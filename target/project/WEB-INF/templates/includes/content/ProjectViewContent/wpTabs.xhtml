@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:l="http://java.sun.com/jsf/composite/tags">
+
+<head>
+<title>IGNORED</title>
+</head>
+<body>
+<ui:composition>
+	<p:tabView>
+		<!-- first tab -->
+		<p:tab title="Info">
+			<h:form id="wp">
+				<l:wpInfoTag numberValue="#{wp.number}" titleValue="#{wp.title}"
+					descValue="#{wp.description}" startDate="#{wp.startDate}"
+					charges="#{wp.openForCharges}" />
+				<p:commandButton id="addButton" value="Add"
+					update="child:campnou, messages">
+					<f:setPropertyActionListener value="#{true}"
+						target="#{projectView.childPanel.rendered}" />
+
+				</p:commandButton>
+			</h:form>
+			
+			<br/>
+			<h:form id="child">
+
+				<p:outputPanel id="campnou">
+					<p:panel id="innerPanel"
+						rendered="#{projectView.childPanel.rendered}"
+						header="New WorkPackage for #{wp.number}" closable="true"
+						closeListener="#{projectView.childPanel.handleClose}"
+						onCloseUpdate="child:campnou, campnou">
+
+						<p:focus />
+						<l:wpInfoTag numberValue="#{wpAction.childWp.number}"
+							titleValue="#{wpAction.childWp.title}"
+							descValue="#{wpAction.childWp.description}"
+							startDate="#{wpAction.childWp.startDate}"
+							charges="#{wpAction.childWp.openForCharges}" />
+
+						<p:commandButton action="#{wpAction.addChild}"
+							update="child:campnou, tree, messages, wp" value="Save">
+						</p:commandButton>
+					</p:panel>
+				</p:outputPanel>
+			</h:form>
+		</p:tab>
+
+		<p:tab title="Staff">
+			<h:form>
+				<ui:insert name="wpStaff">
+					<ui:include src="wpStaff.xhtml" />
+				</ui:insert>
+
+
+			</h:form>
+
+
+		</p:tab>
+
+		<p:tab title="Cost">
+			<ui:insert name="wpCost">
+				<ui:include src="wpCost.xhtml" />
+			</ui:insert>
+
+		</p:tab>
+
+	</p:tabView>
+</ui:composition>
+</body>
+
+</html>
