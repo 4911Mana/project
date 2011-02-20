@@ -211,7 +211,7 @@
 							<!-- If your app has multiple packages, use this include filter to 
 								execute the processor only on the package containing your entities -->
 							<includes>
-								<include>**/*/*/*/*.java</include>
+								<include>**/*/model/*/*.java</include>
 							</includes>
 						</configuration>
 						<goals>

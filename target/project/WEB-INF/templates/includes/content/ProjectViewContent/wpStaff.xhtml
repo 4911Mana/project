@@ -3,8 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.prime.com.tr/ui"
-	xmlns:l="http://java.sun.com/jsf/composite/tags">
+	xmlns:p="http://primefaces.prime.com.tr/ui">
 
 <head>
 <title>IGNORED</title>
@@ -26,51 +25,7 @@
                     Two decades have passed, and crime kingpin Michael Corleone, now divorced from his wife Kay has nearly succeeded in keeping his promise that his family would one day be completely legitimate." />
 			</h:panelGrid>
 		</p:tab>
-		<p:tab title="Search Staff">
-			<h:form>
-
-				<p:dataTable var="employee" value="#{employeeTableBean.employees}"
-					paginator="true" rows="10"
-					selection="#{employeeTableBean.selectedEmployee}" selectionMode="single">
-
-					<f:facet name="header">
-            Available Employees
-        </f:facet>
-
-					<p:column sortBy="#{employee.id}" filterBy="#{employee.id}">
-						<f:facet name="header">
-							<h:outputText value="ID" />
-						</f:facet>
-						<h:outputText value="#{employee.id}" />
-					</p:column>
-
-					<p:column sortBy="#{employee.firstName}"
-						filterBy="#{employee.firstName}">
-						<f:facet name="header">
-							<h:outputText value="First Name" />
-						</f:facet>
-						<h:outputText value="#{employee.firstName}" />
-					</p:column>
-
-					<p:column sortBy="#{employee.lastName}"
-						filterBy="#{employee.lastName }">
-						<f:facet name="header">
-							<h:outputText value="Last Name" />
-						</f:facet>
-						<h:outputText value="#{employee.lastName}" />
-					</p:column>
-
-					<p:column selectionMode="multiple">
-						<f:facet name="header">
-							<h:outputText value="Added to the Project" />
-						</f:facet>
-					</p:column>
-
-				</p:dataTable>
-
-			</h:form>
-
-		</p:tab>
+		
 	</p:accordionPanel>
 </ui:composition>
 </body>

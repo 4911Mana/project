@@ -65,35 +65,6 @@
 		
 	</f:ajax>
 
-
-
-
-<ui:remove>
-	<f:ajax event="action" render="content options header" execute="form1">
- 		<h:form id="form1">
-	 		<h:panelGroup layout="block" id="header" class="header">
-				
-			</h:panelGroup> 
-		
-			<h:panelGroup layout="block" id="options" class="options">
-				<ui:insert name="options">
-					<ui:include src="#{nav.options}" />
-				</ui:insert>	
-			</h:panelGroup>
-			
-			<h:panelGroup layout="block" id="content" class="content">
-				<ui:insert name="content">	
-					<ui:include src="#{nav.content}" />
-				</ui:insert>
-			</h:panelGroup>
-		
-			<h:panelGroup layout="block" id="footer" class="footer">
-					
-			</h:panelGroup>
-		</h:form>
-	</f:ajax>
-</ui:remove>
-
 	<ui:debug hotkey="z" rendered="true" />
 	
 </h:body>
