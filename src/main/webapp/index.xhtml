@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/WEB-INF/templates/default.xhtml">
+	<ui:define name="content">
+		<h1>Welcome to Java EE 6!</h1>
+
+		<p>You have successfully deployed a Java EE 6 web application.</p>
+		<p:layout style="width:850px;min-height:600px;">
+			<p:layoutUnit position="left" width="200" resizable="true"
+				minWidth="100" maxWidth="400">
+				<h:form id="tree">
+					<p:growl id="messages" showDetail="true" />
+
+
+					<p:tree value="#{treeBean.root}" var="node" selectionMode="single"
+						dynamic="true" selection="#{treeBean.selectedNode}"
+						immidiate="true" update="wp, child"
+						nodeSelectListener="#{treeBean.onNodeSelect}">
+
+						<p:treeNode>
+							<h:outputText value="#{node}" />
+						</p:treeNode>
+					</p:tree>
+
+				</h:form>
+			</p:layoutUnit>
+			<!--  Centre-->
+			<p:layoutUnit position="center">
+
+				<p:tabView>
+					<!-- first tab -->
+
+					<p:tab title="Info">
+						<h:form id="wp">
+							<h:panelGrid columns="3">
+
+								<h:outputLabel for="number" value="Number:" />
+								<p:inputText id="number" label="number" value="#{wp.number}"
+									required="true" />
+								<h:message for="number" errorClass="invalid" />
+								<h:outputLabel for="title" value="Title:" />
+								<p:inputText id="title" label="title" value="#{wp.title}" />
+								<h:message for="title" errorClass="invalid" />
+								<h:outputLabel for="desc" value="Description:" />
+								<p:inputText id="desc" label="title" value="#{wp.description}" />
+								<h:message for="desc" errorClass="invalid" />
+
+							</h:panelGrid>
+							<p:commandButton value="Add" update="campnou">
+								<f:setPropertyActionListener value="#{true}"
+									target="#{wpManager.flag}" />
+							</p:commandButton>
+							<p:outputPanel id="campnou">
+								<p:panel rendered="#{wpManager.flag}"
+									header="New WorkPackage for #{wp.number}" closable="true"
+									closeListener="#{treeBean.handleClose}"   
+					     			onCloseUpdate="campnou">
+									<h:panelGrid columns="3">
+
+										<h:outputLabel for="new_number" value="Number:" />
+										<p:inputText id="new_number" label="number"
+											value="#{wpManager.childWp.number}" required="true" />
+										<h:message for="new_number" errorClass="invalid" />
+										<h:outputLabel for="new_title" value="Title:" />
+										<p:inputText id="new_title" label="title"
+											value="#{wpManager.childWp.title}" />
+										<h:message for="new_title" errorClass="invalid" />
+										<h:outputLabel for="new_desc" value="Description:" />
+										<p:inputText id="new_desc" label="title"
+											value="#{wpManager.childWp.description}" />
+										<h:message for="new_desc" errorClass="invalid" />
+
+									</h:panelGrid>
+								<p:commandButton action="#{wpManager.addChild}" actionListener="#{treeBean.displaySelectedSingle}" 
+								update="tree" 
+									value="InSave"></p:commandButton>
+								</p:panel>
+								<h:commandButton action="#{wpManager.addChild}" update="tree"
+									value="Save" />
+							</p:outputPanel>
+						</h:form>
+					</p:tab>
+
+					<p:tab title="Staff">
+						<h:form>
+
+							<p:accordionPanel autoHeight="false" dynamic="true" cache="true">
+
+								<p:tab title="Add Staff">
+									<h:panelGrid columns="2" cellpadding="10">
+										<p:pickList value="#{pickListBean.employees}" var="employee"
+											itemLabel="#{employee.firstName}:"
+											itemValue="#{employee.lastName}" />
+									</h:panelGrid>
+								</p:tab>
+								<p:tab title="Add Responsibale Engineer">
+									<h:panelGrid columns="2" cellpadding="10">
+										<p:graphicImage value="/images/godfather/godfather3.jpg" />
+										<h:outputText
+											value="After a break of more than 15 years, director Francis Ford Coppola and writer Mario Puzo returned to the well for this third and final story of the fictional Corleone crime family.
+                    Two decades have passed, and crime kingpin Michael Corleone, now divorced from his wife Kay has nearly succeeded in keeping his promise that his family would one day be completely legitimate." />
+									</h:panelGrid>
+								</p:tab>
+								<p:tab title="Search Staff">
+									<h:form>
+
+										<p:dataTable var="employee" value="#{tableBean.employees}"
+											paginator="true" rows="10"
+											selection="#{tableBean.selectedEmployee}"
+											selectionMode="single">
+
+											<f:facet name="header">
+            Available Employees
+        </f:facet>
+
+											<p:column sortBy="#{employee.id}" filterBy="#{employee.id}">
+												<f:facet name="header">
+													<h:outputText value="ID" />
+												</f:facet>
+												<h:outputText value="#{employee.id}" />
+											</p:column>
+
+											<p:column sortBy="#{employee.firstName}"
+												filterBy="#{employee.firstName}">
+												<f:facet name="header">
+													<h:outputText value="First Name" />
+												</f:facet>
+												<h:outputText value="#{employee.firstName}" />
+											</p:column>
+
+											<p:column sortBy="#{employee.lastName}"
+												filterBy="#{employee.lastName }">
+												<f:facet name="header">
+													<h:outputText value="Last Name" />
+												</f:facet>
+												<h:outputText value="#{employee.lastName}" />
+											</p:column>
+
+											<p:column selectionMode="multiple">
+												<f:facet name="header">
+													<h:outputText value="Added to the Project" />
+												</f:facet>
+											</p:column>
+
+										</p:dataTable>
+
+									</h:form>
+
+								</p:tab>
+							</p:accordionPanel>
+
+						</h:form>
+
+
+					</p:tab>
+
+					<p:tab title="Cost">
+
+						<p:panel srtyle="float:left">
+		Estimated Cost
+	</p:panel>
+
+						<p:panel>
+		Actual Cost
+	</p:panel>
+
+						<h:panelGrid columns="2" cellpadding="10">
+							<h:form id="reg">
+								<table>
+									<tr>
+										<th style="text-align: right;"><h:outputLabel for="name"
+											value="Name:" /></th>
+										<td><h:inputText id="name" value="#{newMember.name}" />
+										<h:message for="name" errorClass="invalid" /></td>
+									</tr>
+									<tr>
+										<th style="text-align: right;"><h:outputLabel for="email"
+											value="Email:" /></th>
+										<td><h:inputText id="email" value="#{newMember.email}" />
+										<h:message for="email" errorClass="invalid" /></td>
+									</tr>
+									<tr>
+										<th style="text-align: right;"><h:outputLabel
+											for="phoneNumber" value="Phone #:" /></th>
+										<td><h:inputText id="phoneNumber"
+											value="#{newMember.phoneNumber}" /> <h:message
+											for="phoneNumber" errorClass="invalid" /></td>
+									</tr>
+								</table>
+								<p><h:commandButton id="register"
+									action="#{memberRegistration.register}" value="Register" /> <h:outputText
+									value=" Registered!"
+									rendered="#{facesContext.postback and empty facesContext.messageList}"
+									style="color: green;" /></p>
+							</h:form>
+							<h2>Members</h2>
+							<h:panelGroup rendered="#{empty members}">
+								<em>No registered members.</em>
+							</h:panelGroup>
+							<h:dataTable var="_member" value="#{members}"
+								rendered="#{not empty members}">
+								<h:column>
+									<f:facet name="header">Id</f:facet>
+            #{_member.id}
+         </h:column>
+								<h:column>
+									<f:facet name="header">Name</f:facet>
+            #{_member.name}
+         </h:column>
+								<h:column>
+									<f:facet name="header">Email</f:facet>
+            #{_member.email}
+         </h:column>
+								<h:column>
+									<f:facet name="header">Phone #</f:facet>
+            #{_member.phoneNumber}
+         </h:column>
+								<h:column>
+									<f:facet name="header">REST URL</f:facet>
+									<a href="#{request.contextPath}/rest/members/#{_member.id}">/rest/members/#{_member.id}</a>
+								</h:column>
+								<f:facet name="footer">
+            REST URL for all members: <a
+										href="#{request.contextPath}/rest/members">/rest/members</a>
+								</f:facet>
+							</h:dataTable>
+						</h:panelGrid>
+					</p:tab>
+
+				</p:tabView>
+
+				<p:layoutUnit position="bottom" height="175" header="Bottom"
+					resizable="true" closable="true" collapsible="true">
+					<h:outputText value="South unit content." />
+
+
+				</p:layoutUnit>
+			</p:layoutUnit>
+
+		</p:layout>
+
+
+		<!-- <p:commandButton value="Submit" update="displayEmployees" oncomplete="employeeDialog.show()"/>
+
+   <h3>Pojo Support with Bounce Effect, Captions and Reorder Controls</h3>
+    <p:pickList value="#{pickListBean.employees}"
+                    var="employee" iconOnly="true" effect="bounce"
+                    itemLabel="#{employee.firstName}"
+                    itemValue="#{employee}" converter="employee"
+                    showSourceControls="true" showTargetControls="true">
+        <f:facet name="sourceCaption">Available</f:facet>
+        <f:facet name="targetCaption">Starting</f:facet>
+    </p:pickList>
+
+    <p:commandButton value="Submit" update="displayEmployees" oncomplete="employeeDialog.show()"/>
+
+    <p:dialog modal="true" showEffect="fade" hideEffect="fade" widgetVar="cityDialog">
+        <h:panelGrid id="displayCities" columns="2">
+            <h:outputText value="Source: " style="font-weight:bold"/>
+             <ui:repeat value="#{pickListBean.cities.source}" var="item">
+                <h:outputText value="#{item}" style="margin-right:5px" />
+            </ui:repeat>
+
+            <h:outputText value="Target: " style="font-weight:bold"/>
+            <ui:repeat value="#{pickListBean.cities.target}" var="item">
+                <h:outputText value="#{item}" style="margin-right:5px" />
+            </ui:repeat>
+        </h:panelGrid>
+    </p:dialog>
+
+    <p:dialog modal="true" showEffect="fade" hideEffect="fade" widgetVar="employeeDialog">
+        <h:panelGrid id="displayemployees" columns="2">
+            <h:outputText value="Source: " style="font-weight:bold"/>
+            <ui:repeat value="#{pickListBean.employees.source}" var="employee">
+                <h:outputText value="#{employee.firstName}" style="margin-right:5px" />
+            </ui:repeat>
+
+            <h:outputText value="Target: " style="font-weight:bold"/>
+            <ui:repeat value="#{pickListBean.employees.target}" var="employee">
+                <h:outputText value="#{employee.firstName}" style="margin-right:5px" />
+            </ui:repeat>
+        </h:panelGrid>
+    </p:dialog>-->
+
+
+
+	</ui:define>
+</ui:composition>

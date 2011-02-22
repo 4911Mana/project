@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+	<persistence-unit name="ProjectManager">
+	   <jta-data-source>java:/ProjectManagerDS</jta-data-source>
+	   <class>comp.is.controller.project.entities.Employee</class>
+	   <class>comp.is.controller.project.entities.Employeelabourchargerate</class>
+	   <class>comp.is.controller.project.entities.keys.EmployeelabourchargeratePK</class>
+	   <class>comp.is.controller.project.entities.Employeerole</class>
+	   <class>comp.is.controller.project.entities.keys.EmployeerolePK</class>
+	   <class>comp.is.controller.project.entities.Labourchargerate</class>
+	   <class>comp.is.controller.project.entities.Project</class>
+	   <class>comp.is.controller.project.entities.Projectbudget</class>
+	   <class>comp.is.controller.project.entities.Projectsummary</class>
+	   <class>comp.is.controller.project.entities.Ratesheet</class>
+	   <class>comp.is.controller.project.entities.Role</class>
+	   <class>comp.is.controller.project.entities.Timesheet</class>
+	   <class>comp.is.controller.project.entities.Timesheetentry</class>
+	   <class>comp.is.controller.project.entities.Timesheetweek</class>
+	   <class>comp.is.controller.project.entities.Workassignment</class>
+	   <class>comp.is.controller.project.entities.Workpackage</class>
+	   <class>comp.is.controller.project.entities.keys.WorkpackagePK</class>
+	   <class>comp.is.controller.project.entities.Workpackagestatusreport</class>
+	   <properties>
+	   	<property name="eclipselink.weaving.eager" value="false"/>
+	   </properties>
+	</persistence-unit>
+</persistence>
