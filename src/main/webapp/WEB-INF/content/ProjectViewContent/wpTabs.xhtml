@@ -17,33 +17,33 @@
 			<h:form id="wp">
 				<l:wpInfoTag numberValue="#{wp.number}" titleValue="#{wp.title}"
 					descValue="#{wp.description}" startDate="#{wp.startDate}"
-					charges="#{wp.openForCharges}" />
+					charges="#{wp.openForCharges}"/>
 				<p:commandButton id="addButton" value="Add"
 					update="child:campnou, messages">
 					<f:setPropertyActionListener value="#{true}"
-						target="#{projectView.childPanel.rendered}" />
+						target="#{childPanel.rendered}" />
 
 				</p:commandButton>
 			</h:form>
-			
-			<br/>
+
+			<br />
 			<h:form id="child">
 
 				<p:outputPanel id="campnou">
 					<p:panel id="innerPanel"
-						rendered="#{projectView.childPanel.rendered}"
+						rendered="#{childPanel.rendered}"
 						header="New WorkPackage for #{wp.number}" closable="true"
-						closeListener="#{projectView.childPanel.handleClose}"
+						closeListener="#{childPanel.handleClose}"
 						onCloseUpdate="child:campnou, campnou">
 
-						<p:focus />
-						<l:wpInfoTag numberValue="#{wpAction.childWp.number}"
-							titleValue="#{wpAction.childWp.title}"
-							descValue="#{wpAction.childWp.description}"
-							startDate="#{wpAction.childWp.startDate}"
-							charges="#{wpAction.childWp.openForCharges}" />
+						<l:wpInfoTag numberValue="#{childWp.number}"
+							titleValue="#{childWp.title}"
+							descValue="#{childWp.description}"
+							startDate="#{childWp.startDate}"
+							charges="#{childWp.openForCharges}"
+							/>
 
-						<p:commandButton action="#{wpAction.addChild}"
+						<p:commandButton action="#{projectAction.addChild}"
 							update="child:campnou, tree, messages, wp" value="Save">
 						</p:commandButton>
 					</p:panel>

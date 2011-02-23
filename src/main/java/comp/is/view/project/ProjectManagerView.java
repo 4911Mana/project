@@ -6,38 +6,33 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.primefaces.event.CloseEvent;
-import org.primefaces.event.NodeSelectEvent;
-
 import comp.is.controller.project.ProjectAction;
 import comp.is.controller.project.WorkPackageAction;
-import comp.is.model.project.ProjectTree;
+import comp.is.model.project.ProjectIndexTree;
 import comp.is.model.project.WorkPackage;
 
 @Named("projectView")
 @SessionScoped
 public class ProjectManagerView implements Serializable {
 
+    
     @Inject
     ProjectAction projectAction;
     @Inject
     WorkPackageAction wpAction;
-
     @Inject
     private ChildWpPanelBean childPanel;
     @Inject
     private ProjectTreeBean projectTree;
-
+    
+    
     @PostConstruct
     public void init() {
-        ProjectTree tree = projectAction.generateWpIndexes();
-        projectTree.init(tree);
+        projectTree.init(projectAction.getProject());
         displayRoot();
     }
 
@@ -59,16 +54,16 @@ public class ProjectManagerView implements Serializable {
 
     public void onNodeSelect() {
         String selectedNode = projectTree.getSelectedNode().toString();
-        System.out.println("Selected: " + selectedNode);
+        System.out.println("View: Selected: " + selectedNode);
         if (selectedNode.isEmpty()) {
             return;
         } else {
             // validate
-
             WorkPackage wp = projectAction.getWpById(selectedNode);
-            System.out.println("REtrieved wp: " + wp.getNumber());
+           
             if (wp != null)// should be exception
-                wpAction.setWp(wp);
+                System.out.println("REtrieved wp: " + wp.getNumber());
+                ProjectAction.getWp().init(wp);
         }
     }
 
@@ -78,9 +73,9 @@ public class ProjectManagerView implements Serializable {
     }
 
     public void displayRoot() {
-        wpAction.setWp(projectAction.getRoot());
+        ProjectAction.setWp(projectAction.getRoot());
         //projectTree.setSelectedNode(projectTree.getRoot());
-        projectTree.getRoot().setSelected(true);
+        //projectTree.getRoot().setSelected(true);
     }
 
     public void displayMsgs(List<String> msgs) {
@@ -108,5 +103,9 @@ public class ProjectManagerView implements Serializable {
         wpAction.reinit();
 
     }
+
+   
+
+    
 
 }

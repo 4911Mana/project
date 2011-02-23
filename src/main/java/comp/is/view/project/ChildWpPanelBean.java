@@ -10,6 +10,7 @@ import javax.inject.Named;
 
 import org.primefaces.event.CloseEvent;
 
+@Named("childPanel")
 @SessionScoped
 public class ChildWpPanelBean implements Serializable{
     

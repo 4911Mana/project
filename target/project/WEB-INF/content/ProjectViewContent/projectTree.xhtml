@@ -11,12 +11,13 @@
 <body>
 <ui:composition>
 	<h:form id="tree">
-		
-		
-		<p:tree value="#{projectView.projectTree.root}" var="node" selectionMode="single"
-			dynamic="true" selection="#{projectView.projectTree.selectedNode}"
-			update="wp, child, child:campnou, messages" nodeSelectListener="#{tree.onNodeSelect}">
 
+
+		<p:tree value="#{projectView.projectTree.root}" var="node"
+			selectionMode="single" dynamic="true"
+			selection="#{projectView.projectTree.selectedNode}"
+			update="wp, child, child:campnou, messages"
+			nodeSelectListener="#{tree.onNodeSelect}">
 			<p:treeNode>
 				<h:outputText value="#{node}" />
 			</p:treeNode>

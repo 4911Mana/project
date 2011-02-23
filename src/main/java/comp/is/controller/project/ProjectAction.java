@@ -1,19 +1,21 @@
 package comp.is.controller.project;
 
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-
+import comp.is.model.project.ChildWp;
+import comp.is.model.project.CurrentWp;
+import comp.is.model.project.ProjectIndexTree;
 import comp.is.model.project.ProjectTree;
 import comp.is.model.project.WorkPackage;
+import comp.is.view.project.ProjectManagerView;
 
 @Stateful
 @SessionScoped
@@ -21,106 +23,172 @@ import comp.is.model.project.WorkPackage;
 @Named("projectAction")
 public class ProjectAction {
 
-    
-    @Inject 
+    @Produces
+    @CurrentWp
+    @Named("wp")
+    @SessionScoped
+    private static WorkPackage wp;
+    @Produces
+    @ChildWp
+    @Named("childWp")
+    @SessionScoped
+    private static WorkPackage childWp;
+    @Inject
     WorkPackageAction wpAction;
- // Lazy loading
-    Map<String, WorkPackage> wpMap;
-    WorkPackage root;
-    private ProjectTree wpIndexes;
-    
-    public ProjectAction(){
-      //for now we assume that wpMap is available
-        root = new WorkPackage("root wp");
-        wpMap = new Hashtable<String, WorkPackage>();
-        
-        init(); 
+    @Inject
+    private ProjectManagerView view;
+    // Lazy loading
+    private ProjectTree project;
+
+    public ProjectAction() {
+        wp = new WorkPackage();
+        wp.setNumber("rootwp");
+        project = new ProjectTree(wp);
+        childWp = new WorkPackage();
+        init();
     }
-    
+
     public void init() {
-        WorkPackage wp1 = new WorkPackage("a");
-        wp1.setTitle("Layer 1");
-        wp1.setParent(root);
-        WorkPackage wp2 = new WorkPackage("wp2");
-        wp2.setTitle("Layer 2");
-        wp2.setParent(wp1);
-        WorkPackage wp3 = new WorkPackage("wp3");
-        wp3.setTitle("Layer 3");
-        wp3.setParent(wp2);
-        WorkPackage wp4 = new WorkPackage("wp4");
-        wp4.setTitle("Layer 4");
-        wp4.setParent(wp1);
-        WorkPackage wp5 = new WorkPackage("wp5");
-        wp5.setTitle("Layer 5");
-        wp5.setParent(wp2);
-        WorkPackage wp6 = new WorkPackage("wp6");
-        wp6.setTitle("Layer 6");
-        wp6.setParent(wp1);
-        WorkPackage wp7 = new WorkPackage("wp7");
-        wp7.setTitle("Layer 7");
-        wp7.setParent(wp6);
-        WorkPackage wp8 = new WorkPackage("wp8");
-        wp8.setTitle("Layer 8");
-        wp8.setParent(wp1);
-       
-        wpMap.put(wp1.getNumber(), wp1);
-        wpMap.put(wp2.getNumber(), wp2);
-        wpMap.put(wp3.getNumber(), wp3);
-        wpMap.put(wp4.getNumber(), wp4);
-        wpMap.put(wp5.getNumber(), wp5);
-        wpMap.put(wp6.getNumber(), wp6);
-        wpMap.put(wp7.getNumber(), wp7);
-        wpMap.put(wp8.getNumber(), wp8);
-        generateWpIndexes();
-        
+        WorkPackage a = new WorkPackage("a");
+        a.setTitle("Layer 1");
+        a.setParent(project.getRoot());
+        WorkPackage aa = new WorkPackage("a");
+        aa.setTitle("Layer 2");
+        aa.setParent(a);
+        WorkPackage ab = new WorkPackage("ab");
+        ab.setTitle("Layer 3");
+        ab.setParent(a);
+        WorkPackage aaa = new WorkPackage("aaa");
+        aaa.setTitle("Layer 4");
+        aaa.setParent(aa);
+        WorkPackage aab = new WorkPackage("aab");
+        aab.setTitle("Layer 5");
+        aab.setParent(aa);
+        WorkPackage aabd = new WorkPackage("aabd");
+        aabd.setTitle("Layer 6");
+        aabd.setParent(aab);
+        WorkPackage aaaf = new WorkPackage("aaaf");
+        aaaf.setTitle("Layer 7");
+        aaaf.setParent(aaa);
+        WorkPackage aba = new WorkPackage("aba");
+        aba.setTitle("Layer 8");
+        aba.setParent(ab);
+
+        project.put(a);
+        project.put(aa);
+        project.put(ab);
+        project.put(aaa);
+        project.put(aab);
+        project.put(aabd);
+        project.put(aaaf);
+        project.put(aba);
+        // generateWpIndexes();
+
     }
-    
+
     public WorkPackage getRoot() {
-        return root;
+        return project.getRoot();
     }
 
-    public void setRoot(WorkPackage root) {
-        this.root = root;
+    public ProjectTree getProject() {
+        return project;
     }
 
-    public Map<String, WorkPackage> getProject() {
-        return new HashMap<String, WorkPackage>();
+    public void setProject(ProjectTree tree) {
+        this.project = tree;
     }
 
-    public ProjectTree generateWpIndexes() {
-        ProjectTree project = new ProjectTree(root.getNumber());
-
-        for (WorkPackage wp : wpMap.values()) {
-            project.put(wp.getNumber(), wp.getParent().getNumber());
-        }
-
-        wpIndexes = project;
-        return wpIndexes;
+    public static WorkPackage getWp() {
+        return wp;
     }
+
+    
+//    public ProjectIndexTree generateWpIndexes() {
+//        ProjectIndexTree indexes = new ProjectIndexTree(getRoot().toString());
+//
+//        for (WorkPackage wp : project.values()) {
+//            indexes.put(wp.getNumber(), wp.getParent().getNumber());
+//        }
+//        return indexes;
+//    }
 
     public WorkPackage getWpById(String wpNumber) {
-        System.out.println("Get by Id: " + wpNumber+ " / " + (wpMap.containsKey(wpNumber) ? "founds ok" : "not found"));
-        WorkPackage wp = wpMap.get(wpNumber);
-        System.out.println("Getting from wpmap: " +  ((wp == null)? "null" : wp.toString()));
-        return wpMap.get(wpNumber);
+        WorkPackage wp = project.get(wpNumber);
+        System.out.println("Getting from wpmap: "
+                + ((wp == null) ? "null" : wp.toString()));
+        return wp;
 
     }
- 
+
     public void addWp(WorkPackage wp) {
         // validate
         System.out.println(wp.toString());
-        wpMap.put(wp.getNumber(), wp);
-        System.out.println("Put and now Getting from wpmap: " + wpMap.get(wp.getNumber()).toString());
-        System.out.println((wpMap.get(wp.getNumber())== null)? "not found" : "finds ok");
-        
-     }
-    public void printAll(){
-        System.out.print(wpMap.toString());
+        project.put(wp);
+        System.out.println("Put and now Getting from wpmap: "
+                + project.get(wp.getNumber()));
+        System.out.println((project.get(wp.getNumber()) == null) ? "not found"
+                : "finds ok");
+
+    }
+
+    public void printAll() {
+        System.out.print(project.toString());
     }
 
     public boolean validWpNum(String number) {
-        return !wpMap.containsKey(number);
-        
+        return !project.containsKey(number);
+
     }
-    
+
+    public String addChild() {
+        System.out.println("Saving: " + childWp.toString());
+        // validate
+        List<String> msgs = new ArrayList<String>();
+        boolean err = false;
+        // check for errors
+        WorkPackage candidate = new WorkPackage(childWp);
+        candidate.setNumber(candidate.getNumber().toLowerCase());
+
+        if (!validWpNum(candidate.getNumber())) {
+            msgs.add("Work Package Number is not unique.");
+            err = true;
+        }
+
+        candidate.setParent(wp);
+        // check grandparents
+        if (wp.getStartDate() != null) {
+
+            msgs.add("Parent Work Package #" + wp.getNumber()
+                    + " start date is set. Parent is a leaf.");
+            err = true;
+
+        }
+        if (wp.getActCost() != null) {
+            if (!wp.getActCost().isEmpty()) {
+                msgs.add(wp.getNumber()
+                        + " has charges allocated. Parent is a leaf.");
+                err = true;
+            }
+        }
+        if (wp.isOpenForCharges()) {
+            msgs.add(wp.getNumber() + " is open for charges. Parent is a leaf.");
+            err = true;
+
+        }
+
+        // persist
+        // em.persist(wp);
+        if (err) {
+            msgs.add("New Work Package #" + candidate.getNumber()
+                    + " was not saved.");
+            view.displayMsgs(msgs);
+            return null;
+        }
+        addWp(candidate);
+        view.addChildToTree(candidate.getNumber(), wp.getNumber());
+        wp = new WorkPackage(candidate);
+        childWp = new WorkPackage();
+        System.out.println(candidate.toString());
+        return null;
+    }
 }

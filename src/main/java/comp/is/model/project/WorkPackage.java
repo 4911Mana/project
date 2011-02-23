@@ -1,136 +1,99 @@
 package comp.is.model.project;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Named;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Transient;
 
-import comp.is.model.admin.Employee;
-import comp.is.model.admin.LabourGrade;
-
-@Entity
-@Named("wp")
-@SessionScoped
-public class WorkPackage implements Serializable{
-    @Id
-    private String number;
-    private String title;
-    private String description;
-    private Date startDate;
-    @Transient
+public class WorkPackage extends WorkPackageEntity implements Serializable, Comparable<WorkPackage>{
+    static final int LENGTH = 6;
+    static final char PADDING = ' ';
     private WorkPackage parent;
-    //?? get project from parent ??
-    @Transient
-    private WorkPackage project;
-    @Transient
-    private List<Employee> staff;
-    @Transient
-    private Employee respEngineer;
-    private boolean summary;
-    private boolean openForCharges;
-    @Transient
-    private Hashtable<LabourGrade.Type, Integer> estCost;
-    @Transient
-    private Hashtable<LabourGrade.Type, Integer> actCost;
-    @Transient
-    private Hashtable<LabourGrade.Type, Integer> remCost;
+    
+    public WorkPackage(){
+        super();
+    }
+    
+    public WorkPackage(WorkPackage childWp) {
+        init(childWp);
+    }
+
+    public WorkPackage(String wpNum) {
+        super(wpNum);
+    }
+
+    public static String pad(String num) {
+        String padNum = num;
+        for (int i = padNum.length(); i < LENGTH; i++) {
+            padNum += PADDING;
+        }
+        return padNum;
+    }
+    @Override
+    public String getNumber(){
+        System.out.println("getting view wp" + number);
+        return pad(number); 
+    }
+    @Override
+    public void setNumber(String num){
+        System.out.println("setting view wp to" + num);
+        number = unpad(num);
+    }
     
     
     public WorkPackage getParent() {
         return parent;
     }
+
     public void setParent(WorkPackage parent) {
         this.parent = parent;
     }
-    public WorkPackage getProject() {
-        return project;
-    }
-    public WorkPackage(){
-        number = "";
-    }
-    public WorkPackage(String number){
-        this.number = number;
-        //description = wp.description;
+
+    public static String unpad(String num) {
+        int numEnd = num.indexOf(PADDING);
+        if (numEnd == -1) {
+            return num;
+        }
+        String padNum = num.substring(0, num.indexOf(PADDING));
+
+        return padNum;
     }
     
+    public String getChildMask() {
+        System.out.println("Getting a mask for " + number);
+        String parentNum = parent.getNumber();
+        if(parentNum.length() == LENGTH){return parentNum;} // should be exception
+        String mask = parentNum + 'a';
+        for (int i = mask.length(); i < LENGTH; i++) {
+            mask += PADDING;
+        }
+
+        return mask;
+    }
     
-    public void setNumber(String number) {
-        this.number = number;
-    }
-    public String getNumber() {
-        return number;
-    }
-   public void setTitle(String name) {
-        this.title = name;
-    }
-    public String getTitle() {
-        return title;
-    }
-    public String getDescription() {
-        return description;
-    }
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    public void setWp(WorkPackage wp) {
-        number = wp.number;
-        title = wp.title;
-        description = wp.description;
-        startDate = wp.startDate;
-        parent = wp.parent;
-        openForCharges = wp.openForCharges;
+    public String getParentMask() {
+        String parentNum = parent.getNumber();
+        if(parentNum.length() == LENGTH){return parentNum;} // should be exception
         
+        String mask = "a";
+        for (int i = 1; i < parentNum.length(); i++) {
+            mask += "a";
+        }
+        for (int i = mask.length(); i < LENGTH; i++) {
+            mask += PADDING;
+        }
+
+        return mask;
     }
-    
-    public Date getStartDate() {
-        return startDate;
-    }
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-    
-    public boolean isOpenForCharges() {
-        return openForCharges;
-    }
-    public void setOpenForCharges(boolean openForCharges) {
-        this.openForCharges = openForCharges;
-    }
-    public void reinit() {
-        // TODO Auto-generated method stub
-        
-    }
-    
-    public Hashtable<LabourGrade.Type, Integer> getActCost() {
-        return actCost;
-    }
-    public void setActCost(Hashtable<LabourGrade.Type, Integer> actCost) {
-        this.actCost = actCost;
-    }
+
+    @Override
+    public int compareTo(WorkPackage iWp)  throws ClassCastException {
+        if (!(iWp instanceof WorkPackage))
+            throw new ClassCastException("A WorkPackage object expected.");
+          String iWpNum = ((WorkPackage) iWp).getNumber();
+          return iWpNum.compareTo(number);
+        }
+
     public String toString(){
-        return "Wp number: " + number + " Charges: " + openForCharges + " Parent: " + ((parent == null)? "null" : parent.getNumber()); 
+        return super.toString() + ((parent == null)? "null" : parent.getNumber()); 
     }
-    public WorkPackage getCopy() {
-        WorkPackage temp = new WorkPackage();
-        temp.number = number;
-        temp.title = title;
-        temp.description = description;
-        temp.startDate = startDate;
-        temp.parent = parent;
-        temp.openForCharges = openForCharges;
-        //add more
-        return temp;
-    }
-    
-    public boolean isLeaf(){
-        if(actCost.isEmpty() & startDate == null){return true;}
-        return false;
-    }
-    
+
 }

@@ -9,6 +9,8 @@ import javax.inject.Named;
 
 import comp.is.model.project.WorkPackage;
 
+
+
 @Named
 @SessionScoped
 public class ProjectManager extends Employee implements Serializable{

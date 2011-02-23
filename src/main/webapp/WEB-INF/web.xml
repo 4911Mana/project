@@ -8,7 +8,7 @@
   	
   	<context-param>
 		<param-name>primefaces.THEME</param-name>
-		<param-value>vader</param-value>
+		<param-value>excite-bike</param-value>
 	</context-param>
   	
   	<servlet>
@@ -40,7 +40,7 @@
   	</session-config>
   	
   	<welcome-file-list>
-  		<welcome-file>MainTemplate.xhtml</welcome-file>
+  		<welcome-file></welcome-file>
   	</welcome-file-list>
 
 </web-app>
