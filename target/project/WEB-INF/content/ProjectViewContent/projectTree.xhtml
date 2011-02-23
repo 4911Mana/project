@@ -12,10 +12,10 @@
 <ui:composition>
 	<h:form id="tree">
 
-
-		<p:tree value="#{projectView.projectTree.root}" var="node"
+	
+		<p:tree value="#{tree.root}" var="node"
 			selectionMode="single" dynamic="true"
-			selection="#{projectView.projectTree.selectedNode}"
+			selection="#{tree.selectedNode}"
 			update="wp, child, child:campnou, messages"
 			nodeSelectListener="#{tree.onNodeSelect}">
 			<p:treeNode>

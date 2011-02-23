@@ -48,6 +48,7 @@ public class ProjectTree extends Hashtable<String, WorkPackage> {
         }
         try {
             Collections.sort(children);
+            System.out.println("Sorted collection" + children);
         } catch (ClassCastException e) {
             System.out.println("Exception");// ??
         }

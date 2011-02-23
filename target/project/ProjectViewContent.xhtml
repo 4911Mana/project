@@ -10,6 +10,7 @@
 <h:body>
 	<ui:composition template="/WEB-INF/templates/master.xhtml">
 		<ui:define name="content">
+		<h:inputText value="#{projectView.start}"/>
 			<p:growl id="messages" showDetail="true" />
 			<p:layout style="width:850px; min-height:800px;">
 

@@ -61,7 +61,7 @@ public class ProjectTreeBean implements Serializable {
     }
     
     private void buildTree(ProjectTree project) {
-        rootWp = new DefaultTreeNode(project.getRoot().getNumber(), root);
+        rootWp = new DefaultTreeNode(project.getRoot(), root);
         addObjChildrenRecursively(rootWp);
 
     }
@@ -79,19 +79,11 @@ public class ProjectTreeBean implements Serializable {
     }
 
     private void addObjChildrenRecursively(TreeNode parent) {
-        List<String> children = new ArrayList<String>();
-        Iterator<Entry<String, WorkPackage>> it = project.entrySet().iterator();
-        String parentNum = parent.getData().toString();
-        while (it.hasNext()) {
-            Entry<String, WorkPackage> row = it.next();
-            if (row.getValue().getParent().getNumber()
-                    .equalsIgnoreCase(parentNum)) {
-                children.add(row.getKey());
-            }
-        }
+        List<WorkPackage> children = project.getChildren(parent.getData().toString());
+        
         if (children.isEmpty())
             return;
-        for (String child : children) {
+        for (WorkPackage child : children) {
             TreeNode newChild = new DefaultTreeNode(child, parent);
             addObjChildrenRecursively(newChild);
         }
@@ -101,7 +93,8 @@ public class ProjectTreeBean implements Serializable {
 
         selectedNode.setExpanded(true);
         TreeNode newChild = new DefaultTreeNode(child, selectedNode);
-        indexes.put(child, parent);
+        //project.put(wp);
+        System.out.println("Key is in the map: " + project.containsKey(child));
         newChild.setSelected(true);
         setSelectedNode(newChild);
 

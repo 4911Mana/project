@@ -45,6 +45,8 @@ public class ProjectAction {
         wp.setNumber("rootwp");
         project = new ProjectTree(wp);
         childWp = new WorkPackage();
+        childWp.setCandidate(true);
+        childWp.setParent(wp);
         init();
     }
 
@@ -101,6 +103,7 @@ public class ProjectAction {
     public static WorkPackage getWp() {
         return wp;
     }
+    
 
     
 //    public ProjectIndexTree generateWpIndexes() {
@@ -111,6 +114,12 @@ public class ProjectAction {
 //        }
 //        return indexes;
 //    }
+
+   
+
+    public static WorkPackage getChildWp() {
+        return childWp;
+    }
 
     public WorkPackage getWpById(String wpNumber) {
         WorkPackage wp = project.get(wpNumber);
@@ -135,10 +144,17 @@ public class ProjectAction {
         System.out.print(project.toString());
     }
 
-    public boolean validWpNum(String number) {
+    public boolean uniqueNum(String number) {
         return !project.containsKey(number);
 
     }
+    
+    public void reinit(){
+        wp.init(new WorkPackage());
+        childWp.init(new WorkPackage());
+        childWp.setParent(wp);
+    }
+    
 
     public String addChild() {
         System.out.println("Saving: " + childWp.toString());
@@ -148,30 +164,35 @@ public class ProjectAction {
         // check for errors
         WorkPackage candidate = new WorkPackage(childWp);
         candidate.setNumber(candidate.getNumber().toLowerCase());
+        System.out.println(childWp.getDetails());
+        
 
-        if (!validWpNum(candidate.getNumber())) {
-            msgs.add("Work Package Number is not unique.");
+        if (!uniqueNum(candidate.getNumber())) {
+            msgs.add("Number is not unique.");
             err = true;
         }
 
-        candidate.setParent(wp);
         // check grandparents
         if (wp.getStartDate() != null) {
 
-            msgs.add("Parent Work Package #" + wp.getNumber()
-                    + " start date is set. Parent is a leaf.");
+            msgs.add("Parent start date is set. Parent is a leaf.");
             err = true;
 
         }
         if (wp.getActCost() != null) {
             if (!wp.getActCost().isEmpty()) {
-                msgs.add(wp.getNumber()
-                        + " has charges allocated. Parent is a leaf.");
+                msgs.add("Parent has charges allocated. Parent is a leaf.");
                 err = true;
             }
         }
         if (wp.isOpenForCharges()) {
-            msgs.add(wp.getNumber() + " is open for charges. Parent is a leaf.");
+            msgs.add("Parent is open for charges. Parent is a leaf.");
+            err = true;
+
+        }
+        if (!candidate.validLengthNum() || !candidate.validPrefixNum()) {
+
+            msgs.add("Invalid Number");
             err = true;
 
         }
@@ -186,9 +207,9 @@ public class ProjectAction {
         }
         addWp(candidate);
         view.addChildToTree(candidate.getNumber(), wp.getNumber());
-        wp = new WorkPackage(candidate);
-        childWp = new WorkPackage();
-        System.out.println(candidate.toString());
+        wp.init(candidate);
+        childWp.init(new WorkPackage());
+        childWp.setParent(wp);
         return null;
     }
 }

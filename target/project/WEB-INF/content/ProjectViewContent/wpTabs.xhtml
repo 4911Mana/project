@@ -41,7 +41,7 @@
 							descValue="#{childWp.description}"
 							startDate="#{childWp.startDate}"
 							charges="#{childWp.openForCharges}"
-							/>
+							mask="#{wp.childMask}"/>
 
 						<p:commandButton action="#{projectAction.addChild}"
 							update="child:campnou, tree, messages, wp" value="Save">

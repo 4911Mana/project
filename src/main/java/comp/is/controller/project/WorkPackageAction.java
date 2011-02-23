@@ -38,18 +38,7 @@ public class WorkPackageAction implements WorkPackageLocal {
         childWp = new WorkPackage("child");
         System.out.println("Injected into wpAction: " + wp);
         wp = new WorkPackage("new");
-    }
-
-    @Override
-    public String reinit() {
-        wp = new WorkPackage();
-
-        return null;
-    }
-
-    
-
-    
+    } 
 
     public void persist() {
     }

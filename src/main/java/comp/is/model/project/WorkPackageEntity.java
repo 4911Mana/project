@@ -86,6 +86,7 @@ public class WorkPackageEntity implements Serializable{
         openForCharges = wp.openForCharges;
         
     }
+
     
     public Date getStartDate() {
         return startDate;
@@ -109,6 +110,9 @@ public class WorkPackageEntity implements Serializable{
         this.actCost = actCost;
     }
     public String toString(){
+        return number; 
+    }
+    public String getDetails(){
         return "Wp number: " + number + " Charges: " + openForCharges; 
     }
     public WorkPackageEntity getCopy() {
@@ -122,10 +126,10 @@ public class WorkPackageEntity implements Serializable{
         //add more
         return temp;
     }
-    
+    //?????
     public boolean isLeaf(){
-        if(actCost.isEmpty() & startDate == null){return true;}
-        return false;
+        if(actCost.isEmpty() & startDate == null & respEngineer == null){return false;}
+        return true;
     }
     
 }

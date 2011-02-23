@@ -56,14 +56,16 @@ public class ProjectManagerView implements Serializable {
         String selectedNode = projectTree.getSelectedNode().toString();
         System.out.println("View: Selected: " + selectedNode);
         if (selectedNode.isEmpty()) {
-            return;
+            nodeIsNotValid();
         } else {
             // validate
             WorkPackage wp = projectAction.getWpById(selectedNode);
            
             if (wp != null)// should be exception
-                System.out.println("REtrieved wp: " + wp.getNumber());
                 ProjectAction.getWp().init(wp);
+                //not working
+                //ProjectAction.getChildWp().setNumber(wp.getNumber() + ' ');
+                //System.out.println("Child wp: " + ProjectAction.getChildWp().getNumber());
         }
     }
 
@@ -73,7 +75,7 @@ public class ProjectManagerView implements Serializable {
     }
 
     public void displayRoot() {
-        ProjectAction.setWp(projectAction.getRoot());
+        ProjectAction.getWp().init(projectAction.getRoot());
         //projectTree.setSelectedNode(projectTree.getRoot());
         //projectTree.getRoot().setSelected(true);
     }
@@ -100,10 +102,12 @@ public class ProjectManagerView implements Serializable {
     // }
 
     public void nodeIsNotValid() {
-        wpAction.reinit();
+        projectAction.reinit();
 
     }
-
+    public String getStart(){
+        return null;
+    }
    
 
     

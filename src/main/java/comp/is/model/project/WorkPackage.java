@@ -5,19 +5,29 @@ import java.io.Serializable;
 
 public class WorkPackage extends WorkPackageEntity implements Serializable, Comparable<WorkPackage>{
     static final int LENGTH = 6;
-    static final char PADDING = ' ';
+    static final char PADDING = '0';
     private WorkPackage parent;
+    boolean candidate = false;
     
     public WorkPackage(){
         super();
     }
     
-    public WorkPackage(WorkPackage childWp) {
-        init(childWp);
+    public WorkPackage(WorkPackage wp) {
+        init(wp);
+        parent = wp.parent;
     }
-
+    //has to have a parent!!
     public WorkPackage(String wpNum) {
         super(wpNum);
+    }
+    
+    public boolean isCandidate() {
+        return candidate;
+    }
+
+    public void setCandidate(boolean candidate) {
+        this.candidate = candidate;
     }
 
     public static String pad(String num) {
@@ -28,8 +38,10 @@ public class WorkPackage extends WorkPackageEntity implements Serializable, Comp
         return padNum;
     }
     @Override
+    @CurrentWp
+    @ChildWp
     public String getNumber(){
-        System.out.println("getting view wp" + number);
+        if(candidate) return number;
         return pad(number); 
     }
     @Override
@@ -58,14 +70,14 @@ public class WorkPackage extends WorkPackageEntity implements Serializable, Comp
     }
     
     public String getChildMask() {
-        System.out.println("Getting a mask for " + number);
-        String parentNum = parent.getNumber();
-        if(parentNum.length() == LENGTH){return parentNum;} // should be exception
-        String mask = parentNum + 'a';
-        for (int i = mask.length(); i < LENGTH; i++) {
-            mask += PADDING;
+        String mask = "";
+        for (int i = 0; i < number.length() + 1; i++) {
+            mask += '*';
         }
-
+        for (int i = mask.length(); i < LENGTH; i++) {
+            mask += PADDING; //make configurable, ?
+        }
+        System.out.println("Mask " + mask);
         return mask;
     }
     
@@ -73,9 +85,9 @@ public class WorkPackage extends WorkPackageEntity implements Serializable, Comp
         String parentNum = parent.getNumber();
         if(parentNum.length() == LENGTH){return parentNum;} // should be exception
         
-        String mask = "a";
+        String mask = "*";
         for (int i = 1; i < parentNum.length(); i++) {
-            mask += "a";
+            mask += "*";
         }
         for (int i = mask.length(); i < LENGTH; i++) {
             mask += PADDING;
@@ -83,17 +95,32 @@ public class WorkPackage extends WorkPackageEntity implements Serializable, Comp
 
         return mask;
     }
+    
+    public boolean validLengthNum() {
+        return (number.length() == parent.number.length() + 1);
 
+    }
+    
+    public boolean validPrefixNum(){
+        return number.matches(parent.number + "\\w");
+    }
+    
     @Override
     public int compareTo(WorkPackage iWp)  throws ClassCastException {
         if (!(iWp instanceof WorkPackage))
             throw new ClassCastException("A WorkPackage object expected.");
           String iWpNum = ((WorkPackage) iWp).getNumber();
-          return iWpNum.compareTo(number);
+          return number.compareTo(iWpNum);
         }
-
-    public String toString(){
-        return super.toString() + ((parent == null)? "null" : parent.getNumber()); 
+    public void init(WorkPackage wp){
+        super.init(wp);
+        parent = wp.parent;
     }
-
+    
+    public String toString(){
+        return getNumber(); 
+    }
+    public String getDetails(){
+        return super.getDetails() + " Parent: " + ((parent == null)? "null" : parent.getNumber()); 
+    }
 }
