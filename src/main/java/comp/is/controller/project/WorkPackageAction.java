@@ -35,18 +35,16 @@ public class WorkPackageAction implements WorkPackageLocal {
     // private EntityManager em;
 
     public WorkPackageAction() {
-        childWp = new WorkPackage("child");
-        System.out.println("Injected into wpAction: " + wp);
-        wp = new WorkPackage("new");
+
     } 
 
-    public void persist() {
-    }
-
-    public void delete() {
-    }
-
-    private boolean validWpDate(WorkPackage wp) {
-        return !(wp.getStartDate().before(wp.getParent().getStartDate()));
-    }
+//    public void persist() {
+//    }
+//
+//    public void delete() {
+//    }
+//
+//    private boolean validWpDate(WorkPackage wp) {
+//        return !(wp.getStartDate().before(wp.getParent().getStartDate()));
+//    }
 }

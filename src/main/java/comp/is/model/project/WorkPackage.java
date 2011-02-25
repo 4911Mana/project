@@ -1,13 +1,17 @@
 package comp.is.model.project;
 
 import java.io.Serializable;
+import java.util.Date;
+
+import comp.is.model.project.entity.WorkpackageEntity;
 
 
-public class WorkPackage extends WorkPackageEntity implements Serializable, Comparable<WorkPackage>{
+public class WorkPackage extends WorkpackageEntity implements Serializable, Comparable<WorkPackage>{
     static final int LENGTH = 6;
     static final char PADDING = '0';
-    private WorkPackage parent;
-    boolean candidate = false;
+    private boolean candidate = false;
+    private boolean openForCharges = false;
+    private Date startDate;
     
     public WorkPackage(){
         super();
@@ -15,11 +19,6 @@ public class WorkPackage extends WorkPackageEntity implements Serializable, Comp
     
     public WorkPackage(WorkPackage wp) {
         init(wp);
-        parent = wp.parent;
-    }
-    //has to have a parent!!
-    public WorkPackage(String wpNum) {
-        super(wpNum);
     }
     
     public boolean isCandidate() {
@@ -37,28 +36,38 @@ public class WorkPackage extends WorkPackageEntity implements Serializable, Comp
         }
         return padNum;
     }
-    @Override
+    
+    public boolean isOpenForCharges() {
+        return openForCharges;
+    }
+
+    public void setOpenForCharges(boolean openForCharges) {
+        this.openForCharges = openForCharges;
+    }
+    
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
     @CurrentWp
     @ChildWp
     public String getNumber(){
-        if(candidate) return number;
-        return pad(number); 
+        String id = getId().getWpid();
+        if(candidate) return id;
+        return pad(id); 
     }
-    @Override
+    
     public void setNumber(String num){
         System.out.println("setting view wp to" + num);
-        number = unpad(num);
+        getId().setWpid(unpad(num));
+        getId().setProjid(getWpParent().getId().getProjid());
     }
     
-    
-    public WorkPackage getParent() {
-        return parent;
-    }
-
-    public void setParent(WorkPackage parent) {
-        this.parent = parent;
-    }
-
+   
     public static String unpad(String num) {
         int numEnd = num.indexOf(PADDING);
         if (numEnd == -1) {
@@ -71,7 +80,7 @@ public class WorkPackage extends WorkPackageEntity implements Serializable, Comp
     
     public String getChildMask() {
         String mask = "";
-        for (int i = 0; i < number.length() + 1; i++) {
+        for (int i = 0; i < getId().getWpid().length() + 1; i++) {
             mask += '*';
         }
         for (int i = mask.length(); i < LENGTH; i++) {
@@ -81,46 +90,46 @@ public class WorkPackage extends WorkPackageEntity implements Serializable, Comp
         return mask;
     }
     
-    public String getParentMask() {
-        String parentNum = parent.getNumber();
-        if(parentNum.length() == LENGTH){return parentNum;} // should be exception
-        
-        String mask = "*";
-        for (int i = 1; i < parentNum.length(); i++) {
-            mask += "*";
-        }
-        for (int i = mask.length(); i < LENGTH; i++) {
-            mask += PADDING;
-        }
-
-        return mask;
-    }
+//    public String getParentMask() {
+//        String parentNum = getWpParent().getNumber();
+//        if(parentNum.length() == LENGTH){return parentNum;} // should be exception
+//        
+//        String mask = "*";
+//        for (int i = 1; i < parentNum.length(); i++) {
+//            mask += "*";
+//        }
+//        for (int i = mask.length(); i < LENGTH; i++) {
+//            mask += PADDING;
+//        }
+//
+//        return mask;
+//    }
     
     public boolean validLengthNum() {
-        return (number.length() == parent.number.length() + 1);
+        return (getId().getWpid().length() == getWpParent().getId().getWpid().length() + 1);
 
     }
     
     public boolean validPrefixNum(){
-        return number.matches(parent.number + "\\w");
+        return getId().getWpid().matches(getWpParent().getId().getWpid() + "\\w");
     }
     
     @Override
     public int compareTo(WorkPackage iWp)  throws ClassCastException {
         if (!(iWp instanceof WorkPackage))
             throw new ClassCastException("A WorkPackage object expected.");
-          String iWpNum = ((WorkPackage) iWp).getNumber();
-          return number.compareTo(iWpNum);
+          String iWpNum = (iWp).getNumber();
+          return getId().getWpid().compareTo(iWpNum);
         }
+    
     public void init(WorkPackage wp){
         super.init(wp);
-        parent = wp.parent;
     }
     
     public String toString(){
         return getNumber(); 
     }
     public String getDetails(){
-        return super.getDetails() + " Parent: " + ((parent == null)? "null" : parent.getNumber()); 
+        return getNumber() + " Parent: " + ((getWpParent() == null)? "null" : getWpParent().getId().toString()); 
     }
 }

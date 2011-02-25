@@ -2,13 +2,10 @@ package comp.is.model.project;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Map.Entry;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
+import java.util.Map.Entry;
 
 
 public class ProjectIndexTree extends Hashtable<String, String>{

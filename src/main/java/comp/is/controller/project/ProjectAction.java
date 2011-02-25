@@ -9,12 +9,15 @@ import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import comp.is.model.project.ChildWp;
 import comp.is.model.project.CurrentWp;
-import comp.is.model.project.ProjectIndexTree;
 import comp.is.model.project.ProjectTree;
 import comp.is.model.project.WorkPackage;
+import comp.is.model.project.entity.ProjectEntity;
+import comp.is.model.project.entity.WorkpackageEntity;
 import comp.is.view.project.ProjectManagerView;
 
 @Stateful
@@ -39,59 +42,83 @@ public class ProjectAction {
     private ProjectManagerView view;
     // Lazy loading
     private ProjectTree project;
-
+    private ProjectEntity pr;
+    @PersistenceContext(unitName="ProjectManager")
+    private EntityManager em;
+    
     public ProjectAction() {
         wp = new WorkPackage();
         wp.setNumber("rootwp");
         project = new ProjectTree(wp);
         childWp = new WorkPackage();
         childWp.setCandidate(true);
-        childWp.setParent(wp);
-        init();
+        childWp.setWpParent(wp);
+        //init();
     }
-
-    public void init() {
-        WorkPackage a = new WorkPackage("a");
-        a.setTitle("Layer 1");
-        a.setParent(project.getRoot());
-        WorkPackage aa = new WorkPackage("a");
-        aa.setTitle("Layer 2");
-        aa.setParent(a);
-        WorkPackage ab = new WorkPackage("ab");
-        ab.setTitle("Layer 3");
-        ab.setParent(a);
-        WorkPackage aaa = new WorkPackage("aaa");
-        aaa.setTitle("Layer 4");
-        aaa.setParent(aa);
-        WorkPackage aab = new WorkPackage("aab");
-        aab.setTitle("Layer 5");
-        aab.setParent(aa);
-        WorkPackage aabd = new WorkPackage("aabd");
-        aabd.setTitle("Layer 6");
-        aabd.setParent(aab);
-        WorkPackage aaaf = new WorkPackage("aaaf");
-        aaaf.setTitle("Layer 7");
-        aaaf.setParent(aaa);
-        WorkPackage aba = new WorkPackage("aba");
-        aba.setTitle("Layer 8");
-        aba.setParent(ab);
-
-        project.put(a);
-        project.put(aa);
-        project.put(ab);
-        project.put(aaa);
-        project.put(aab);
-        project.put(aabd);
-        project.put(aaaf);
-        project.put(aba);
-        // generateWpIndexes();
-
+    
+    public void initializeProject(String projId) {
+        pr = em.find(ProjectEntity.class, "PR002");
+        findAndSetRoot();
+        fillWpMap();
     }
-
-    public WorkPackage getRoot() {
-        return project.getRoot();
+    private void findAndSetRoot() {
+        /** note that only one workpackage has a null parent */
+        //Project p = em.find(Project.class, pr.getProjid());
+        List<WorkpackageEntity> wps = pr.getWorkPackages();
+        for (WorkpackageEntity wp : wps) {
+            if (wp.getWpParent() == null) {
+                project = new ProjectTree(wp);
+                return;
+            }
+        }
     }
+    private void fillWpMap() {
+        //Project p = em.find(Project.class, pr.getProjid());
+        List<WorkpackageEntity> wps = pr.getWorkPackages();
+        for (WorkpackageEntity wp : wps) {
+                project.put((WorkPackage) wp);
+                //wpMap.put(wp.getId().getWpid(), wp);
+        }
+    }
+//    public void init() {
+//        WorkPackage a = new WorkPackage("a");
+//        a.setTitle("Layer 1");
+//        a.setParent(project.getRoot());
+//        WorkPackage aa = new WorkPackage("a");
+//        aa.setTitle("Layer 2");
+//        aa.setParent(a);
+//        WorkPackage ab = new WorkPackage("ab");
+//        ab.setTitle("Layer 3");
+//        ab.setParent(a);
+//        WorkPackage aaa = new WorkPackage("aaa");
+//        aaa.setTitle("Layer 4");
+//        aaa.setParent(aa);
+//        WorkPackage aab = new WorkPackage("aab");
+//        aab.setTitle("Layer 5");
+//        aab.setParent(aa);
+//        WorkPackage aabd = new WorkPackage("aabd");
+//        aabd.setTitle("Layer 6");
+//        aabd.setParent(aab);
+//        WorkPackage aaaf = new WorkPackage("aaaf");
+//        aaaf.setTitle("Layer 7");
+//        aaaf.setParent(aaa);
+//        WorkPackage aba = new WorkPackage("aba");
+//        aba.setTitle("Layer 8");
+//        aba.setParent(ab);
+//
+//        project.put(a);
+//        project.put(aa);
+//        project.put(ab);
+//        project.put(aaa);
+//        project.put(aab);
+//        project.put(aabd);
+//        project.put(aaaf);
+//        project.put(aba);
+//        // generateWpIndexes();
 
+   // }
+
+    
     public ProjectTree getProject() {
         return project;
     }
@@ -152,7 +179,7 @@ public class ProjectAction {
     public void reinit(){
         wp.init(new WorkPackage());
         childWp.init(new WorkPackage());
-        childWp.setParent(wp);
+        childWp.setWpParent(wp);
     }
     
 
@@ -179,12 +206,12 @@ public class ProjectAction {
             err = true;
 
         }
-        if (wp.getActCost() != null) {
-            if (!wp.getActCost().isEmpty()) {
-                msgs.add("Parent has charges allocated. Parent is a leaf.");
-                err = true;
-            }
-        }
+//        if (wp.getActCost() != null) {
+//            if (!wp.getActCost().isEmpty()) {
+//                msgs.add("Parent has charges allocated. Parent is a leaf.");
+//                err = true;
+//            }
+//        }
         if (wp.isOpenForCharges()) {
             msgs.add("Parent is open for charges. Parent is a leaf.");
             err = true;
@@ -209,7 +236,7 @@ public class ProjectAction {
         view.addChildToTree(candidate.getNumber(), wp.getNumber());
         wp.init(candidate);
         childWp.init(new WorkPackage());
-        childWp.setParent(wp);
+        childWp.setWpParent(wp);
         return null;
     }
 }

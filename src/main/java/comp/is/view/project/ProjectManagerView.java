@@ -12,7 +12,6 @@ import javax.inject.Named;
 
 import comp.is.controller.project.ProjectAction;
 import comp.is.controller.project.WorkPackageAction;
-import comp.is.model.project.ProjectIndexTree;
 import comp.is.model.project.WorkPackage;
 
 @Named("projectView")
@@ -75,7 +74,7 @@ public class ProjectManagerView implements Serializable {
     }
 
     public void displayRoot() {
-        ProjectAction.getWp().init(projectAction.getRoot());
+        ProjectAction.getWp().init(projectAction.getProject().getRoot());
         //projectTree.setSelectedNode(projectTree.getRoot());
         //projectTree.getRoot().setSelected(true);
     }

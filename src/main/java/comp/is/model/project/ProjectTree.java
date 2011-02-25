@@ -7,20 +7,22 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-public class ProjectTree extends Hashtable<String, WorkPackage> {
-    private final WorkPackage root;
+import comp.is.model.project.entity.WorkpackageEntity;
 
-    public ProjectTree(WorkPackage projectRoot) {
+public class ProjectTree extends Hashtable<String, WorkPackage> {
+    private WorkpackageEntity root;
+
+    public ProjectTree(WorkpackageEntity projectRoot) {
         root = projectRoot;
     }
 
-    public WorkPackage getRoot() {
+    public WorkpackageEntity getRoot() {
         return root;
     }
 
-//    public void setRoot(WorkPackage root) {
-//        this.root = root;
-//    }
+    public void setRoot(WorkPackage root) {
+        this.root = root;
+    }
 
     public WorkPackage add(String id, WorkPackage wp) {
         if (!containsKey(id)){
@@ -42,7 +44,7 @@ public class ProjectTree extends Hashtable<String, WorkPackage> {
         Iterator<Entry<String, WorkPackage>> it = entrySet().iterator();
         while (it.hasNext()) {
             Entry<String, WorkPackage> row = it.next();
-            if (row.getValue().getParent().getNumber().equalsIgnoreCase(parent)) {
+            if (row.getValue().getWpParent().getId().getWpid().equalsIgnoreCase(parent)) {
                 children.add(row.getValue());
             }
         }

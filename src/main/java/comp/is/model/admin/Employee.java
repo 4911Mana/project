@@ -1,13 +1,7 @@
 package comp.is.model.admin;
 import java.io.Serializable;
 
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.SessionScoped;
-import javax.faces.bean.ManagedBean;
 import javax.inject.Inject;
-import javax.inject.Named;
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
 
 public class Employee implements Serializable{
