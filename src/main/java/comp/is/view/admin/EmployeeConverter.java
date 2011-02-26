@@ -40,7 +40,9 @@ public class EmployeeConverter implements Converter{
            if (value == null) {
                return null;
            } else {
-               return String.valueOf(((Employee) value).getId());
+               return ((Employee) value).getId() 
+               + " : " +((Employee) value).getFirstName() 
+               + " " + ((Employee) value).getLastName();
            }
        }
 }

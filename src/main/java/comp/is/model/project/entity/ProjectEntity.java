@@ -30,7 +30,7 @@ public class ProjectEntity implements Serializable {
 	private double projlabourratemarkup;
 	private String projname;
 	private List<EmployeeroleEntity> employeeRoles;
-	private Projectbudget projectBudget;
+	private ProjectbudgetEntity projectBudget;
 	private List<EmployeeEntity> projectEmployees;
 	private List<ProjectsummaryEntity> projectSummaries;
 	private List<RatesheetEntity> rateSheets;
@@ -96,11 +96,11 @@ public class ProjectEntity implements Serializable {
 
 	//bi-directional one-to-one association to Projectbudget
 	@OneToOne(mappedBy="project")
-	public Projectbudget getProjectBudget() {
+	public ProjectbudgetEntity getProjectBudget() {
 		return this.projectBudget;
 	}
 
-	public void setProjectBudget(Projectbudget projectBudget) {
+	public void setProjectBudget(ProjectbudgetEntity projectBudget) {
 		this.projectBudget = projectBudget;
 	}
 	

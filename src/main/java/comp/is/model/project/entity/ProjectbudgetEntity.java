@@ -18,13 +18,13 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="PROJECTBUDGET")
-public class Projectbudget implements Serializable {
+public class ProjectbudgetEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String projid;
 	private String projbudgetdesc;
 	private ProjectEntity project;
 
-    public Projectbudget() {
+    public ProjectbudgetEntity() {
     }
 
 

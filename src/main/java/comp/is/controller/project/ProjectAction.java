@@ -3,6 +3,7 @@ package comp.is.controller.project;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
@@ -45,19 +46,22 @@ public class ProjectAction {
     private ProjectEntity pr;
     @PersistenceContext(unitName="ProjectManager")
     private EntityManager em;
+    String projId;
     
     public ProjectAction() {
-        wp = new WorkPackage();
-        wp.setNumber("rootwp");
-        project = new ProjectTree(wp);
-        childWp = new WorkPackage();
-        childWp.setCandidate(true);
-        childWp.setWpParent(wp);
+//        wp = new WorkPackage();
+//        wp.setNumber("rootwp");
+//        project = new ProjectTree(wp);
+//        childWp = new WorkPackage();
+//        childWp.setCandidate(true);
+//        childWp.setWpParent(wp);
         //init();
+        projId = "PR002";
     }
-    
-    public void initializeProject(String projId) {
-        pr = em.find(ProjectEntity.class, "PR002");
+    @PostConstruct
+    public void initializeProject() {
+        pr = em.find(ProjectEntity.class, projId);
+        System.out.println(pr.getProjid());
         findAndSetRoot();
         fillWpMap();
     }
