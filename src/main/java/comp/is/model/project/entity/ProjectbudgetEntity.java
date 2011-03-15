@@ -20,12 +20,25 @@ import javax.persistence.Table;
 @Table(name="PROJECTBUDGET")
 public class ProjectbudgetEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String projid;
 	private String projbudgetdesc;
 	private ProjectEntity project;
+	private String projid;
 
     public ProjectbudgetEntity() {
     }
+
+
+	@Column(length=2048)
+	public String getProjbudgetdesc() {
+		return this.projbudgetdesc;
+	}
+
+	//bi-directional one-to-one association to Project
+	@OneToOne
+	@JoinColumn(name="PROJID", nullable=false, insertable=false, updatable=false)
+	public ProjectEntity getProject() {
+		return this.project;
+	}
 
 
 	@Id
@@ -35,30 +48,17 @@ public class ProjectbudgetEntity implements Serializable {
 		return this.projid;
 	}
 
-	public void setProjid(String projid) {
-		this.projid = projid;
-	}
-
-
-	@Column(length=2048)
-	public String getProjbudgetdesc() {
-		return this.projbudgetdesc;
-	}
-
 	public void setProjbudgetdesc(String projbudgetdesc) {
 		this.projbudgetdesc = projbudgetdesc;
 	}
 
 
-	//bi-directional one-to-one association to Project
-	@OneToOne
-	@JoinColumn(name="PROJID", nullable=false, insertable=false, updatable=false)
-	public ProjectEntity getProject() {
-		return this.project;
-	}
-
 	public void setProject(ProjectEntity project) {
 		this.project = project;
+	}
+
+	public void setProjid(String projid) {
+		this.projid = projid;
 	}
 	
 }

@@ -15,12 +15,12 @@ import javax.interceptor.InvocationContext;
  */
 public class LoginInterceptor implements Serializable{
 	
-	@Inject
-	private NavigationControls nav;
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	@Inject
+	private NavigationControls nav;
 
 	@AroundInvoke  
 	public Object log(InvocationContext ctx) throws Exception   

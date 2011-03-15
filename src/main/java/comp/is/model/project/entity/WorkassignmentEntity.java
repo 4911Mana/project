@@ -22,7 +22,6 @@ import javax.persistence.TemporalType;
 @Table(name="WORKASSIGNMENT")
 public class WorkassignmentEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private long workassignid;
 	private BigDecimal empid;
 	private String projid;
 	private Date waapproxenddate;
@@ -45,9 +44,131 @@ public class WorkassignmentEntity implements Serializable {
 	private String waspecialsupervision;
 	private Date watechressuperelecsigndate;
 	private String watype;
+	private long workassignid;
 
     public WorkassignmentEntity() {
     }
+
+
+	@Column(precision=16)
+	public BigDecimal getEmpid() {
+		return this.empid;
+	}
+
+	@Column(length=16)
+	public String getProjid() {
+		return this.projid;
+	}
+
+
+	@Temporal( TemporalType.DATE)
+	public Date getWaapproxenddate() {
+		return this.waapproxenddate;
+	}
+
+	@Temporal( TemporalType.DATE)
+	public Date getWaapproxstartdate() {
+		return this.waapproxstartdate;
+	}
+
+
+	@Column(length=2048)
+	public String getWaauthority() {
+		return this.waauthority;
+	}
+
+	@Column(length=64)
+	public String getWaearlytermoption() {
+		return this.waearlytermoption;
+	}
+
+
+    @Temporal( TemporalType.DATE)
+	public Date getWaengineerelecsigndate() {
+		return this.waengineerelecsigndate;
+	}
+
+	@Column(precision=16)
+	public BigDecimal getWaengineerid() {
+		return this.waengineerid;
+	}
+
+
+    @Column(precision=10, scale=1)
+	public BigDecimal getWaestimatedmandays() {
+		return this.waestimatedmandays;
+	}
+
+	@Column(length=1024)
+	public String getWaetcetera() {
+		return this.waetcetera;
+	}
+
+
+	@Column(length=1024)
+	public String getWaevaluationcriteria() {
+		return this.waevaluationcriteria;
+	}
+
+	@Column(length=64)
+	public String getWafundingsource() {
+		return this.wafundingsource;
+	}
+
+
+	@Column(length=1024)
+	public String getWailldefinedassignment() {
+		return this.wailldefinedassignment;
+	}
+
+	@Column(length=1024)
+	public String getWainteractswith() {
+		return this.wainteractswith;
+	}
+
+
+    @Column(length=2048)
+	public String getWajobdesc() {
+		return this.wajobdesc;
+	}
+
+	@Column(length=2048)
+	public String getWamajordeliverables() {
+		return this.wamajordeliverables;
+	}
+
+
+	@Temporal( TemporalType.DATE)
+	public Date getWaprojmanagerelecsigndate() {
+		return this.waprojmanagerelecsigndate;
+	}
+
+	@Column(precision=16)
+	public BigDecimal getWareportstoid() {
+		return this.wareportstoid;
+	}
+
+
+	@Column(length=2048)
+	public String getWaresponsibilities() {
+		return this.waresponsibilities;
+	}
+
+	@Column(length=1024)
+	public String getWaspecialsupervision() {
+		return this.waspecialsupervision;
+	}
+
+
+	@Temporal( TemporalType.DATE)
+	public Date getWatechressuperelecsigndate() {
+		return this.watechressuperelecsigndate;
+	}
+
+	@Column(length=64)
+	public String getWatype() {
+		return this.watype;
+	}
 
 
 	@Id
@@ -57,34 +178,13 @@ public class WorkassignmentEntity implements Serializable {
 		return this.workassignid;
 	}
 
-	public void setWorkassignid(long workassignid) {
-		this.workassignid = workassignid;
-	}
-
-
-	@Column(precision=16)
-	public BigDecimal getEmpid() {
-		return this.empid;
-	}
-
 	public void setEmpid(BigDecimal empid) {
 		this.empid = empid;
 	}
 
 
-	@Column(length=16)
-	public String getProjid() {
-		return this.projid;
-	}
-
 	public void setProjid(String projid) {
 		this.projid = projid;
-	}
-
-
-    @Temporal( TemporalType.DATE)
-	public Date getWaapproxenddate() {
-		return this.waapproxenddate;
 	}
 
 	public void setWaapproxenddate(Date waapproxenddate) {
@@ -92,19 +192,8 @@ public class WorkassignmentEntity implements Serializable {
 	}
 
 
-    @Temporal( TemporalType.DATE)
-	public Date getWaapproxstartdate() {
-		return this.waapproxstartdate;
-	}
-
 	public void setWaapproxstartdate(Date waapproxstartdate) {
 		this.waapproxstartdate = waapproxstartdate;
-	}
-
-
-	@Column(length=2048)
-	public String getWaauthority() {
-		return this.waauthority;
 	}
 
 	public void setWaauthority(String waauthority) {
@@ -112,19 +201,8 @@ public class WorkassignmentEntity implements Serializable {
 	}
 
 
-	@Column(length=64)
-	public String getWaearlytermoption() {
-		return this.waearlytermoption;
-	}
-
 	public void setWaearlytermoption(String waearlytermoption) {
 		this.waearlytermoption = waearlytermoption;
-	}
-
-
-    @Temporal( TemporalType.DATE)
-	public Date getWaengineerelecsigndate() {
-		return this.waengineerelecsigndate;
 	}
 
 	public void setWaengineerelecsigndate(Date waengineerelecsigndate) {
@@ -132,19 +210,8 @@ public class WorkassignmentEntity implements Serializable {
 	}
 
 
-	@Column(precision=16)
-	public BigDecimal getWaengineerid() {
-		return this.waengineerid;
-	}
-
 	public void setWaengineerid(BigDecimal waengineerid) {
 		this.waengineerid = waengineerid;
-	}
-
-
-	@Column(precision=10, scale=1)
-	public BigDecimal getWaestimatedmandays() {
-		return this.waestimatedmandays;
 	}
 
 	public void setWaestimatedmandays(BigDecimal waestimatedmandays) {
@@ -152,19 +219,8 @@ public class WorkassignmentEntity implements Serializable {
 	}
 
 
-	@Column(length=1024)
-	public String getWaetcetera() {
-		return this.waetcetera;
-	}
-
 	public void setWaetcetera(String waetcetera) {
 		this.waetcetera = waetcetera;
-	}
-
-
-	@Column(length=1024)
-	public String getWaevaluationcriteria() {
-		return this.waevaluationcriteria;
 	}
 
 	public void setWaevaluationcriteria(String waevaluationcriteria) {
@@ -172,19 +228,8 @@ public class WorkassignmentEntity implements Serializable {
 	}
 
 
-	@Column(length=64)
-	public String getWafundingsource() {
-		return this.wafundingsource;
-	}
-
-	public void setWafundingsource(String wafundingsource) {
+    public void setWafundingsource(String wafundingsource) {
 		this.wafundingsource = wafundingsource;
-	}
-
-
-	@Column(length=1024)
-	public String getWailldefinedassignment() {
-		return this.wailldefinedassignment;
 	}
 
 	public void setWailldefinedassignment(String wailldefinedassignment) {
@@ -192,19 +237,8 @@ public class WorkassignmentEntity implements Serializable {
 	}
 
 
-	@Column(length=1024)
-	public String getWainteractswith() {
-		return this.wainteractswith;
-	}
-
 	public void setWainteractswith(String wainteractswith) {
 		this.wainteractswith = wainteractswith;
-	}
-
-
-	@Column(length=2048)
-	public String getWajobdesc() {
-		return this.wajobdesc;
 	}
 
 	public void setWajobdesc(String wajobdesc) {
@@ -212,19 +246,8 @@ public class WorkassignmentEntity implements Serializable {
 	}
 
 
-	@Column(length=2048)
-	public String getWamajordeliverables() {
-		return this.wamajordeliverables;
-	}
-
 	public void setWamajordeliverables(String wamajordeliverables) {
 		this.wamajordeliverables = wamajordeliverables;
-	}
-
-
-    @Temporal( TemporalType.DATE)
-	public Date getWaprojmanagerelecsigndate() {
-		return this.waprojmanagerelecsigndate;
 	}
 
 	public void setWaprojmanagerelecsigndate(Date waprojmanagerelecsigndate) {
@@ -232,19 +255,8 @@ public class WorkassignmentEntity implements Serializable {
 	}
 
 
-	@Column(precision=16)
-	public BigDecimal getWareportstoid() {
-		return this.wareportstoid;
-	}
-
 	public void setWareportstoid(BigDecimal wareportstoid) {
 		this.wareportstoid = wareportstoid;
-	}
-
-
-	@Column(length=2048)
-	public String getWaresponsibilities() {
-		return this.waresponsibilities;
 	}
 
 	public void setWaresponsibilities(String waresponsibilities) {
@@ -252,19 +264,8 @@ public class WorkassignmentEntity implements Serializable {
 	}
 
 
-	@Column(length=1024)
-	public String getWaspecialsupervision() {
-		return this.waspecialsupervision;
-	}
-
-	public void setWaspecialsupervision(String waspecialsupervision) {
+    public void setWaspecialsupervision(String waspecialsupervision) {
 		this.waspecialsupervision = waspecialsupervision;
-	}
-
-
-    @Temporal( TemporalType.DATE)
-	public Date getWatechressuperelecsigndate() {
-		return this.watechressuperelecsigndate;
 	}
 
 	public void setWatechressuperelecsigndate(Date watechressuperelecsigndate) {
@@ -272,13 +273,12 @@ public class WorkassignmentEntity implements Serializable {
 	}
 
 
-	@Column(length=64)
-	public String getWatype() {
-		return this.watype;
-	}
-
 	public void setWatype(String watype) {
 		this.watype = watype;
+	}
+
+	public void setWorkassignid(long workassignid) {
+		this.workassignid = workassignid;
 	}
 
 }

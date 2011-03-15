@@ -27,7 +27,11 @@ import javax.persistence.TemporalType;
 @Table(name="WORKPACKAGESTATUSREPORT")
 public class WorkpackagestatusreportEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private EmployeeEntity projectAssistant;
+	private EmployeeEntity projectManager;
+	private List<WorkpackageEntity> workPackages;
 	private long workpackagestatusreportid;
+	private EmployeeEntity wpResponsibleEngineer;
 	private String wpsraccompthisperiod;
 	private String wpsrcomments;
 	private Date wpsrdate;
@@ -43,175 +47,9 @@ public class WorkpackagestatusreportEntity implements Serializable {
 	private String wpsrproblemsthisperiodcomm;
 	private Date wpsrreportingperiod;
 	private String wpsrworkplannednextperiodcomm;
-	private EmployeeEntity projectAssistant;
-	private EmployeeEntity wpResponsibleEngineer;
-	private EmployeeEntity projectManager;
-	private List<WorkpackageEntity> workPackages;
 
     public WorkpackagestatusreportEntity() {
     }
-
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(unique=true, nullable=false, precision=10)
-	public long getWorkpackagestatusreportid() {
-		return this.workpackagestatusreportid;
-	}
-
-	public void setWorkpackagestatusreportid(long workpackagestatusreportid) {
-		this.workpackagestatusreportid = workpackagestatusreportid;
-	}
-
-
-	@Column(length=2048)
-	public String getWpsraccompthisperiod() {
-		return this.wpsraccompthisperiod;
-	}
-
-	public void setWpsraccompthisperiod(String wpsraccompthisperiod) {
-		this.wpsraccompthisperiod = wpsraccompthisperiod;
-	}
-
-
-	@Column(length=2048)
-	public String getWpsrcomments() {
-		return this.wpsrcomments;
-	}
-
-	public void setWpsrcomments(String wpsrcomments) {
-		this.wpsrcomments = wpsrcomments;
-	}
-
-
-    @Temporal( TemporalType.DATE)
-	public Date getWpsrdate() {
-		return this.wpsrdate;
-	}
-
-	public void setWpsrdate(Date wpsrdate) {
-		this.wpsrdate = wpsrdate;
-	}
-
-
-	@Column(length=2048)
-	public String getWpsrdelactualcompletion() {
-		return this.wpsrdelactualcompletion;
-	}
-
-	public void setWpsrdelactualcompletion(String wpsrdelactualcompletion) {
-		this.wpsrdelactualcompletion = wpsrdelactualcompletion;
-	}
-
-
-	@Column(length=1024)
-	public String getWpsrdeldesc() {
-		return this.wpsrdeldesc;
-	}
-
-	public void setWpsrdeldesc(String wpsrdeldesc) {
-		this.wpsrdeldesc = wpsrdeldesc;
-	}
-
-
-	@Column(precision=10)
-	public BigDecimal getWpsrdeldocnum() {
-		return this.wpsrdeldocnum;
-	}
-
-	public void setWpsrdeldocnum(BigDecimal wpsrdeldocnum) {
-		this.wpsrdeldocnum = wpsrdeldocnum;
-	}
-
-
-	@Column(length=2048)
-	public String getWpsrdelplannedcompletion() {
-		return this.wpsrdelplannedcompletion;
-	}
-
-	public void setWpsrdelplannedcompletion(String wpsrdelplannedcompletion) {
-		this.wpsrdelplannedcompletion = wpsrdelplannedcompletion;
-	}
-
-
-	@Column(length=2048)
-	public String getWpsrmileactualcompletion() {
-		return this.wpsrmileactualcompletion;
-	}
-
-	public void setWpsrmileactualcompletion(String wpsrmileactualcompletion) {
-		this.wpsrmileactualcompletion = wpsrmileactualcompletion;
-	}
-
-
-	@Column(length=2048)
-	public String getWpsrmileearnedvalue() {
-		return this.wpsrmileearnedvalue;
-	}
-
-	public void setWpsrmileearnedvalue(String wpsrmileearnedvalue) {
-		this.wpsrmileearnedvalue = wpsrmileearnedvalue;
-	}
-
-
-	@Column(length=2048)
-	public String getWpsrmileplannedcompletion() {
-		return this.wpsrmileplannedcompletion;
-	}
-
-	public void setWpsrmileplannedcompletion(String wpsrmileplannedcompletion) {
-		this.wpsrmileplannedcompletion = wpsrmileplannedcompletion;
-	}
-
-
-	@Column(length=2048)
-	public String getWpsrmileprojectedcompletion() {
-		return this.wpsrmileprojectedcompletion;
-	}
-
-	public void setWpsrmileprojectedcompletion(String wpsrmileprojectedcompletion) {
-		this.wpsrmileprojectedcompletion = wpsrmileprojectedcompletion;
-	}
-
-
-	@Column(length=2048)
-	public String getWpsrproblemsanticcomm() {
-		return this.wpsrproblemsanticcomm;
-	}
-
-	public void setWpsrproblemsanticcomm(String wpsrproblemsanticcomm) {
-		this.wpsrproblemsanticcomm = wpsrproblemsanticcomm;
-	}
-
-
-	@Column(length=2048)
-	public String getWpsrproblemsthisperiodcomm() {
-		return this.wpsrproblemsthisperiodcomm;
-	}
-
-	public void setWpsrproblemsthisperiodcomm(String wpsrproblemsthisperiodcomm) {
-		this.wpsrproblemsthisperiodcomm = wpsrproblemsthisperiodcomm;
-	}
-
-
-    @Temporal( TemporalType.DATE)
-	public Date getWpsrreportingperiod() {
-		return this.wpsrreportingperiod;
-	}
-
-	public void setWpsrreportingperiod(Date wpsrreportingperiod) {
-		this.wpsrreportingperiod = wpsrreportingperiod;
-	}
-
-
-	@Column(length=2048)
-	public String getWpsrworkplannednextperiodcomm() {
-		return this.wpsrworkplannednextperiodcomm;
-	}
-
-	public void setWpsrworkplannednextperiodcomm(String wpsrworkplannednextperiodcomm) {
-		this.wpsrworkplannednextperiodcomm = wpsrworkplannednextperiodcomm;
-	}
 
 
 	//uni-directional many-to-one association to Employee
@@ -221,23 +59,6 @@ public class WorkpackagestatusreportEntity implements Serializable {
 		return this.projectAssistant;
 	}
 
-	public void setProjectAssistant(EmployeeEntity projectAssistant) {
-		this.projectAssistant = projectAssistant;
-	}
-	
-
-	//uni-directional many-to-one association to Employee
-    @ManyToOne
-	@JoinColumn(name="ENGINEERID")
-	public EmployeeEntity getWpResponsibleEngineer() {
-		return this.wpResponsibleEngineer;
-	}
-
-	public void setWpResponsibleEngineer(EmployeeEntity wpResponsibleEngineer) {
-		this.wpResponsibleEngineer = wpResponsibleEngineer;
-	}
-	
-
 	//uni-directional many-to-one association to Employee
     @ManyToOne
 	@JoinColumn(name="PROJMANAGERID")
@@ -245,10 +66,6 @@ public class WorkpackagestatusreportEntity implements Serializable {
 		return this.projectManager;
 	}
 
-	public void setProjectManager(EmployeeEntity projectManager) {
-		this.projectManager = projectManager;
-	}
-	
 
 	//bi-directional many-to-many association to Workpackage
 	@ManyToMany
@@ -259,15 +76,198 @@ public class WorkpackagestatusreportEntity implements Serializable {
 			}
 		, inverseJoinColumns={
 			@JoinColumn(name="PROJID", referencedColumnName="PROJID", nullable=false),
-			@JoinColumn(name="WPID", referencedColumnName="WPID", nullable=false)
+			@JoinColumn(name="WPID", referencedColumnName="ID", nullable=false)
 			}
 		)
 	public List<WorkpackageEntity> getWorkPackages() {
 		return this.workPackages;
 	}
 
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(unique=true, nullable=false, precision=10)
+	public long getWorkpackagestatusreportid() {
+		return this.workpackagestatusreportid;
+	}
+
+
+	//uni-directional many-to-one association to Employee
+    @ManyToOne
+	@JoinColumn(name="ENGINEERID")
+	public EmployeeEntity getWpResponsibleEngineer() {
+		return this.wpResponsibleEngineer;
+	}
+
+	@Column(length=2048)
+	public String getWpsraccompthisperiod() {
+		return this.wpsraccompthisperiod;
+	}
+
+
+    @Column(length=2048)
+	public String getWpsrcomments() {
+		return this.wpsrcomments;
+	}
+
+	@Temporal( TemporalType.DATE)
+	public Date getWpsrdate() {
+		return this.wpsrdate;
+	}
+
+
+	@Column(length=2048)
+	public String getWpsrdelactualcompletion() {
+		return this.wpsrdelactualcompletion;
+	}
+
+	@Column(length=1024)
+	public String getWpsrdeldesc() {
+		return this.wpsrdeldesc;
+	}
+
+
+	@Column(precision=10)
+	public BigDecimal getWpsrdeldocnum() {
+		return this.wpsrdeldocnum;
+	}
+
+	@Column(length=2048)
+	public String getWpsrdelplannedcompletion() {
+		return this.wpsrdelplannedcompletion;
+	}
+
+
+	@Column(length=2048)
+	public String getWpsrmileactualcompletion() {
+		return this.wpsrmileactualcompletion;
+	}
+
+	@Column(length=2048)
+	public String getWpsrmileearnedvalue() {
+		return this.wpsrmileearnedvalue;
+	}
+
+
+	@Column(length=2048)
+	public String getWpsrmileplannedcompletion() {
+		return this.wpsrmileplannedcompletion;
+	}
+
+	@Column(length=2048)
+	public String getWpsrmileprojectedcompletion() {
+		return this.wpsrmileprojectedcompletion;
+	}
+
+
+	@Column(length=2048)
+	public String getWpsrproblemsanticcomm() {
+		return this.wpsrproblemsanticcomm;
+	}
+
+	@Column(length=2048)
+	public String getWpsrproblemsthisperiodcomm() {
+		return this.wpsrproblemsthisperiodcomm;
+	}
+
+
+	@Temporal( TemporalType.DATE)
+	public Date getWpsrreportingperiod() {
+		return this.wpsrreportingperiod;
+	}
+
+	@Column(length=2048)
+	public String getWpsrworkplannednextperiodcomm() {
+		return this.wpsrworkplannednextperiodcomm;
+	}
+
+
+	public void setProjectAssistant(EmployeeEntity projectAssistant) {
+		this.projectAssistant = projectAssistant;
+	}
+
+	public void setProjectManager(EmployeeEntity projectManager) {
+		this.projectManager = projectManager;
+	}
+
+
 	public void setWorkPackages(List<WorkpackageEntity> workPackages) {
 		this.workPackages = workPackages;
+	}
+
+	public void setWorkpackagestatusreportid(long workpackagestatusreportid) {
+		this.workpackagestatusreportid = workpackagestatusreportid;
+	}
+
+
+	public void setWpResponsibleEngineer(EmployeeEntity wpResponsibleEngineer) {
+		this.wpResponsibleEngineer = wpResponsibleEngineer;
+	}
+
+	public void setWpsraccompthisperiod(String wpsraccompthisperiod) {
+		this.wpsraccompthisperiod = wpsraccompthisperiod;
+	}
+
+
+	public void setWpsrcomments(String wpsrcomments) {
+		this.wpsrcomments = wpsrcomments;
+	}
+
+	public void setWpsrdate(Date wpsrdate) {
+		this.wpsrdate = wpsrdate;
+	}
+
+
+    public void setWpsrdelactualcompletion(String wpsrdelactualcompletion) {
+		this.wpsrdelactualcompletion = wpsrdelactualcompletion;
+	}
+
+	public void setWpsrdeldesc(String wpsrdeldesc) {
+		this.wpsrdeldesc = wpsrdeldesc;
+	}
+
+
+	public void setWpsrdeldocnum(BigDecimal wpsrdeldocnum) {
+		this.wpsrdeldocnum = wpsrdeldocnum;
+	}
+
+	public void setWpsrdelplannedcompletion(String wpsrdelplannedcompletion) {
+		this.wpsrdelplannedcompletion = wpsrdelplannedcompletion;
+	}
+
+
+	public void setWpsrmileactualcompletion(String wpsrmileactualcompletion) {
+		this.wpsrmileactualcompletion = wpsrmileactualcompletion;
+	}
+
+	public void setWpsrmileearnedvalue(String wpsrmileearnedvalue) {
+		this.wpsrmileearnedvalue = wpsrmileearnedvalue;
+	}
+	
+
+	public void setWpsrmileplannedcompletion(String wpsrmileplannedcompletion) {
+		this.wpsrmileplannedcompletion = wpsrmileplannedcompletion;
+	}
+
+	public void setWpsrmileprojectedcompletion(String wpsrmileprojectedcompletion) {
+		this.wpsrmileprojectedcompletion = wpsrmileprojectedcompletion;
+	}
+	
+
+	public void setWpsrproblemsanticcomm(String wpsrproblemsanticcomm) {
+		this.wpsrproblemsanticcomm = wpsrproblemsanticcomm;
+	}
+
+	public void setWpsrproblemsthisperiodcomm(String wpsrproblemsthisperiodcomm) {
+		this.wpsrproblemsthisperiodcomm = wpsrproblemsthisperiodcomm;
+	}
+	
+
+	public void setWpsrreportingperiod(Date wpsrreportingperiod) {
+		this.wpsrreportingperiod = wpsrreportingperiod;
+	}
+
+	public void setWpsrworkplannednextperiodcomm(String wpsrworkplannednextperiodcomm) {
+		this.wpsrworkplannednextperiodcomm = wpsrworkplannednextperiodcomm;
 	}
 	
 }

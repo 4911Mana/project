@@ -14,20 +14,12 @@ public class ProjectIndexTree extends Hashtable<String, String>{
     public ProjectIndexTree(String projectId){
         root = projectId;
     }
-    public String getRoot() {
-        return root;
-    }
-
-    public void setRoot(String root) {
-        this.root = root;
-    }
-
     public void addChild(String id, String parentId){
        if(containsKey(parentId) ){
            put(id, parentId);
        }
     }
-    
+
     public List<String> getChildren(String parent){
         List<String> children = new ArrayList<String>();
         Iterator<Entry<String, String>> it  = entrySet().iterator();
@@ -39,6 +31,14 @@ public class ProjectIndexTree extends Hashtable<String, String>{
         }
         Collections.sort(children);        
         return children;
+    }
+
+    public String getRoot() {
+        return root;
+    }
+    
+    public void setRoot(String root) {
+        this.root = root;
     }
     
     

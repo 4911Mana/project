@@ -8,13 +8,9 @@ import javax.inject.Named;
 
 import comp.is.model.project.WorkPackage;
 
-
-
-@Named
-@SessionScoped
 public class ProjectManager extends Employee implements Serializable{
-    private List<Employee> assignedStaff;
     private static List<WorkPackage> projects;
+    private List<Employee> assignedStaff;
     
 //    static {
 //        projects.add(new WorkPackage("advn"));
@@ -24,19 +20,19 @@ public class ProjectManager extends Employee implements Serializable{
 //        projects.add(new WorkPackage("ad99"));
 //    }
 
-    public void setAssignedStaff(List<Employee> assignedStaff) {
-        this.assignedStaff = assignedStaff;
-    }
-
     public List<Employee> getAssignedStaff() {
         return assignedStaff;
     }
 
-    public void setProjects(List<WorkPackage> projects) {
-        ProjectManager.projects = projects;
-    }
-
     public List<WorkPackage> getProjects() {
         return projects;
+    }
+
+    public void setAssignedStaff(List<Employee> assignedStaff) {
+        this.assignedStaff = assignedStaff;
+    }
+
+    public void setProjects(List<WorkPackage> projects) {
+        ProjectManager.projects = projects;
     }
 }

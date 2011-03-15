@@ -37,14 +37,25 @@ public class LabourchargerateEntity implements Serializable {
 		return this.labourchargerateid;
 	}
 
-	public void setLabourchargerateid(long labourchargerateid) {
-		this.labourchargerateid = labourchargerateid;
-	}
-
-
 	@Column(precision=126)
 	public double getLcrrate() {
 		return this.lcrrate;
+	}
+
+
+	@Temporal( TemporalType.DATE)
+	public Date getLcryear() {
+		return this.lcryear;
+	}
+
+	@Column(length=16)
+	public String getRateclassid() {
+		return this.rateclassid;
+	}
+
+
+    public void setLabourchargerateid(long labourchargerateid) {
+		this.labourchargerateid = labourchargerateid;
 	}
 
 	public void setLcrrate(double lcrrate) {
@@ -52,19 +63,8 @@ public class LabourchargerateEntity implements Serializable {
 	}
 
 
-    @Temporal( TemporalType.DATE)
-	public Date getLcryear() {
-		return this.lcryear;
-	}
-
 	public void setLcryear(Date lcryear) {
 		this.lcryear = lcryear;
-	}
-
-
-	@Column(length=16)
-	public String getRateclassid() {
-		return this.rateclassid;
 	}
 
 	public void setRateclassid(String rateclassid) {

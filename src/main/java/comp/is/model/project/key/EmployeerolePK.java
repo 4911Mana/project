@@ -20,30 +20,6 @@ public class EmployeerolePK implements Serializable {
     public EmployeerolePK() {
     }
 
-	@Column(unique=true, nullable=false, precision=16)
-	public long getEmpid() {
-		return this.empid;
-	}
-	public void setEmpid(long empid) {
-		this.empid = empid;
-	}
-
-	@Column(unique=true, nullable=false, length=16)
-	public String getProjid() {
-		return this.projid;
-	}
-	public void setProjid(String projid) {
-		this.projid = projid;
-	}
-
-	@Column(unique=true, nullable=false, precision=16)
-	public long getRoleid() {
-		return this.roleid;
-	}
-	public void setRoleid(long roleid) {
-		this.roleid = roleid;
-	}
-
 	@Override
     public boolean equals(Object other) {
 		if (this == other) {
@@ -59,7 +35,20 @@ public class EmployeerolePK implements Serializable {
 			&& (this.roleid == castOther.roleid);
 
     }
-    
+	@Column(unique=true, nullable=false, precision=16)
+	public long getEmpid() {
+		return this.empid;
+	}
+
+	@Column(unique=true, nullable=false, length=16)
+	public String getProjid() {
+		return this.projid;
+	}
+	@Column(unique=true, nullable=false, precision=16)
+	public long getRoleid() {
+		return this.roleid;
+	}
+
 	@Override
     public int hashCode() {
 		final int prime = 31;
@@ -70,4 +59,15 @@ public class EmployeerolePK implements Serializable {
 		
 		return hash;
     }
+	public void setEmpid(long empid) {
+		this.empid = empid;
+	}
+
+	public void setProjid(String projid) {
+		this.projid = projid;
+	}
+    
+	public void setRoleid(long roleid) {
+		this.roleid = roleid;
+	}
 }

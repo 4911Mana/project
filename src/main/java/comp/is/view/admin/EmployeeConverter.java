@@ -22,7 +22,7 @@ public class EmployeeConverter implements Converter{
                try {
                    
                    for (Employee e : EmployeeList) {
-                       if (e.getId() == submittedValue) {
+                       if (String.valueOf(e.getEmpid()) == submittedValue) {
                            return e;
                        }
                    }
@@ -40,9 +40,9 @@ public class EmployeeConverter implements Converter{
            if (value == null) {
                return null;
            } else {
-               return ((Employee) value).getId() 
-               + " : " +((Employee) value).getFirstName() 
-               + " " + ((Employee) value).getLastName();
+               return ((Employee) value).getEmpid() 
+               + " : " +((Employee) value).getEmplastname() 
+               + ", " + ((Employee) value).getEmpfirstname();
            }
        }
 }

@@ -25,17 +25,57 @@ import javax.persistence.TemporalType;
 @Table(name="TIMESHEET")
 public class TimesheetEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private long tsid;
+	private EmployeeEntity employee;
+	private EmployeeEntity timeSheetApprover;
+	private List<TimesheetentryEntity> timeSheetEntries;
+	private TimesheetweekEntity timeSheetWeek;
 	private Date tsapprovedbyelecsignaturedate;
 	private Date tsempelecsignaturedate;
+	private long tsid;
 	private String tsnotes;
-	private EmployeeEntity timeSheetApprover;
-	private EmployeeEntity employee;
-	private TimesheetweekEntity timeSheetWeek;
-	private List<TimesheetentryEntity> timeSheetEntries;
 
     public TimesheetEntity() {
     }
+
+
+	//bi-directional many-to-one association to Employee
+    @ManyToOne
+	@JoinColumn(name="EMPID")
+	public EmployeeEntity getEmployee() {
+		return this.employee;
+	}
+
+	//bi-directional many-to-one association to Employee
+    @ManyToOne
+	@JoinColumn(name="TSAPPROVERID")
+	public EmployeeEntity getTimeSheetApprover() {
+		return this.timeSheetApprover;
+	}
+
+
+    //bi-directional many-to-one association to Timesheetentry
+	@OneToMany(mappedBy="timeSheet")
+	public List<TimesheetentryEntity> getTimeSheetEntries() {
+		return this.timeSheetEntries;
+	}
+
+	//bi-directional many-to-one association to Timesheetweek
+    @ManyToOne
+	@JoinColumn(name="TSWEEKID")
+	public TimesheetweekEntity getTimeSheetWeek() {
+		return this.timeSheetWeek;
+	}
+
+
+    @Temporal( TemporalType.DATE)
+	public Date getTsapprovedbyelecsignaturedate() {
+		return this.tsapprovedbyelecsignaturedate;
+	}
+
+	@Temporal( TemporalType.DATE)
+	public Date getTsempelecsignaturedate() {
+		return this.tsempelecsignaturedate;
+	}
 
 
 	@Id
@@ -45,46 +85,14 @@ public class TimesheetEntity implements Serializable {
 		return this.tsid;
 	}
 
-	public void setTsid(long tsid) {
-		this.tsid = tsid;
-	}
-
-
-    @Temporal( TemporalType.DATE)
-	public Date getTsapprovedbyelecsignaturedate() {
-		return this.tsapprovedbyelecsignaturedate;
-	}
-
-	public void setTsapprovedbyelecsignaturedate(Date tsapprovedbyelecsignaturedate) {
-		this.tsapprovedbyelecsignaturedate = tsapprovedbyelecsignaturedate;
-	}
-
-
-    @Temporal( TemporalType.DATE)
-	public Date getTsempelecsignaturedate() {
-		return this.tsempelecsignaturedate;
-	}
-
-	public void setTsempelecsignaturedate(Date tsempelecsignaturedate) {
-		this.tsempelecsignaturedate = tsempelecsignaturedate;
-	}
-
-
 	@Column(length=1024)
 	public String getTsnotes() {
 		return this.tsnotes;
 	}
 
-	public void setTsnotes(String tsnotes) {
-		this.tsnotes = tsnotes;
-	}
 
-
-	//bi-directional many-to-one association to Employee
-    @ManyToOne
-	@JoinColumn(name="TSAPPROVERID")
-	public EmployeeEntity getTimeSheetApprover() {
-		return this.timeSheetApprover;
+	public void setEmployee(EmployeeEntity employee) {
+		this.employee = employee;
 	}
 
 	public void setTimeSheetApprover(EmployeeEntity timeSheetApprover) {
@@ -92,23 +100,8 @@ public class TimesheetEntity implements Serializable {
 	}
 	
 
-	//bi-directional many-to-one association to Employee
-    @ManyToOne
-	@JoinColumn(name="EMPID")
-	public EmployeeEntity getEmployee() {
-		return this.employee;
-	}
-
-	public void setEmployee(EmployeeEntity employee) {
-		this.employee = employee;
-	}
-	
-
-	//bi-directional many-to-one association to Timesheetweek
-    @ManyToOne
-	@JoinColumn(name="TSWEEKID")
-	public TimesheetweekEntity getTimeSheetWeek() {
-		return this.timeSheetWeek;
+	public void setTimeSheetEntries(List<TimesheetentryEntity> timeSheetEntries) {
+		this.timeSheetEntries = timeSheetEntries;
 	}
 
 	public void setTimeSheetWeek(TimesheetweekEntity timeSheetWeek) {
@@ -116,14 +109,21 @@ public class TimesheetEntity implements Serializable {
 	}
 	
 
-	//bi-directional many-to-one association to Timesheetentry
-	@OneToMany(mappedBy="timeSheet")
-	public List<TimesheetentryEntity> getTimeSheetEntries() {
-		return this.timeSheetEntries;
+	public void setTsapprovedbyelecsignaturedate(Date tsapprovedbyelecsignaturedate) {
+		this.tsapprovedbyelecsignaturedate = tsapprovedbyelecsignaturedate;
 	}
 
-	public void setTimeSheetEntries(List<TimesheetentryEntity> timeSheetEntries) {
-		this.timeSheetEntries = timeSheetEntries;
+	public void setTsempelecsignaturedate(Date tsempelecsignaturedate) {
+		this.tsempelecsignaturedate = tsempelecsignaturedate;
+	}
+	
+
+	public void setTsid(long tsid) {
+		this.tsid = tsid;
+	}
+
+	public void setTsnotes(String tsnotes) {
+		this.tsnotes = tsnotes;
 	}
 	
 }

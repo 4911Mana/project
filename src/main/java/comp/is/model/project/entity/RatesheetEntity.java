@@ -20,12 +20,27 @@ import javax.persistence.Table;
 @Table(name="RATESHEET")
 public class RatesheetEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private long ratesheetid;
-	private EmployeeEntity projectManager;
 	private ProjectEntity project;
+	private EmployeeEntity projectManager;
+	private long ratesheetid;
 
     public RatesheetEntity() {
     }
+
+
+	//bi-directional many-to-one association to Project
+    @ManyToOne
+	@JoinColumn(name="PROJID")
+	public ProjectEntity getProject() {
+		return this.project;
+	}
+
+	//bi-directional many-to-one association to Employee
+    @ManyToOne
+	@JoinColumn(name="PROJMANAGERID")
+	public EmployeeEntity getProjectManager() {
+		return this.projectManager;
+	}
 
 
 	@Id
@@ -35,32 +50,17 @@ public class RatesheetEntity implements Serializable {
 		return this.ratesheetid;
 	}
 
-	public void setRatesheetid(long ratesheetid) {
-		this.ratesheetid = ratesheetid;
+	public void setProject(ProjectEntity project) {
+		this.project = project;
 	}
-
-
-	//bi-directional many-to-one association to Employee
-    @ManyToOne
-	@JoinColumn(name="PROJMANAGERID")
-	public EmployeeEntity getProjectManager() {
-		return this.projectManager;
-	}
+	
 
 	public void setProjectManager(EmployeeEntity projectManager) {
 		this.projectManager = projectManager;
 	}
-	
 
-	//bi-directional many-to-one association to Project
-    @ManyToOne
-	@JoinColumn(name="PROJID")
-	public ProjectEntity getProject() {
-		return this.project;
-	}
-
-	public void setProject(ProjectEntity project) {
-		this.project = project;
+	public void setRatesheetid(long ratesheetid) {
+		this.ratesheetid = ratesheetid;
 	}
 	
 }

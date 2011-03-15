@@ -22,6 +22,15 @@
 	   <class>comp.is.model.project.entity.WorkpackagestatusreportEntity</class>
 	   <properties>
 	   	<property name="eclipselink.weaving.eager" value="false"/>
+	   	<property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
 	   </properties>
 	</persistence-unit>
-</persistence>
+    <!--<persistence-unit name="titan">
+      <provider>org.hibernate.ejb.HibernatePersistence</provider>
+      <jta-data-source>java:/DefaultDS</jta-data-source>
+      <properties>
+         <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+         <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+      </properties>
+   </persistence-unit>
+--></persistence>

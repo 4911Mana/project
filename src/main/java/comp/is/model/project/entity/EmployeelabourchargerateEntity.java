@@ -20,25 +20,15 @@ import comp.is.model.project.key.EmployeelabourchargeratePK;
 @Table(name="EMPLOYEELABOURCHARGERATE")
 public class EmployeelabourchargerateEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private EmployeelabourchargeratePK id;
 	private EmployeeEntity employee;
-	private LabourchargerateEntity labourChargerRate;
 	private TimesheetweekEntity endTimeSheetWeek;
+	private EmployeelabourchargeratePK id;
+	private LabourchargerateEntity labourChargerRate;
 	private TimesheetweekEntity startTimeSheetWeek;
 
     public EmployeelabourchargerateEntity() {
     }
 
-
-	@EmbeddedId
-	public EmployeelabourchargeratePK getId() {
-		return this.id;
-	}
-
-	public void setId(EmployeelabourchargeratePK id) {
-		this.id = id;
-	}
-	
 
 	//bi-directional many-to-one association to Employee
 	@ManyToOne(cascade={CascadeType.ALL})
@@ -47,32 +37,24 @@ public class EmployeelabourchargerateEntity implements Serializable {
 		return this.employee;
 	}
 
-	public void setEmployee(EmployeeEntity employee) {
-		this.employee = employee;
-	}
-	
-
-	//uni-directional many-to-one association to Labourchargerate
-    @ManyToOne
-	@JoinColumn(name="LABOURCHARGERATEID", nullable=false, insertable=false, updatable=false)
-	public LabourchargerateEntity getLabourChargerRate() {
-		return this.labourChargerRate;
-	}
-
-	public void setLabourChargerRate(LabourchargerateEntity labourChargerRate) {
-		this.labourChargerRate = labourChargerRate;
-	}
-	
-
 	//bi-directional many-to-one association to Timesheetweek
     @ManyToOne
 	@JoinColumn(name="ENDCHGRATETSWEEKID")
 	public TimesheetweekEntity getEndTimeSheetWeek() {
 		return this.endTimeSheetWeek;
 	}
+	
 
-	public void setEndTimeSheetWeek(TimesheetweekEntity timeSheetWeek) {
-		this.endTimeSheetWeek = timeSheetWeek;
+	@EmbeddedId
+	public EmployeelabourchargeratePK getId() {
+		return this.id;
+	}
+
+	//uni-directional many-to-one association to Labourchargerate
+    @ManyToOne
+	@JoinColumn(name="LABOURCHARGERATEID", nullable=false, insertable=false, updatable=false)
+	public LabourchargerateEntity getLabourChargerRate() {
+		return this.labourChargerRate;
 	}
 	
 
@@ -81,6 +63,24 @@ public class EmployeelabourchargerateEntity implements Serializable {
 	@JoinColumn(name="STARTCHGRATETSWEEKID")
 	public TimesheetweekEntity getStartTimeSheetWeek() {
 		return this.startTimeSheetWeek;
+	}
+
+	public void setEmployee(EmployeeEntity employee) {
+		this.employee = employee;
+	}
+	
+
+	public void setEndTimeSheetWeek(TimesheetweekEntity timeSheetWeek) {
+		this.endTimeSheetWeek = timeSheetWeek;
+	}
+
+	public void setId(EmployeelabourchargeratePK id) {
+		this.id = id;
+	}
+	
+
+	public void setLabourChargerRate(LabourchargerateEntity labourChargerRate) {
+		this.labourChargerRate = labourChargerRate;
 	}
 
 	public void setStartTimeSheetWeek(TimesheetweekEntity timeSheetWeek) {

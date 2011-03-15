@@ -10,13 +10,18 @@
 </head>
 <body>
 <ui:composition>
-	<p:panel srtyle="float:left">
-		Estimated Cost
+	<h:form>
+	 <p:commandButton value="Submit" update="display" oncomplete="spinner.init()" /> 
+	 <p:panel header="Spinners">  
+	 <h:panelGrid id="grid" columns="2" cellpadding="5">  
+	 <h:outputLabel for="spinner" value="P1" />  
+             <p:spinner id="spinner" value="123"><p:ajax process="@this"/></p:spinner>
+     <h:outputLabel for="showon" value="Show On: " />  
+             <p:spinner id="showon"   
+                     value="123" showOn="hover"/>   
+	</h:panelGrid>
 	</p:panel>
-
-			<p:panel>
-		Actual Cost
-	</p:panel>
-	</ui:composition>
+	</h:form>
+</ui:composition>
 </body>
 </html>

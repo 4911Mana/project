@@ -24,36 +24,24 @@ import javax.persistence.Table;
 @Table(name="EMPLOYEE")
 public class EmployeeEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private int empid;
 	private double empaccumflextime;
 	private double empaccumvacation;
 	private String empfirstname;
+	private int empid;
 	private String emplastname;
-	private double emppercentfulltime;
 	private List<EmployeelabourchargerateEntity> employeeLabourChargeRates;
 	private List<EmployeeroleEntity> employeeRoles;
 	private List<EmployeeEntity> employeeSupervisors;
-	private List<ProjectEntity> projects;
+	private List<WorkpackageEntity> employeesWorkPackages;
+	private double emppercentfulltime;
+	//private List<ProjectEntity> projects;
 	private List<ProjectsummaryEntity> projectSummaries;
 	private List<RatesheetEntity> rateSheets;
-	private List<TimesheetEntity> timeSheets;
 	private List<EmployeeEntity> timeSheetApprovers;
-	private List<WorkpackageEntity> employeesWorkPackages;
+	private List<TimesheetEntity> timeSheets;
 
     public EmployeeEntity() {
     }
-
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(unique=true, nullable=false, precision=16)
-	public int getEmpid() {
-		return this.empid;
-	}
-
-	public void setEmpid(int empid) {
-		this.empid = empid;
-	}
 
 
 	@Column(precision=126)
@@ -61,18 +49,9 @@ public class EmployeeEntity implements Serializable {
 		return this.empaccumflextime;
 	}
 
-	public void setEmpaccumflextime(double empaccumflextime) {
-		this.empaccumflextime = empaccumflextime;
-	}
-
-
 	@Column(precision=126)
 	public double getEmpaccumvacation() {
 		return this.empaccumvacation;
-	}
-
-	public void setEmpaccumvacation(double empaccumvacation) {
-		this.empaccumvacation = empaccumvacation;
 	}
 
 
@@ -81,8 +60,11 @@ public class EmployeeEntity implements Serializable {
 		return this.empfirstname;
 	}
 
-	public void setEmpfirstname(String empfirstname) {
-		this.empfirstname = empfirstname;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(unique=true, nullable=false, precision=16)
+	public int getEmpid() {
+		return this.empid;
 	}
 
 
@@ -91,42 +73,18 @@ public class EmployeeEntity implements Serializable {
 		return this.emplastname;
 	}
 
-	public void setEmplastname(String emplastname) {
-		this.emplastname = emplastname;
-	}
-
-
-	@Column(precision=126)
-	public double getEmppercentfulltime() {
-		return this.emppercentfulltime;
-	}
-
-	public void setEmppercentfulltime(double emppercentfulltime) {
-		this.emppercentfulltime = emppercentfulltime;
-	}
-
-
 	//bi-directional many-to-one association to Employeelabourchargerate
 	@OneToMany(mappedBy="employee", cascade={CascadeType.ALL})
 	public List<EmployeelabourchargerateEntity> getEmployeeLabourChargeRates() {
 		return this.employeeLabourChargeRates;
 	}
 
-	public void setEmployeeLabourChargeRates(List<EmployeelabourchargerateEntity> employeeLabourChargeRates) {
-		this.employeeLabourChargeRates = employeeLabourChargeRates;
-	}
-	
 
 	//bi-directional many-to-one association to Employeerole
 	@OneToMany(mappedBy="employee")
 	public List<EmployeeroleEntity> getEmployeeRoles() {
 		return this.employeeRoles;
 	}
-
-	public void setEmployeeRoles(List<EmployeeroleEntity> employeeRoles) {
-		this.employeeRoles = employeeRoles;
-	}
-	
 
 	//uni-directional many-to-many association to Employee
 	@ManyToMany
@@ -143,21 +101,18 @@ public class EmployeeEntity implements Serializable {
 		return this.employeeSupervisors;
 	}
 
-	public void setEmployeeSupervisors(List<EmployeeEntity> employeeSupervisors) {
-		this.employeeSupervisors = employeeSupervisors;
-	}
-	
 
-	//bi-directional many-to-many association to Project
-	@ManyToMany(mappedBy="projectEmployees")
-	public List<ProjectEntity> getProjects() {
-		return this.projects;
+	//bi-directional many-to-many association to Workpackage
+	@ManyToMany(mappedBy="wpEmployeesAssigned")
+	public List<WorkpackageEntity> getEmployeesWorkPackages() {
+		return this.employeesWorkPackages;
 	}
 
-	public void setProjects(List<ProjectEntity> projects) {
-		this.projects = projects;
+	@Column(precision=126)
+	public double getEmppercentfulltime() {
+		return this.emppercentfulltime;
 	}
-	
+
 
 	//bi-directional many-to-one association to Projectsummary
 	@OneToMany(mappedBy="projectManager")
@@ -165,31 +120,12 @@ public class EmployeeEntity implements Serializable {
 		return this.projectSummaries;
 	}
 
-	public void setProjectSummaries(List<ProjectsummaryEntity> projectSummaries) {
-		this.projectSummaries = projectSummaries;
-	}
-	
-
 	//bi-directional many-to-one association to Ratesheet
 	@OneToMany(mappedBy="projectManager")
 	public List<RatesheetEntity> getRateSheets() {
 		return this.rateSheets;
 	}
 
-	public void setRateSheets(List<RatesheetEntity> rateSheets) {
-		this.rateSheets = rateSheets;
-	}	
-
-	//bi-directional many-to-one association to Timesheet
-	@OneToMany(mappedBy="employee")
-	public List<TimesheetEntity> getTimeSheets() {
-		return this.timeSheets;
-	}
-
-	public void setTimeSheets(List<TimesheetEntity> timeSheets) {
-		this.timeSheets = timeSheets;
-	}
-	
 
 	//uni-directional many-to-many association to Employee
 	@ManyToMany
@@ -206,19 +142,83 @@ public class EmployeeEntity implements Serializable {
 		return this.timeSheetApprovers;
 	}
 
-	public void setTimeSheetApprovers(List<EmployeeEntity> timeSheetApprovers) {
-		this.timeSheetApprovers = timeSheetApprovers;
+	//bi-directional many-to-one association to Timesheet
+	@OneToMany(mappedBy="employee")
+	public List<TimesheetEntity> getTimeSheets() {
+		return this.timeSheets;
 	}
 	
 
-	//bi-directional many-to-many association to Workpackage
-	@ManyToMany(mappedBy="wpEmployeesAssigned")
-	public List<WorkpackageEntity> getEmployeesWorkPackages() {
-		return this.employeesWorkPackages;
+	public void setEmpaccumflextime(double empaccumflextime) {
+		this.empaccumflextime = empaccumflextime;
 	}
+
+	public void setEmpaccumvacation(double empaccumvacation) {
+		this.empaccumvacation = empaccumvacation;
+	}
+	
+
+	public void setEmpfirstname(String empfirstname) {
+		this.empfirstname = empfirstname;
+	}
+
+	public void setEmpid(int empid) {
+		this.empid = empid;
+	}
+	
+
+//	//bi-directional many-to-many association to Project
+//	@ManyToMany(mappedBy="projectEmployees")
+//	public List<ProjectEntity> getProjects() {
+//		return this.projects;
+//	}
+//
+//	public void setProjects(List<ProjectEntity> projects) {
+//		this.projects = projects;
+//	}
+//	
+
+	public void setEmplastname(String emplastname) {
+		this.emplastname = emplastname;
+	}
+
+	public void setEmployeeLabourChargeRates(List<EmployeelabourchargerateEntity> employeeLabourChargeRates) {
+		this.employeeLabourChargeRates = employeeLabourChargeRates;
+	}
+	
+
+	public void setEmployeeRoles(List<EmployeeroleEntity> employeeRoles) {
+		this.employeeRoles = employeeRoles;
+	}
+
+	public void setEmployeeSupervisors(List<EmployeeEntity> employeeSupervisors) {
+		this.employeeSupervisors = employeeSupervisors;
+	}	
 
 	public void setEmployeesWorkPackages(List<WorkpackageEntity> employeesWorkPackages) {
 		this.employeesWorkPackages = employeesWorkPackages;
+	}
+
+	public void setEmppercentfulltime(double emppercentfulltime) {
+		this.emppercentfulltime = emppercentfulltime;
+	}
+	
+
+	public void setProjectSummaries(List<ProjectsummaryEntity> projectSummaries) {
+		this.projectSummaries = projectSummaries;
+	}
+
+	public void setRateSheets(List<RatesheetEntity> rateSheets) {
+		this.rateSheets = rateSheets;
+	}
+	
+
+	public void setTimeSheetApprovers(List<EmployeeEntity> timeSheetApprovers) {
+		this.timeSheetApprovers = timeSheetApprovers;
+	}
+
+	public void setTimeSheets(List<TimesheetEntity> timeSheets) {
+		this.timeSheets = timeSheets;
 	}
 	
 }

@@ -1,51 +1,61 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.prime.com.tr/ui"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
-    <h:head>
-        <title>Login</title>
-      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-       <link type="text/css" rel="stylesheet" href="/project/resources/css/skin.css"/>  
-   </h:head>
-    <h:body>
-        <p:layout fullPage="true">
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<style type="text/css">
+.ui-spinner {
+	width: 500px;
+	background-color: white;
+}
+</style>
+	<title>Login</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link type="text/css" rel="stylesheet"
+		href="/project/resources/css/skin.css" />
+</h:head>
+<h:body>
+	<p:layout fullPage="true">
 
-            <p:layoutUnit position="top" height="75" resizable="false" closable="false" collapsible="false">
-                <h:outputText value="Welcome~ " />
-                <br />
-                
-                <h:form>
-                    <h:panelGrid columns="4">
-                        <h:commandLink value="Home" />
-                        <h:commandLink value="Employee Information Update" />
-                        <h:commandLink value="Time Sheet Activities" />
-                        <h:commandLink value="Project Management" />
-                        
+		<p:layoutUnit position="top" height="75" resizable="false"
+			closable="false" collapsible="false">
+			<h:outputText value="Welcome~ " />
+			<br />
 
-                    </h:panelGrid>
+			<h:form>
+				<h:panelGrid columns="4">
+					<h:commandLink value="Home" />
+					<h:commandLink value="Employee Information Update" />
+					<h:commandLink value="Time Sheet Activities" />
+					<h:commandLink value="Project Management" />
 
-                </h:form>
-            </p:layoutUnit>
 
-            <p:layoutUnit position="bottom" resizable="false" closable="false" collapsible="false">
-                <h:outputText value="All Rights Reserved by Me" />
-            </p:layoutUnit>
+				</h:panelGrid>
 
-            <p:layoutUnit position="left" width="200" resizable="false" closable="false" collapsible="false">
-                <h:outputText value="Login" />
-            </p:layoutUnit>
+			</h:form>
+		</p:layoutUnit>
 
-            <p:layoutUnit position="center" closable="false" minHeight="600"  
-            collapsible="false" scrollable="true">
-                <ui:insert name="content">
-                    
-                </ui:insert>
-            </p:layoutUnit>
-        </p:layout>
-        <ui:debug hotkey="z"/>
-    </h:body>
+		<p:layoutUnit position="bottom" resizable="false" closable="false"
+			collapsible="false">
+			<h:outputText value="All Rights Reserved by Me" />
+		</p:layoutUnit>
+
+		<p:layoutUnit position="left" width="200" resizable="false"
+			closable="false" collapsible="false">
+			<h:outputText value="Login" />
+		</p:layoutUnit>
+
+		<p:layoutUnit position="center" closable="false" minHeight="600"
+			collapsible="false" scrollable="true">
+			<ui:insert name="content">
+
+			</ui:insert>
+		</p:layoutUnit>
+	</p:layout>
+	<ui:debug hotkey="z" />
+</h:body>
 </html>
 

@@ -21,15 +21,15 @@ import comp.is.view.project.ProjectManagerView;
 public class WorkPackageAction implements WorkPackageLocal {
 
     @Inject
-    @CurrentWp
-    private static WorkPackage wp;
+    @ChildWp
+    private static WorkPackage childWp;
     @Inject
-    private ProjectManagerView view;
+    @CurrentWp
+    private static Package wp;
     @Inject
     private ProjectAction projectAction;
     @Inject
-    @ChildWp
-    private static WorkPackage childWp;
+    private ProjectManagerView view;
 
     // @PersistenceContext(unitName="primary")
     // private EntityManager em;

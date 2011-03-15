@@ -15,7 +15,7 @@
 		<p:tab title="Add Staff">
 			<h:panelGrid columns="2" cellpadding="10">
 				<p:pickList value="#{employeePickListBean.employees}" var="employee"
-					itemLabel="#{employee.firstName}:" itemValue="#{employee.lastName}" />
+					itemLabel="#{employee}" itemValue="#{employee.id}" />
 			</h:panelGrid>
 		</p:tab>
 		<p:tab title="Add Responsibale Engineer">

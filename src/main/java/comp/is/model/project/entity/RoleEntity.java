@@ -20,34 +20,12 @@ import javax.persistence.Table;
 @Table(name="ROLE")
 public class RoleEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private List<EmployeeroleEntity> employeeRoles;
 	private long roleid;
 	private String rolename;
-	private List<EmployeeroleEntity> employeeRoles;
 
     public RoleEntity() {
     }
-
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(unique=true, nullable=false, precision=16)
-	public long getRoleid() {
-		return this.roleid;
-	}
-
-	public void setRoleid(long roleid) {
-		this.roleid = roleid;
-	}
-
-
-	@Column(length=64)
-	public String getRolename() {
-		return this.rolename;
-	}
-
-	public void setRolename(String rolename) {
-		this.rolename = rolename;
-	}
 
 
 	//bi-directional many-to-one association to Employeerole
@@ -56,8 +34,30 @@ public class RoleEntity implements Serializable {
 		return this.employeeRoles;
 	}
 
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(unique=true, nullable=false, precision=16)
+	public long getRoleid() {
+		return this.roleid;
+	}
+
+
+	@Column(length=64)
+	public String getRolename() {
+		return this.rolename;
+	}
+
 	public void setEmployeeRoles(List<EmployeeroleEntity> employeeRoles) {
 		this.employeeRoles = employeeRoles;
+	}
+
+
+	public void setRoleid(long roleid) {
+		this.roleid = roleid;
+	}
+
+	public void setRolename(String rolename) {
+		this.rolename = rolename;
 	}
 	
 }

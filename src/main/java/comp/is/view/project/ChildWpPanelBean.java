@@ -28,12 +28,12 @@ public class ChildWpPanelBean implements Serializable{
         return rendered;
     }
 
-    public void setRendered(boolean rendered) {
-        this.rendered = rendered;
-    }
-    
     public String render(){
         rendered = true;
         return null;
+    }
+    
+    public void setRendered(boolean rendered) {
+        this.rendered = rendered;
     }
 }

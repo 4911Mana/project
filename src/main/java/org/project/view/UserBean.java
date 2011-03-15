@@ -18,22 +18,15 @@ public class UserBean implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private String userID;
 	private String password;
+	private String userID;
 	
-	public String getUserID() {
-		return userID;
-	}
-	public void setUserID(String userID) {
-		this.userID = userID;
-	}
 	public String getPassword() {
 		return password;
 	}
-	public void setPassword(String password) {
-		this.password = password;
+	public String getUserID() {
+		return userID;
 	}
-	
 	@Interceptors(LoginInterceptor.class)
 	public boolean login() {
 		
@@ -42,6 +35,13 @@ public class UserBean implements Serializable {
 		
 		return true;
 		
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	public void setUserID(String userID) {
+		this.userID = userID;
 	}
 	
 	//@PostConstruct

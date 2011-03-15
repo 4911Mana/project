@@ -13,14 +13,14 @@
 <ui:composition>
 	<p:tabView>
 		<!-- first tab -->
-		<p:tab title="Info">
+		<p:tab title="Info" dynamic="true" cache="false">
 			<h:form id="wp">
-				<l:wpInfoTag numberValue="#{wp.number}" titleValue="#{wp.title}"
-					descValue="#{wp.description}" startDate="#{wp.startDate}"
-					charges="#{wp.openForCharges}"/>
-				<p:commandButton id="addButton" value="Add"
-					update="child:campnou, messages">
-					<f:setPropertyActionListener value="#{true}"
+				<l:wpInfoTag numberValue="#{wp.number}" numberReadonly="true"
+					titleValue="#{wp.name}" descValue="#{wp.description}"
+					startDate="#{wp.startDate}" charges="#{wp.openForCharges}" />
+				<p:commandButton id="addButton" action="#{projectAction.validParent}"
+					value="Add" update="child:campnou, messages">
+					<f:setPropertyActionListener value="#{not wp.lowestLevel}"
 						target="#{childPanel.rendered}" />
 
 				</p:commandButton>
@@ -30,18 +30,15 @@
 			<h:form id="child">
 
 				<p:outputPanel id="campnou">
-					<p:panel id="innerPanel"
-						rendered="#{childPanel.rendered}"
+					<p:panel id="innerPanel" rendered="#{childPanel.rendered}"
 						header="New WorkPackage for #{wp.number}" closable="true"
 						closeListener="#{childPanel.handleClose}"
 						onCloseUpdate="child:campnou, campnou">
 
 						<l:wpInfoTag numberValue="#{childWp.number}"
-							titleValue="#{childWp.title}"
-							descValue="#{childWp.description}"
+							titleValue="#{childWp.name}" descValue="#{childWp.description}"
 							startDate="#{childWp.startDate}"
-							charges="#{childWp.openForCharges}"
-							mask="#{wp.childMask}"/>
+							charges="#{childWp.openForCharges}" mask="#{wp.childMask}" />
 
 						<p:commandButton action="#{projectAction.addChild}"
 							update="child:campnou, tree, messages, wp" value="Save">
@@ -56,20 +53,13 @@
 				<ui:insert name="wpStaff">
 					<ui:include src="wpStaff.xhtml" />
 				</ui:insert>
-
-
 			</h:form>
-
-
 		</p:tab>
-
 		<p:tab title="Cost">
 			<ui:insert name="wpCost">
 				<ui:include src="wpCost.xhtml" />
 			</ui:insert>
-
 		</p:tab>
-
 	</p:tabView>
 </ui:composition>
 </body>

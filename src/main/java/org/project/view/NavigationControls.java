@@ -25,9 +25,9 @@ public class NavigationControls implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String content;
+	private String footer;
 	private String header;
 	private String options;
-	private String footer;
 	
 	/** */
 	public NavigationControls() {
@@ -43,10 +43,10 @@ public class NavigationControls implements Serializable {
 	}
 	/**
 	 * 
-	 * @param content
+	 * @return
 	 */
-	public void setContent(String content) {
-		this.content = content;
+	public String getFooter() {
+		return footer;
 	}
 	/**
 	 * 
@@ -57,31 +57,25 @@ public class NavigationControls implements Serializable {
 	}
 	/**
 	 * 
-	 * @param header
-	 */
-	public void setHeader(String header) {
-		this.header = header;
-	}
-	/**
-	 * 
 	 * @return
 	 */
 	public String getOptions() {
 		return options;
 	}
-	/**
-	 * 
-	 * @param options
-	 */
-	public void setOptions(String options) {
-		this.options = options;
+	@SuppressWarnings("unused")
+	@PostConstruct
+	private void init() {
+		content = DirectoryBean.CONTENT_LOGIN;
+		header = DirectoryBean.HEADER_LOGIN;
+		options = DirectoryBean.OPTIONS_LOGIN;
+		footer = DirectoryBean.FOOTER_LOGIN;
 	}
 	/**
 	 * 
-	 * @return
+	 * @param content
 	 */
-	public String getFooter() {
-		return footer;
+	public void setContent(String content) {
+		this.content = content;
 	}
 	/**
 	 * 
@@ -90,13 +84,19 @@ public class NavigationControls implements Serializable {
 	public void setFooter(String footer) {
 		this.footer = footer;
 	}
+	/**
+	 * 
+	 * @param header
+	 */
+	public void setHeader(String header) {
+		this.header = header;
+	}
 	
-	@SuppressWarnings("unused")
-	@PostConstruct
-	private void init() {
-		content = DirectoryBean.CONTENT_LOGIN;
-		header = DirectoryBean.HEADER_LOGIN;
-		options = DirectoryBean.OPTIONS_LOGIN;
-		footer = DirectoryBean.FOOTER_LOGIN;
+	/**
+	 * 
+	 * @param options
+	 */
+	public void setOptions(String options) {
+		this.options = options;
 	}
 }

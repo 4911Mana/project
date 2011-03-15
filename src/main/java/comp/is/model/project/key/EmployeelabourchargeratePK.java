@@ -19,22 +19,6 @@ public class EmployeelabourchargeratePK implements Serializable {
     public EmployeelabourchargeratePK() {
     }
 
-	@Column(unique=true, nullable=false, precision=16)
-	public long getEmpid() {
-		return this.empid;
-	}
-	public void setEmpid(long empid) {
-		this.empid = empid;
-	}
-
-	@Column(unique=true, nullable=false, precision=16)
-	public long getLabourchargerateid() {
-		return this.labourchargerateid;
-	}
-	public void setLabourchargerateid(long labourchargerateid) {
-		this.labourchargerateid = labourchargerateid;
-	}
-
 	@Override
     public boolean equals(Object other) {
 		if (this == other) {
@@ -49,7 +33,15 @@ public class EmployeelabourchargeratePK implements Serializable {
 			&& (this.labourchargerateid == castOther.labourchargerateid);
 
     }
-    
+	@Column(unique=true, nullable=false, precision=16)
+	public long getEmpid() {
+		return this.empid;
+	}
+
+	@Column(unique=true, nullable=false, precision=16)
+	public long getLabourchargerateid() {
+		return this.labourchargerateid;
+	}
 	@Override
     public int hashCode() {
 		final int prime = 31;
@@ -59,4 +51,12 @@ public class EmployeelabourchargeratePK implements Serializable {
 		
 		return hash;
     }
+
+	public void setEmpid(long empid) {
+		this.empid = empid;
+	}
+    
+	public void setLabourchargerateid(long labourchargerateid) {
+		this.labourchargerateid = labourchargerateid;
+	}
 }

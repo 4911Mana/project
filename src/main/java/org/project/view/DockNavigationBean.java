@@ -12,9 +12,21 @@ public class DockNavigationBean {
     @Inject
     private NavigationControls nav;
     
-	public void setupTimeSheet() {
-		nav.setContent(DirectoryBean.CONTENT_TIMESHEET);
-		nav.setOptions(DirectoryBean.OPTIONS_TIMESHEET);
+	public void logout() {
+	    nav.setContent(DirectoryBean.CONTENT_LOGIN);
+        nav.setOptions(DirectoryBean.OPTIONS_LOGIN);
+        nav.setHeader(DirectoryBean.HEADER_LOGIN);
+        FacesContext.getCurrentInstance()
+                    .getExternalContext()
+                    .invalidateSession();
+	}
+	public void setupChangePassword() {
+	    nav.setContent(DirectoryBean.CONTENT_CHANGE_PASSWORD);
+        nav.setOptions(DirectoryBean.OPTIONS_LOGIN);
+	}
+	public void setupHome() {
+	    nav.setContent(DirectoryBean.CONTENT_HOME);
+        nav.setOptions(DirectoryBean.OPTIONS_LOGIN);
 	}
 	public void setupHRAdmin() {
 	    nav.setContent(DirectoryBean.CONTENT_HR_ADMIN);
@@ -28,20 +40,8 @@ public class DockNavigationBean {
 	    nav.setContent(DirectoryBean.CONTENT_TIMESHEET);
         nav.setOptions(DirectoryBean.OPTIONS_LOGIN);
 	}
-	public void setupChangePassword() {
-	    nav.setContent(DirectoryBean.CONTENT_CHANGE_PASSWORD);
-        nav.setOptions(DirectoryBean.OPTIONS_LOGIN);
-	}
-	public void setupHome() {
-	    nav.setContent(DirectoryBean.CONTENT_HOME);
-        nav.setOptions(DirectoryBean.OPTIONS_LOGIN);
-	}
-	public void logout() {
-	    nav.setContent(DirectoryBean.CONTENT_LOGIN);
-        nav.setOptions(DirectoryBean.OPTIONS_LOGIN);
-        nav.setHeader(DirectoryBean.HEADER_LOGIN);
-        FacesContext.getCurrentInstance()
-                    .getExternalContext()
-                    .invalidateSession();
+	public void setupTimeSheet() {
+		nav.setContent(DirectoryBean.CONTENT_TIMESHEET);
+		nav.setOptions(DirectoryBean.OPTIONS_TIMESHEET);
 	}
 }

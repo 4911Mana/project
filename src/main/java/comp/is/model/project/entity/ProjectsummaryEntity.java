@@ -23,18 +23,66 @@ import javax.persistence.TemporalType;
 @Table(name="PROJECTSUMMARY")
 public class ProjectsummaryEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private long projsumreportid;
+	private ProjectEntity project;
+	private EmployeeEntity projectManager;
 	private String projsumanticprognextprdcomm;
 	private String projsumapproval;
 	private Date projsummonthending;
 	private String projsumprobencounteredcomm;
 	private String projsumprogdurperiodcomm;
 	private Date projsumreportdate;
-	private EmployeeEntity projectManager;
-	private ProjectEntity project;
+	private long projsumreportid;
 
     public ProjectsummaryEntity() {
     }
+
+
+	//bi-directional many-to-one association to Project
+    @ManyToOne
+	@JoinColumn(name="PROJID")
+	public ProjectEntity getProject() {
+		return this.project;
+	}
+
+	//bi-directional many-to-one association to Employee
+    @ManyToOne
+	@JoinColumn(name="PROJMANAGERID")
+	public EmployeeEntity getProjectManager() {
+		return this.projectManager;
+	}
+
+
+	@Column(length=1024)
+	public String getProjsumanticprognextprdcomm() {
+		return this.projsumanticprognextprdcomm;
+	}
+
+	@Column(length=64)
+	public String getProjsumapproval() {
+		return this.projsumapproval;
+	}
+
+
+	@Temporal( TemporalType.DATE)
+	public Date getProjsummonthending() {
+		return this.projsummonthending;
+	}
+
+	@Column(length=1024)
+	public String getProjsumprobencounteredcomm() {
+		return this.projsumprobencounteredcomm;
+	}
+
+
+    @Column(length=1024)
+	public String getProjsumprogdurperiodcomm() {
+		return this.projsumprogdurperiodcomm;
+	}
+
+	@Temporal( TemporalType.DATE)
+	public Date getProjsumreportdate() {
+		return this.projsumreportdate;
+	}
 
 
 	@Id
@@ -44,14 +92,13 @@ public class ProjectsummaryEntity implements Serializable {
 		return this.projsumreportid;
 	}
 
-	public void setProjsumreportid(long projsumreportid) {
-		this.projsumreportid = projsumreportid;
+	public void setProject(ProjectEntity project) {
+		this.project = project;
 	}
 
 
-	@Column(length=1024)
-	public String getProjsumanticprognextprdcomm() {
-		return this.projsumanticprognextprdcomm;
+	public void setProjectManager(EmployeeEntity projectManager) {
+		this.projectManager = projectManager;
 	}
 
 	public void setProjsumanticprognextprdcomm(String projsumanticprognextprdcomm) {
@@ -59,19 +106,8 @@ public class ProjectsummaryEntity implements Serializable {
 	}
 
 
-	@Column(length=64)
-	public String getProjsumapproval() {
-		return this.projsumapproval;
-	}
-
-	public void setProjsumapproval(String projsumapproval) {
+    public void setProjsumapproval(String projsumapproval) {
 		this.projsumapproval = projsumapproval;
-	}
-
-
-    @Temporal( TemporalType.DATE)
-	public Date getProjsummonthending() {
-		return this.projsummonthending;
 	}
 
 	public void setProjsummonthending(Date projsummonthending) {
@@ -79,57 +115,21 @@ public class ProjectsummaryEntity implements Serializable {
 	}
 
 
-	@Column(length=1024)
-	public String getProjsumprobencounteredcomm() {
-		return this.projsumprobencounteredcomm;
-	}
-
 	public void setProjsumprobencounteredcomm(String projsumprobencounteredcomm) {
 		this.projsumprobencounteredcomm = projsumprobencounteredcomm;
-	}
-
-
-	@Column(length=1024)
-	public String getProjsumprogdurperiodcomm() {
-		return this.projsumprogdurperiodcomm;
 	}
 
 	public void setProjsumprogdurperiodcomm(String projsumprogdurperiodcomm) {
 		this.projsumprogdurperiodcomm = projsumprogdurperiodcomm;
 	}
-
-
-    @Temporal( TemporalType.DATE)
-	public Date getProjsumreportdate() {
-		return this.projsumreportdate;
-	}
+	
 
 	public void setProjsumreportdate(Date projsumreportdate) {
 		this.projsumreportdate = projsumreportdate;
 	}
 
-
-	//bi-directional many-to-one association to Employee
-    @ManyToOne
-	@JoinColumn(name="PROJMANAGERID")
-	public EmployeeEntity getProjectManager() {
-		return this.projectManager;
-	}
-
-	public void setProjectManager(EmployeeEntity projectManager) {
-		this.projectManager = projectManager;
-	}
-	
-
-	//bi-directional many-to-one association to Project
-    @ManyToOne
-	@JoinColumn(name="PROJID")
-	public ProjectEntity getProject() {
-		return this.project;
-	}
-
-	public void setProject(ProjectEntity project) {
-		this.project = project;
+	public void setProjsumreportid(long projsumreportid) {
+		this.projsumreportid = projsumreportid;
 	}
 	
 }

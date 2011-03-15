@@ -1,33 +1,17 @@
 package comp.is.model.project;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Hashtable;
+import java.util.List;
 
+import comp.is.model.admin.LabourGrade;
+import comp.is.model.project.entity.Package;
 import comp.is.model.project.entity.WorkpackageEntity;
 
-
-public class WorkPackage extends WorkpackageEntity implements Serializable, Comparable<WorkPackage>{
-    static final int LENGTH = 6;
-    static final char PADDING = '0';
-    private boolean candidate = false;
-    private boolean openForCharges = false;
-    private Date startDate;
-    
-    public WorkPackage(){
-        super();
-    }
-    
-    public WorkPackage(WorkPackage wp) {
-        init(wp);
-    }
-    
-    public boolean isCandidate() {
-        return candidate;
-    }
-
-    public void setCandidate(boolean candidate) {
-        this.candidate = candidate;
-    }
+public class WorkPackage extends WorkpackageEntity implements
+        Comparable<WorkPackage> {
 
     public static String pad(String num) {
         String padNum = num;
@@ -36,38 +20,7 @@ public class WorkPackage extends WorkpackageEntity implements Serializable, Comp
         }
         return padNum;
     }
-    
-    public boolean isOpenForCharges() {
-        return openForCharges;
-    }
 
-    public void setOpenForCharges(boolean openForCharges) {
-        this.openForCharges = openForCharges;
-    }
-    
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    @CurrentWp
-    @ChildWp
-    public String getNumber(){
-        String id = getId().getWpid();
-        if(candidate) return id;
-        return pad(id); 
-    }
-    
-    public void setNumber(String num){
-        System.out.println("setting view wp to" + num);
-        getId().setWpid(unpad(num));
-        getId().setProjid(getWpParent().getId().getProjid());
-    }
-    
-   
     public static String unpad(String num) {
         int numEnd = num.indexOf(PADDING);
         if (numEnd == -1) {
@@ -77,59 +30,162 @@ public class WorkPackage extends WorkpackageEntity implements Serializable, Comp
 
         return padNum;
     }
-    
-    public String getChildMask() {
-        String mask = "";
-        for (int i = 0; i < getId().getWpid().length() + 1; i++) {
-            mask += '*';
-        }
-        for (int i = mask.length(); i < LENGTH; i++) {
-            mask += PADDING; //make configurable, ?
-        }
-        System.out.println("Mask " + mask);
-        return mask;
-    }
-    
-//    public String getParentMask() {
-//        String parentNum = getWpParent().getNumber();
-//        if(parentNum.length() == LENGTH){return parentNum;} // should be exception
-//        
-//        String mask = "*";
-//        for (int i = 1; i < parentNum.length(); i++) {
-//            mask += "*";
-//        }
-//        for (int i = mask.length(); i < LENGTH; i++) {
-//            mask += PADDING;
-//        }
-//
-//        return mask;
-//    }
-    
-    public boolean validLengthNum() {
-        return (getId().getWpid().length() == getWpParent().getId().getWpid().length() + 1);
 
+    private Hashtable<LabourGrade, Double> budget = new Hashtable<LabourGrade, Double>(
+            6);
+
+    //private boolean candidate = false;
+
+    public WorkPackage() {
+        super();
+        budget.put(LabourGrade.P1, 4.6);
     }
-    
-    public boolean validPrefixNum(){
-        return getId().getWpid().matches(getWpParent().getId().getWpid() + "\\w");
+
+    public WorkPackage(Package p) {
+        init(p);
     }
-    
+
+    public WorkPackage(WorkPackage p) {
+        id = p.id;
+        name = p.name;
+        description = p.description;
+        //this.candidate = false;
+        setOpenForCharges(p.isOpenForCharges());
+        this.parent = p.getParent();
+        this.projid = p.getProjid();
+        this.status = p.getStatus();
+        this.startDate = p.getStartDate();
+    }
+
+    public WorkPackage(WorkpackageEntity p) {
+        init(p);
+        setParent(p.getParent());
+        System.out.println("Wp init " + this.getDetails());
+    }
+
+    public WorkPackage getParentWp() {
+        return new WorkPackage(super.getParent());
+    }
+
     @Override
-    public int compareTo(WorkPackage iWp)  throws ClassCastException {
+    public int compareTo(WorkPackage iWp) throws ClassCastException {
         if (!(iWp instanceof WorkPackage))
             throw new ClassCastException("A WorkPackage object expected.");
-          String iWpNum = (iWp).getNumber();
-          return getId().getWpid().compareTo(iWpNum);
+        String iWpNum = (iWp).getNumber();
+        return getId().compareTo(iWpNum);
+    }
+
+    public List<LabourGrade> getBudgetKeys() {
+        return new ArrayList<LabourGrade>(budget.keySet());
+    }
+
+    public ArrayList<Double> getBudgetVal() {
+        return new ArrayList<Double>(budget.values());
+    }
+    public boolean isRootChild(){
+        return getParent().getId().equalsIgnoreCase(".");
+    }
+    public String getChildMask() {
+        String mask = "*";
+        // null is dif
+        if (parent == null || getParent().getId().equalsIgnoreCase(".")) {
+            mask += '*';
+            System.out.println("First child mask");
+        } else {
+            for (int i = 0; i < getId().length(); i++) {
+                mask += '*';
+            }
         }
-    
-    public void init(WorkPackage wp){
-        super.init(wp);
+        for (int i = mask.length(); i < LENGTH; i++) {
+            mask += PADDING; // make configurable, ?
+        }
+        return mask;
     }
-    
-    public String toString(){
-        return getNumber(); 
+
+    public String getDetails() {
+        return getNumber() + " Parent: "
+                + ((getParent() == null) ? "null" : getParent().getId());
     }
-    public String getDetails(){
-        return getNumber() + " Parent: " + ((getWpParent() == null)? "null" : getWpParent().getId().toString()); 
+
+    @CurrentWp
+    @ChildWp
+    @Override
+    public String getNumber() {
+        String id = getId();
+        if (id == null) {
+            System.out.println("Id is null");
+            return "";
+        }
+//        if (candidate) {
+//            return id;
+//        }
+        return pad(id);
     }
+
+    public void init(WorkPackage p) {
+        super.init(p);
+        this.projid = p.getProjid();
+        // responsibleEngineer = p.responsibleEngineer;
+        //this.candidate = false;
+        this.parent = p.getParent();
+        // this.project = p.getProject();
+    }
+
+    // public String getParentMask() {
+    // String parentNum = getWpParent().getNumber();
+    // if(parentNum.length() == LENGTH){return parentNum;} // should be
+    // exception
+    //
+    // String mask = "*";
+    // for (int i = 1; i < parentNum.length(); i++) {
+    // mask += "*";
+    // }
+    // for (int i = mask.length(); i < LENGTH; i++) {
+    // mask += PADDING;
+    // }
+    //
+    // return mask;
+    // }
+
+//    public boolean isCandidate() {
+//        return candidate;
+//    }
+//
+//    public void setCandidate(boolean candidate) {
+//        this.candidate = candidate;
+//    }
+
+    public void setNumber(String num) {
+        System.out.println("setting view wp to" + num);
+        id = (unpad(num));
+    }
+
+    public void setParent(Package p) {
+        if (p instanceof ProjectPackage) {
+            super.setParent(((ProjectPackage) p).getRootFlag());
+        } else {
+            super.setParent(new WorkPackage(p));
+        }
+
+    }
+
+    public String toString() {
+        return getNumber();
+    }
+
+    public boolean validLengthNum() {
+        if (getParent().getId().equalsIgnoreCase(".")) {
+            return (getId().length() == 1);
+        }
+        return (getId().length() == getParent().getId().length() + 1);
+    }
+
+    public boolean validPrefixNum() {
+        if (getParent().getId().equalsIgnoreCase(".")) {
+            return true;
+        }
+        return getId().matches(getParent().getId() + "\\w");
+    }
+
+   
 }

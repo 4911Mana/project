@@ -19,24 +19,14 @@ import comp.is.model.project.key.EmployeerolePK;
 @Table(name="EMPLOYEEROLES")
 public class EmployeeroleEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private EmployeerolePK id;
 	private EmployeeEntity employee;
+	private EmployeerolePK id;
 	private ProjectEntity project;
 	private RoleEntity role;
 
     public EmployeeroleEntity() {
     }
 
-
-	@EmbeddedId
-	public EmployeerolePK getId() {
-		return this.id;
-	}
-
-	public void setId(EmployeerolePK id) {
-		this.id = id;
-	}
-	
 
 	//bi-directional many-to-one association to Employee
     @ManyToOne
@@ -45,8 +35,9 @@ public class EmployeeroleEntity implements Serializable {
 		return this.employee;
 	}
 
-	public void setEmployee(EmployeeEntity employee) {
-		this.employee = employee;
+	@EmbeddedId
+	public EmployeerolePK getId() {
+		return this.id;
 	}
 	
 
@@ -57,16 +48,25 @@ public class EmployeeroleEntity implements Serializable {
 		return this.project;
 	}
 
-	public void setProject(ProjectEntity project) {
-		this.project = project;
-	}
-	
-
 	//bi-directional many-to-one association to Role
     @ManyToOne
 	@JoinColumn(name="ROLEID", nullable=false, insertable=false, updatable=false)
 	public RoleEntity getRole() {
 		return this.role;
+	}
+	
+
+	public void setEmployee(EmployeeEntity employee) {
+		this.employee = employee;
+	}
+
+	public void setId(EmployeerolePK id) {
+		this.id = id;
+	}
+	
+
+	public void setProject(ProjectEntity project) {
+		this.project = project;
 	}
 
 	public void setRole(RoleEntity role) {
