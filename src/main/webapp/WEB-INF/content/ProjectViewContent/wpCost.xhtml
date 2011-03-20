@@ -10,18 +10,15 @@
 </head>
 <body>
 <ui:composition>
-	<h:form>
-	 <p:commandButton value="Submit" update="display" oncomplete="spinner.init()" /> 
 	 <p:panel header="Spinners">  
 	 <h:panelGrid id="grid" columns="2" cellpadding="5">  
-	 <h:outputLabel for="spinner" value="P1" />  
+	 <!--  <h:outputLabel for="spinner" value="P1" />  
              <p:spinner id="spinner" value="123"><p:ajax process="@this"/></p:spinner>
      <h:outputLabel for="showon" value="Show On: " />  
              <p:spinner id="showon"   
-                     value="123" showOn="hover"/>   
+                     value="123" showOn="hover"/>  --> 
 	</h:panelGrid>
 	</p:panel>
-	</h:form>
 </ui:composition>
 </body>
 </html>

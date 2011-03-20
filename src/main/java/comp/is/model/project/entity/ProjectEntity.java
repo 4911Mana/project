@@ -2,6 +2,7 @@ package comp.is.model.project.entity;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
@@ -27,10 +28,10 @@ import javax.persistence.Table;
 public class ProjectEntity extends Package implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private String customer;
-    private double labourratemarkup;
-    private List<WorkpackageEntity> workPackages;
-    //private List<EmployeeEntity> projectEmployees;
+    protected String customer;
+    protected double labourratemarkup;
+    protected Set<WorkpackageEntity> workPackages;
+    protected Set<EmployeeEntity> projectEmployees;
 
     @Column(length = 256)
     public String getCustomer() {
@@ -44,11 +45,7 @@ public class ProjectEntity extends Package implements Serializable {
 
     // bi-directional many-to-one association to Workpackage
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
-    public List<WorkpackageEntity> getWorkPackages() {
-        for (WorkpackageEntity wp : workPackages) {
-            System.err.println("getWorkPackages raw values: " + wp.getId()
-                    + " : " + wp.getProjid() + " : " + wp.getName());
-        }
+    public Set<WorkpackageEntity> getWorkPackages() {
         return this.workPackages;
     }
 
@@ -56,40 +53,40 @@ public class ProjectEntity extends Package implements Serializable {
         this.customer = customer;
     }
 
-    // //bi-directional many-to-one association to Employeerole
-    // @OneToMany(mappedBy="project")
-    // public List<EmployeeroleEntity> getEmployeeRoles() {
-    // return this.employeeRoles;
-    // }
-    //
-    // public void setEmployeeRoles(List<EmployeeroleEntity> employeeRoles) {
-    // this.employeeRoles = employeeRoles;
-    // }
-    //
-    //
-    // //bi-directional one-to-one association to Projectbudget
-    // @OneToOne(mappedBy="project")
-    // public ProjectbudgetEntity getProjectBudget() {
-    // return this.projectBudget;
-    // }
-    //
-    // public void setProjectBudget(ProjectbudgetEntity projectBudget) {
-    // this.projectBudget = projectBudget;
-    // }
-    //
-    //
-    // bi-directional many-to-many association to Employee
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(name = "PROJECTEMPLOYEE", 
-//            joinColumns = { @JoinColumn(name = "PROJID", nullable = false) }, 
-//            inverseJoinColumns = { @JoinColumn(name = "EMPID", nullable = false) })
-//    public List<EmployeeEntity> getProjectEmployees() {
-//        return this.projectEmployees;
-//    }
-//
-//    public void setProjectEmployees(List<EmployeeEntity> projectEmployees) {
-//        this.projectEmployees = projectEmployees;
-//    }
+//     //bi-directional many-to-one association to Employeerole
+//     @OneToMany(mappedBy="project")
+//     public List<EmployeeroleEntity> getEmployeeRoles() {
+//     return this.employeeRoles;
+//     }
+//    
+//     public void setEmployeeRoles(List<EmployeeroleEntity> employeeRoles) {
+//     this.employeeRoles = employeeRoles;
+//     }
+    
+    
+//     //bi-directional one-to-one association to Projectbudget
+//     @OneToOne(mappedBy="project")
+//     public ProjectbudgetEntity getProjectBudget() {
+//     return this.projectBudget;
+//     }
+//    
+//     public void setProjectBudget(ProjectbudgetEntity projectBudget) {
+//     this.projectBudget = projectBudget;
+//     }
+//    
+    
+     //bi-directional many-to-many association to Employee
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "PROJECTEMPLOYEE", 
+            joinColumns = { @JoinColumn(name = "PROJID", nullable = false) }, 
+            inverseJoinColumns = { @JoinColumn(name = "EMPID", nullable = false) })
+    public Set<EmployeeEntity> getProjectEmployees() {
+        return this.projectEmployees;
+    }
+
+    public void setProjectEmployees(Set<EmployeeEntity> projectEmployees) {
+        this.projectEmployees = projectEmployees;
+    }
 
     //
     //
@@ -132,7 +129,7 @@ public class ProjectEntity extends Package implements Serializable {
         this.labourratemarkup = labourratemarkup;
     }
 
-    public void setWorkPackages(List<WorkpackageEntity> workPackages) {
+    public void setWorkPackages(Set<WorkpackageEntity> workPackages) {
         this.workPackages = workPackages;
     }
 }

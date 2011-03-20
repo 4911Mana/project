@@ -21,28 +21,29 @@ import javax.persistence.Table;
 @Table(name="TIMESHEETENTRY")
 public class TimesheetentryEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private ProjectEntity project;
+	//private ProjectEntity project;
 	private TimesheetEntity timeSheet;
-	private double tsentryfrihours;
-	private long tsentryid;
-	private double tsentrymonhours;
-	private double tsentrysathours;
-	private double tsentrysunhours;
-	private double tsentrythuhours;
-	private double tsentrytuehours;
-	private double tsentrywedhours;
+	private double frihours;
+	private long id;
+	private double monhours;
+	private double sathours;
+	private double sunhours;
+	private double thuhours;
+	private double tuehours;
+	private double wedhours;
 	private WorkpackageEntity workPackage;
+	private String notes;
 
     public TimesheetentryEntity() {
     }
 
 
 	//bi-directional many-to-one association to Project
-    @ManyToOne
-	@JoinColumn(name="PROJID", insertable=false, updatable=false)
-	public ProjectEntity getProject() {
-		return this.project;
-	}
+//    @ManyToOne
+//	@JoinColumn(name="PROJID", insertable=false, updatable=false)
+//	public ProjectEntity getProject() {
+//		return this.project;
+//	}
 
 	//bi-directional many-to-one association to Timesheet
     @ManyToOne
@@ -53,48 +54,48 @@ public class TimesheetentryEntity implements Serializable {
 
 
 	@Column(precision=126)
-	public double getTsentryfrihours() {
-		return this.tsentryfrihours;
+	public double getFrihours() {
+		return frihours;
 	}
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(unique=true, nullable=false, precision=16)
-	public long getTsentryid() {
-		return this.tsentryid;
+	public long getId() {
+		return this.id;
 	}
 
 
 	@Column(precision=126)
-	public double getTsentrymonhours() {
-		return this.tsentrymonhours;
+	public double getMonhours() {
+		return monhours;
 	}
 
 	@Column(precision=126)
-	public double getTsentrysathours() {
-		return this.tsentrysathours;
-	}
-
-
-	@Column(precision=126)
-	public double getTsentrysunhours() {
-		return this.tsentrysunhours;
-	}
-
-	@Column(precision=126)
-	public double getTsentrythuhours() {
-		return this.tsentrythuhours;
+	public double getSathours() {
+		return sathours;
 	}
 
 
 	@Column(precision=126)
-	public double getTsentrytuehours() {
-		return this.tsentrytuehours;
+	public double getSunhours() {
+		return sunhours;
 	}
 
 	@Column(precision=126)
-	public double getTsentrywedhours() {
-		return this.tsentrywedhours;
+	public double getThuhours() {
+		return thuhours;
+	}
+
+
+	@Column(precision=126)
+	public double getTuehours() {
+		return tuehours;
+	}
+
+	@Column(precision=126)
+	public double getWedhours() {
+		return wedhours;
 	}
 
 
@@ -108,53 +109,63 @@ public class TimesheetentryEntity implements Serializable {
 		return this.workPackage;
 	}
 
-	public void setProject(ProjectEntity project) {
-		this.project = project;
-	}
+//	public void setProject(ProjectEntity project) {
+//		this.project = project;
+//	}
 
 
 	public void setTimeSheet(TimesheetEntity timeSheet) {
 		this.timeSheet = timeSheet;
 	}
 
-	public void setTsentryfrihours(double tsentryfrihours) {
-		this.tsentryfrihours = tsentryfrihours;
+	public void setFrihours(double tsentryfrihours) {
+		frihours = tsentryfrihours;
 	}
 
 
-	public void setTsentryid(long tsentryid) {
-		this.tsentryid = tsentryid;
+	public void setId(long tsentryid) {
+		this.id = tsentryid;
 	}
 
-	public void setTsentrymonhours(double tsentrymonhours) {
-		this.tsentrymonhours = tsentrymonhours;
+	public void setMonhours(double tsentrymonhours) {
+		monhours = tsentrymonhours;
 	}
 
 
-	public void setTsentrysathours(double tsentrysathours) {
-		this.tsentrysathours = tsentrysathours;
+	public void setSathours(double tsentrysathours) {
+		sathours = tsentrysathours;
 	}
 
-	public void setTsentrysunhours(double tsentrysunhours) {
-		this.tsentrysunhours = tsentrysunhours;
-	}
-	
-
-	public void setTsentrythuhours(double tsentrythuhours) {
-		this.tsentrythuhours = tsentrythuhours;
-	}
-
-	public void setTsentrytuehours(double tsentrytuehours) {
-		this.tsentrytuehours = tsentrytuehours;
+	public void setSunhours(double tsentrysunhours) {
+		sunhours = tsentrysunhours;
 	}
 	
 
-	public void setTsentrywedhours(double tsentrywedhours) {
-		this.tsentrywedhours = tsentrywedhours;
+	public void setThuhours(double tsentrythuhours) {
+		thuhours = tsentrythuhours;
+	}
+
+	public void setTuehours(double tsentrytuehours) {
+		tuehours = tsentrytuehours;
+	}
+	
+
+	public void setWedhours(double tsentrywedhours) {
+		wedhours = tsentrywedhours;
 	}
 
 	public void setWorkPackage(WorkpackageEntity workPackage) {
 		this.workPackage = workPackage;
 	}
+
+	@Column(length=1024)
+    public String getNotes() {
+        return notes;
+    }
+
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 	
 }

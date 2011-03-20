@@ -1,10 +1,14 @@
 package comp.is.controller.project;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.Local;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
 import javax.enterprise.context.RequestScoped;
@@ -15,37 +19,45 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import comp.is.model.admin.Employee;
 import comp.is.model.project.ChildWp;
 import comp.is.model.project.CurrentWp;
 import comp.is.model.project.ProjectPackage;
 import comp.is.model.project.ProjectTree;
+import comp.is.model.project.ProjectView;
 import comp.is.model.project.WorkPackage;
+import comp.is.model.project.entity.EmployeeEntity;
 import comp.is.model.project.entity.Package;
 import comp.is.model.project.entity.ProjectEntity;
 import comp.is.model.project.entity.WorkpackageEntity;
+import comp.is.view.project.EmployeePickListBean;
 import comp.is.view.project.ProjectManagerView;
 
 @Stateful
 @SessionScoped
-@LocalBean
+@Local
 @Named("projectAction")
-public class ProjectAction {
+public class ProjectAction implements ProjectActionLocal {
 
-    private WorkPackage childWp;
+    
     private Package currentP;
+    private WorkPackage childWp;
+    private ProjectPackage pp;
+    private ProjectTree project;
     @PersistenceContext(unitName = "ProjectManager")
     private EntityManager em;
-    private ProjectEntity pr;
-    // Lazy loading
-    private ProjectTree project;
     @Inject
     private ProjectManagerView view;
     @Inject
-    WorkPackageAction wpAction;
+    EmployeePickListBean pickList;
 
     public ProjectAction() {
     }
 
+    /* (non-Javadoc)
+     * @see comp.is.controller.project.ProjectActionLocal#addChild()
+     */
+    @Override
     public String addChild() {
         System.out.println("Saving: " + childWp.toString());
         // validate
@@ -53,9 +65,9 @@ public class ProjectAction {
         boolean err = false;
         // check for errors
         WorkPackage candidate = new WorkPackage(childWp);
-        candidate.setParent(currentP);
-        candidate.getParent().setProject(pr);
-        candidate.setProject(pr);
+        candidate.setParent(getWpById(currentP.getId()));
+        candidate.setProject(pp);
+        
 
         System.out.println("CANDIDATE " + candidate.getDetails());
 
@@ -108,13 +120,17 @@ public class ProjectAction {
         }
         addWp(candidate);
         view.addChildToTree(candidate.getNumber(),
-                (candidate.isRootChild()) ? pr.getId() : candidate.getParent()
+                (candidate.isRootChild()) ? pp.getId() : candidate.getParent()
                         .getNumber());
         setWp(candidate);
         setChildWp(new WorkPackage());
         return null;
     }
 
+    /* (non-Javadoc)
+     * @see comp.is.controller.project.ProjectActionLocal#addWp(comp.is.model.project.WorkPackage)
+     */
+    @Override
     public void addWp(WorkPackage wp) {
         // validate
         project.put(wp);
@@ -122,28 +138,35 @@ public class ProjectAction {
     }
 
     private void fillWpMap() {
-        List<WorkpackageEntity> wps = pr.getWorkPackages();
+        Set<WorkpackageEntity> wps = pp.getWorkPackages();
         for (WorkpackageEntity wp : wps) {
-            System.out.println(new WorkPackage(wp).getDetails());
             if (wp.getParent() != null & !wp.getId().equalsIgnoreCase(".")) {
                 WorkPackage newWp = new WorkPackage(wp);
                 project.put(newWp);
             }
         }
-        System.out.print(project);
     }
 
-    private void findAndSetRoot() {
+    private boolean findAndSetRoot() {
+        ProjectEntity pr = null;
         try {
             pr = em.find(ProjectEntity.class, "1000");
-            ProjectPackage pp = new ProjectPackage(pr);
-            project = new ProjectTree(pp);
+
         } catch (Exception e) {
-            // ??
-            init();
+            System.out.println("Project not found. " + e.toString());
+            return false;
         }
+        System.out.println("Project found " + pr.getId());
+        pp = new ProjectPackage(pr);
+
+        project = new ProjectTree(pp);
+        return true;
     }
 
+    /* (non-Javadoc)
+     * @see comp.is.controller.project.ProjectActionLocal#getChildWp()
+     */
+    @Override
     @Produces
     @ChildWp
     @Named("childWp")
@@ -152,10 +175,18 @@ public class ProjectAction {
         return childWp;
     }
 
+    /* (non-Javadoc)
+     * @see comp.is.controller.project.ProjectActionLocal#getProject()
+     */
+    @Override
     public ProjectTree getProject() {
         return project;
     }
 
+    /* (non-Javadoc)
+     * @see comp.is.controller.project.ProjectActionLocal#getWp()
+     */
+    @Override
     @Produces
     @CurrentWp
     @Named("wp")
@@ -163,94 +194,75 @@ public class ProjectAction {
         return currentP;
     }
 
+    /* (non-Javadoc)
+     * @see comp.is.controller.project.ProjectActionLocal#getWpById(java.lang.String)
+     */
+    @Override
     public WorkPackage getWpById(String wpNumber) {
         WorkPackage wp = project.get(wpNumber);
         return wp;
     }
 
-    public void init() {
-        // List<WorkpackageEntity> wps = new ArrayList<WorkpackageEntity>();
-        // pr = new ProjectEntity();
-        // pr.setId("1234567");
-        // ProjectPackage pp = new ProjectPackage(pr);
-        //
-        // WorkPackage dot = new WorkPackage(".");
-        // dot.setParent(dot);
-        // WorkPackage a = new WorkPackage("a");
-        // a.setTitle("Layer 1");
-        // a.setParent(dot);
-        // WorkPackage aa = new WorkPackage("aa");
-        // aa.setTitle("Layer 2");
-        // aa.setParent(a);
-        // WorkPackage ab = new WorkPackage("ab");
-        // ab.setTitle("Layer 3");
-        // ab.setParent(a);
-        // WorkPackage aaa = new WorkPackage("aaa");
-        // aaa.setTitle("Layer 4");
-        // aaa.setParent(aa);
-        // WorkPackage aab = new WorkPackage("aab");
-        // aab.setTitle("Layer 5");
-        // aab.setParent(aa);
-        // WorkPackage aabd = new WorkPackage("aabd");
-        // aabd.setTitle("Layer 6");
-        // aabd.setParent(aab);
-        // WorkPackage aaaf = new WorkPackage("aaaf");
-        // aaaf.setTitle("Layer 7");
-        // aaaf.setParent(aaa);
-        // WorkPackage aba = new WorkPackage("aba");
-        // aba.setTitle("Layer 8");
-        // aba.setParent(ab);
-        // wps.add(dot);
-        // wps.add(a);
-        // wps.add(aa);
-        // wps.add(ab);
-        // wps.add(aaa);
-        // wps.add(aab);
-        // wps.add(aabd);
-        // wps.add(aaaf);
-        // wps.add(aba);
-        // pr.setWorkPackages(wps);
-        // WorkPackage root = new WorkPackage(pr);
-        // for (WorkpackageEntity wp : wps) {
-        // if (wp.getId().equalsIgnoreCase(".")) {
-        // wp = root;
-        // wp.setParent(dot);
-        // }
-        // }
-        // project = new ProjectTree(root);
-
-    }
-
-    @PostConstruct
+    /* (non-Javadoc)
+     * @see comp.is.controller.project.ProjectActionLocal#initializeProject()
+     */
+    @Override
     public void initializeProject() {
-        findAndSetRoot();
+        System.out
+                .println("Post construct start =======================================================");
+        if (!findAndSetRoot()) {
+            view.displayMsg("Project not found");
+            return;
+        }
         fillWpMap();
         currentP = new WorkPackage(project.getRoot());
         childWp = new WorkPackage();
-        //childWp.setCandidate(true);
         childWp.setParent(currentP);
+        view.init();
+        System.out
+                .println("Post construct end =======================================================");
     }
 
+    /* (non-Javadoc)
+     * @see comp.is.controller.project.ProjectActionLocal#setChildWp(comp.is.model.project.WorkPackage)
+     */
+    @Override
     public void setChildWp(WorkPackage childWp) {
         this.childWp = childWp;
     }
 
+    /* (non-Javadoc)
+     * @see comp.is.controller.project.ProjectActionLocal#setProject(comp.is.model.project.ProjectTree)
+     */
+    @Override
     public void setProject(ProjectTree tree) {
         this.project = tree;
     }
 
+    /* (non-Javadoc)
+     * @see comp.is.controller.project.ProjectActionLocal#setWp(comp.is.model.project.entity.Package)
+     */
+    @Override
     public void setWp(Package wp) {
         currentP = wp;
     }
 
+    /* (non-Javadoc)
+     * @see comp.is.controller.project.ProjectActionLocal#uniqueNum(java.lang.String)
+     */
+    @Override
     public boolean uniqueNum(String number) {
         return !project.containsKey(number);
 
     }
 
+    /* (non-Javadoc)
+     * @see comp.is.controller.project.ProjectActionLocal#validStartDate(comp.is.model.project.WorkPackage, java.util.Date)
+     */
+    @Override
     public boolean validStartDate(WorkPackage wp, Date newDate) {
         if (wp.isRootChild()) {
-            return !pr.getStartDate().after(newDate);
+            return !pp.getStartDate().after(newDate);
         }
         if (wp.getParent().getStartDate() == null) {
             return validStartDate(getWpById(wp.getParent().getId()), newDate);
@@ -262,15 +274,101 @@ public class ProjectAction {
         em.persist(entity);
     }
 
+    /* (non-Javadoc)
+     * @see comp.is.controller.project.ProjectActionLocal#reinit()
+     */
+    @Override
     public void reinit() {
         setWp(new WorkPackage());
         setChildWp(new WorkPackage());
 
     }
     
-    public String validParent(){
-        if(currentP.isLowestLevel()){
+    /* (non-Javadoc)
+     * @see comp.is.controller.project.ProjectActionLocal#validParent()
+     */
+    @Override
+    public String validParent() {
+        if (currentP.isLowestLevel()) {
             view.displayMsg("Work Package is a leaf");
+        }
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see comp.is.controller.project.ProjectActionLocal#getSourceEmp(comp.is.model.project.WorkPackage)
+     */
+    @Override
+    public ArrayList<Employee> getSourceEmp(WorkPackage wp) {
+        if (wp.getAvailableStaff() != null) {
+            return wp.getAvailableStaff();
+        } else {
+            return pp.getEmployees();
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see comp.is.controller.project.ProjectActionLocal#getTargetEmp(comp.is.model.project.WorkPackage)
+     */
+    @Override
+    public ArrayList<Employee> getTargetEmp(WorkPackage wp) {
+        Set<Employee> emp = new HashSet<Employee>(wp.getEmployees());
+        if (project.getChildren(wp.getId()) == null) {
+            return wp.getEmployees();
+        } else {
+            for (WorkPackage cwp : project.getChildren(wp.getId())) {
+                emp.addAll(getTargetEmp(cwp));
+            }
+            return new ArrayList<Employee>(emp);
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see comp.is.controller.project.ProjectActionLocal#doMerge()
+     */
+    @Override
+    public String doMerge() {
+        System.out.println("Saving " + currentP);
+        List<String> msgs = new ArrayList<String>();
+        boolean err = false;
+
+        WorkPackage candidate = this.getWpById(currentP.getId());
+//        if (!candidate.getId().equalsIgnoreCase(currentP.getId())) {
+//            msgs.add("Number update is not allowed");
+//            err = true;
+//        }
+        candidate.mereg(currentP);
+        List<Employee> employeesAssigned = pickList.getEmployees().getTarget();
+        Set<EmployeeEntity> empSet = new HashSet<EmployeeEntity>();
+        for(Employee e : employeesAssigned){
+            empSet.add(new EmployeeEntity(e));
+        }
+        candidate.setEmployeesAssigned(empSet);
+        if (candidate.getStartDate() != null) {
+            if (!validStartDate(candidate, candidate.getStartDate())) {
+
+                msgs.add("Start Date must be later then parent Start Date");
+                err = true;
+            }
+        }
+        if (err) {
+            msgs.add("Work Package #" + candidate.getNumber()
+                    + " was not updated.");
+            view.displayMsgs(msgs);
+            setWp(getWpById(currentP.getId()));
+            return null;
+        }
+        try {
+            WorkpackageEntity entity = new WorkpackageEntity(candidate);
+            em.merge(entity);
+            System.out.println("Saving " + candidate + " "
+                    + candidate.getStartDate() + "/ "
+                    + candidate.getEmployeesAssigned());
+            project.put(candidate.getId(), candidate);
+        } catch (Exception ex) {
+            view.displayMsg("Unable to update " + ex.toString());
+            setWp(getWpById(currentP.getId()));
+            System.out.println("Unable to update " + ex.toString());
         }
         return null;
     }

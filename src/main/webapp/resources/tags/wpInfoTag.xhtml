@@ -24,7 +24,7 @@
 		<p:spacer />
 
 		<h:outputLabel for="date" value="Start Date:" />
-		<p:calendar id="date" value="#{cc.attrs.startDate}" />
+		<p:calendar id="date" value="#{cc.attrs.startDate}" pattern="EEE, dd MMM, yyyy"/>
 		<p:message for="date" errorClass="invalid" />
 		<h:outputLabel for="title" value="Title:" />
 		<p:inputText id="title" label="title" value="#{cc.attrs.titleValue}" />

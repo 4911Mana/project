@@ -1,6 +1,7 @@
 package comp.is.model.project.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +12,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import comp.is.model.admin.Employee;
+
 @MappedSuperclass
 public abstract class Package implements Serializable{
     protected static final int LENGTH = 6;
@@ -20,6 +23,11 @@ public abstract class Package implements Serializable{
     protected String name;
     protected Date startDate;
     protected String status;
+    protected ArrayList<Employee> employees;
+    
+    public Package(){
+        employees = new ArrayList<Employee>();
+    }
     
     @Transient
     public String getChildMask(){return null;}
@@ -41,7 +49,7 @@ public abstract class Package implements Serializable{
     }
     @Transient
     public String getNumber(){
-        return null;
+        return id;
     }
 
     @Temporal(TemporalType.DATE)
@@ -59,6 +67,7 @@ public abstract class Package implements Serializable{
         description = candidate.description;
         startDate = candidate.startDate;
         status = candidate.status;
+        employees = candidate.employees;
     }
     @Transient
     public boolean isOpenForCharges(){
@@ -99,8 +108,8 @@ public abstract class Package implements Serializable{
     public void setLowestLevel(boolean b){
         
     }
-    
-    //abstract public List<EmployeeEntity> getWpEmployeesAssigned();
+    @Transient
+    public ArrayList<Employee> getEmployees(){ return employees;}
 
     //abstract public void setWpEmployeesAssigned(List<EmployeeEntity> wpEmployeesAssigned);
     

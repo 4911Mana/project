@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
@@ -19,7 +20,10 @@ public class EmployeeTableBean implements Serializable {
     private Employee selectedEmployee;
    
     
-    public EmployeeTableBean(){}
+    public EmployeeTableBean(){
+        employees = new ArrayList<Employee>();
+        System.out.println("Table bean init " + this);
+    }
     public EmployeeTableBean(ArrayList<Employee> employees) {
         this.employees = employees;
     }

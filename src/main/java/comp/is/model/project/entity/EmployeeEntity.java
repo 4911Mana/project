@@ -15,6 +15,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import comp.is.model.admin.Employee;
+
 
 /**
  * The persistent class for the EMPLOYEE database table.
@@ -24,66 +26,73 @@ import javax.persistence.Table;
 @Table(name="EMPLOYEE")
 public class EmployeeEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private double empaccumflextime;
-	private double empaccumvacation;
-	private String empfirstname;
-	private int empid;
-	private String emplastname;
-	private List<EmployeelabourchargerateEntity> employeeLabourChargeRates;
-	private List<EmployeeroleEntity> employeeRoles;
-	private List<EmployeeEntity> employeeSupervisors;
-	private List<WorkpackageEntity> employeesWorkPackages;
-	private double emppercentfulltime;
-	//private List<ProjectEntity> projects;
-	private List<ProjectsummaryEntity> projectSummaries;
-	private List<RatesheetEntity> rateSheets;
-	private List<EmployeeEntity> timeSheetApprovers;
-	private List<TimesheetEntity> timeSheets;
+	protected double accumflextime;
+	protected double accumvacation;
+	protected String firstname;
+	protected int id;
+	protected String lastname;
+	protected List<EmployeelabourchargerateEntity> labourChargeRates;
+	protected List<EmployeeroleEntity> roles;
+	protected List<EmployeeEntity> supervisors;
+	protected List<WorkpackageEntity> workPackages;
+	protected double percentfulltime;
+	//protected List<ProjectEntity> projects;
+	protected List<ProjectsummaryEntity> projectSummaries;
+	protected List<RatesheetEntity> rateSheets;
+	protected List<EmployeeEntity> timeSheetApprovers;
+	protected List<TimesheetEntity> timeSheets;
 
     public EmployeeEntity() {
     }
 
 
-	@Column(precision=126)
-	public double getEmpaccumflextime() {
-		return this.empaccumflextime;
+	public EmployeeEntity(Employee e) {
+	    firstname = e.firstname;
+	    id = e.id;
+	    lastname = e.lastname;
+    }
+
+
+    @Column(precision=126)
+	public double getAccumflextime() {
+		return this.accumflextime;
 	}
 
 	@Column(precision=126)
-	public double getEmpaccumvacation() {
-		return this.empaccumvacation;
+	public double getAccumvacation() {
+		return this.accumvacation;
 	}
 
 
 	@Column(length=64)
-	public String getEmpfirstname() {
-		return this.empfirstname;
+	public String getFirstname() {
+		return this.firstname;
 	}
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(unique=true, nullable=false, precision=16)
-	public int getEmpid() {
-		return this.empid;
+	public int getId() {
+		return this.id;
 	}
 
 
 	@Column(length=64)
-	public String getEmplastname() {
-		return this.emplastname;
+	public String getLastname() {
+		return this.lastname;
 	}
 
 	//bi-directional many-to-one association to Employeelabourchargerate
 	@OneToMany(mappedBy="employee", cascade={CascadeType.ALL})
-	public List<EmployeelabourchargerateEntity> getEmployeeLabourChargeRates() {
-		return this.employeeLabourChargeRates;
+	public List<EmployeelabourchargerateEntity> getLabourChargeRates() {
+		return this.labourChargeRates;
 	}
 
 
 	//bi-directional many-to-one association to Employeerole
 	@OneToMany(mappedBy="employee")
-	public List<EmployeeroleEntity> getEmployeeRoles() {
-		return this.employeeRoles;
+	public List<EmployeeroleEntity> getRoles() {
+		return this.roles;
 	}
 
 	//uni-directional many-to-many association to Employee
@@ -91,26 +100,26 @@ public class EmployeeEntity implements Serializable {
 	@JoinTable(
 		name="EMPLOYEESUPERVISOR"
 		, joinColumns={
-			@JoinColumn(name="EMPID", nullable=false)
+			@JoinColumn(name="ID", nullable=false)
 			}
 		, inverseJoinColumns={
 			@JoinColumn(name="SUPERVISORID", nullable=false)
 			}
 		)
-	public List<EmployeeEntity> getEmployeeSupervisors() {
-		return this.employeeSupervisors;
+	public List<EmployeeEntity> getSupervisors() {
+		return this.supervisors;
 	}
 
 
 	//bi-directional many-to-many association to Workpackage
-	@ManyToMany(mappedBy="wpEmployeesAssigned")
-	public List<WorkpackageEntity> getEmployeesWorkPackages() {
-		return this.employeesWorkPackages;
+	@ManyToMany(mappedBy="employeesAssigned")
+	public List<WorkpackageEntity> getWorkPackages() {
+		return this.workPackages;
 	}
 
 	@Column(precision=126)
-	public double getEmppercentfulltime() {
-		return this.emppercentfulltime;
+	public double getPercentfulltime() {
+		return this.percentfulltime;
 	}
 
 
@@ -132,7 +141,7 @@ public class EmployeeEntity implements Serializable {
 	@JoinTable(
 		name="TIMESHEETAPPROVER"
 		, joinColumns={
-			@JoinColumn(name="EMPID", nullable=false)
+			@JoinColumn(name="ID", nullable=false)
 			}
 		, inverseJoinColumns={
 			@JoinColumn(name="TSAPPROVERID", nullable=false)
@@ -149,21 +158,21 @@ public class EmployeeEntity implements Serializable {
 	}
 	
 
-	public void setEmpaccumflextime(double empaccumflextime) {
-		this.empaccumflextime = empaccumflextime;
+	public void setAccumflextime(double empaccumflextime) {
+		this.accumflextime = empaccumflextime;
 	}
 
-	public void setEmpaccumvacation(double empaccumvacation) {
-		this.empaccumvacation = empaccumvacation;
+	public void setAccumvacation(double empaccumvacation) {
+		this.accumvacation = empaccumvacation;
 	}
 	
 
-	public void setEmpfirstname(String empfirstname) {
-		this.empfirstname = empfirstname;
+	public void setFirstname(String empfirstname) {
+		this.firstname = empfirstname;
 	}
 
-	public void setEmpid(int empid) {
-		this.empid = empid;
+	public void setId(int empid) {
+		this.id = empid;
 	}
 	
 
@@ -178,29 +187,29 @@ public class EmployeeEntity implements Serializable {
 //	}
 //	
 
-	public void setEmplastname(String emplastname) {
-		this.emplastname = emplastname;
+	public void setLastname(String emplastname) {
+		this.lastname = emplastname;
 	}
 
-	public void setEmployeeLabourChargeRates(List<EmployeelabourchargerateEntity> employeeLabourChargeRates) {
-		this.employeeLabourChargeRates = employeeLabourChargeRates;
+	public void setLabourChargeRates(List<EmployeelabourchargerateEntity> employeeLabourChargeRates) {
+		this.labourChargeRates = employeeLabourChargeRates;
 	}
 	
 
-	public void setEmployeeRoles(List<EmployeeroleEntity> employeeRoles) {
-		this.employeeRoles = employeeRoles;
+	public void setRoles(List<EmployeeroleEntity> employeeRoles) {
+		this.roles = employeeRoles;
 	}
 
-	public void setEmployeeSupervisors(List<EmployeeEntity> employeeSupervisors) {
-		this.employeeSupervisors = employeeSupervisors;
+	public void setSupervisors(List<EmployeeEntity> employeeSupervisors) {
+		this.supervisors = employeeSupervisors;
 	}	
 
-	public void setEmployeesWorkPackages(List<WorkpackageEntity> employeesWorkPackages) {
-		this.employeesWorkPackages = employeesWorkPackages;
+	public void setWorkPackages(List<WorkpackageEntity> employeesWorkPackages) {
+		this.workPackages = employeesWorkPackages;
 	}
 
-	public void setEmppercentfulltime(double emppercentfulltime) {
-		this.emppercentfulltime = emppercentfulltime;
+	public void setPercentfulltime(double emppercentfulltime) {
+		this.percentfulltime = emppercentfulltime;
 	}
 	
 

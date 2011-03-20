@@ -12,10 +12,44 @@
 	background-color: white;
 }
 </style>
+<script type="text/javascript">
+PrimeFaces.widget.PickList.prototype.selectedSource = function() {
+	var selectedSource = [];
+	jQuery(this.sourceId + " > option:selected").each(function (i) {
+		selectedSource.push(this.value());
+	});
+	jQuery(this.targetId).trigger('change');
+	return selectedSource;
+}
+
+PrimeFaces.widget.PickList.prototype.selectedTarget = function() {
+	var selectedTarget = [];
+	jQuery(this.targetId + " > option:selected").each(function (i) {
+		selectedTarget.push(this.value());
+	});
+	jQuery(this.targetId).trigger('change');
+	return selectedTarget;
+}
+
+</script>
 	<title>Login</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link type="text/css" rel="stylesheet"
 		href="/project/resources/css/skin.css" />
+<style type="text/css">
+.ui-picklist-source,.ui-picklist-target {
+	width: 100px;
+	height: 100px;
+}
+
+.ui-picklist-control {
+	cursor: pointer;
+}
+
+.col1,.col2 {
+	vertical-align: top;
+}
+</style>
 </h:head>
 <h:body>
 	<p:layout fullPage="true">

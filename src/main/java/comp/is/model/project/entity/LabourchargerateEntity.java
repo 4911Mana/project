@@ -21,9 +21,9 @@ import javax.persistence.TemporalType;
 @Table(name="LABOURCHARGERATE")
 public class LabourchargerateEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private long labourchargerateid;
-	private double lcrrate;
-	private Date lcryear;
+	private long id;
+	private double rate;
+	private Date year;
 	private String rateclassid;
 
     public LabourchargerateEntity() {
@@ -33,19 +33,19 @@ public class LabourchargerateEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(unique=true, nullable=false, precision=16)
-	public long getLabourchargerateid() {
-		return this.labourchargerateid;
+	public long getId() {
+		return id;
 	}
 
 	@Column(precision=126)
-	public double getLcrrate() {
-		return this.lcrrate;
+	public double getRate() {
+		return rate;
 	}
 
 
 	@Temporal( TemporalType.DATE)
-	public Date getLcryear() {
-		return this.lcryear;
+	public Date getYear() {
+		return year;
 	}
 
 	@Column(length=16)
@@ -54,17 +54,17 @@ public class LabourchargerateEntity implements Serializable {
 	}
 
 
-    public void setLabourchargerateid(long labourchargerateid) {
-		this.labourchargerateid = labourchargerateid;
+    public void setId(long labourchargerateid) {
+		id = labourchargerateid;
 	}
 
-	public void setLcrrate(double lcrrate) {
-		this.lcrrate = lcrrate;
+	public void setRate(double lcrrate) {
+		rate = lcrrate;
 	}
 
 
-	public void setLcryear(Date lcryear) {
-		this.lcryear = lcryear;
+	public void setYear(Date lcryear) {
+		year = lcryear;
 	}
 
 	public void setRateclassid(String rateclassid) {

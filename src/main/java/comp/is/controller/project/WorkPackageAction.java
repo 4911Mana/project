@@ -27,7 +27,7 @@ public class WorkPackageAction implements WorkPackageLocal {
     @CurrentWp
     private static Package wp;
     @Inject
-    private ProjectAction projectAction;
+    private ProjectActionLocal projectAction;
     @Inject
     private ProjectManagerView view;
 

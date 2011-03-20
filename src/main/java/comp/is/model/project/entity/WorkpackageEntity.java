@@ -2,11 +2,13 @@ package comp.is.model.project.entity;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Inheritance;
@@ -38,11 +40,11 @@ import comp.is.model.project.entity.Package;
 // @AttributeOverride(name="id", column=@Column(unique=true, nullable=false,
 // length=16))
 public class WorkpackageEntity extends Package {
-    // private List<TimesheetentryEntity> timeSheetEntries;
-    protected List<EmployeeEntity> employeesAssigned;
-    // private EmployeeEntity responsibleEngineerId;
+    protected Set<TimesheetentryEntity> timeSheetEntries;
+    protected Set<EmployeeEntity> employeesAssigned;
+    protected EmployeeEntity responsibleEngineerId;
     protected WorkpackageEntity parent;
-    // private List<WorkpackagestatusreportEntity> statusReports;
+    protected Set<WorkpackagestatusreportEntity> statusReports;
     protected ProjectEntity project;
     protected String projid;
 
@@ -50,7 +52,12 @@ public class WorkpackageEntity extends Package {
     public WorkpackageEntity(WorkPackage candidate) {
         init(candidate);
         setParent(candidate.getParent());
-        //setProject(candidate.getProject());
+        employeesAssigned = candidate.getEmployeesAssigned();
+        responsibleEngineerId = candidate.getResponsibleEngineer();
+        statusReports = candidate.getStatusReports();
+        project = candidate.getProject();
+        projid = candidate.getProjid();
+        timeSheetEntries = candidate.getTimeSheetEntries();
     }
 
     // bi-directional many-to-one association to Workpackage
@@ -62,17 +69,17 @@ public class WorkpackageEntity extends Package {
         return parent;
     }
 
-    // // bi-directional many-to-many association to Workpackagestatusreport
-    // @ManyToMany(mappedBy = "workPackages")
-    // public List<WorkpackagestatusreportEntity> getStatusReports() {
-    // return statusReports;
-    // }
-    //
-    // public void setStatusReports(
-    // List<WorkpackagestatusreportEntity> wpStatusReports) {
-    // statusReports = wpStatusReports;
-    // }
-    //
+     // bi-directional many-to-many association to Workpackagestatusreport
+     @ManyToMany(mappedBy = "workPackages")
+     public Set<WorkpackagestatusreportEntity> getStatusReports() {
+     return statusReports;
+     }
+    
+     public void setStatusReports(
+     Set<WorkpackagestatusreportEntity> wpStatusReports) {
+     statusReports = wpStatusReports;
+     }
+    
     
     @ManyToOne
     @JoinColumn(name = "PROJID", nullable = false, insertable = false, updatable = false)
@@ -101,35 +108,35 @@ public class WorkpackageEntity extends Package {
         return getName();
     }
 
-    // // bi-directional many-to-one association to Timesheetentry
-    // @OneToMany(mappedBy = "workPackage")
-    // public List<TimesheetentryEntity> getTimeSheetEntries() {
-    // return this.timeSheetEntries;
-    // }
-    //
-    // public void setTimeSheetEntries(List<TimesheetentryEntity>
-    // timeSheetEntries) {
-    // this.timeSheetEntries = timeSheetEntries;
-    // }
-    //
-    // // uni-directional many-to-one association to Employee
-    // @ManyToOne
-    // @JoinColumn(name = "WPRESPONSIBLEENGINEERID")
-    // public EmployeeEntity getResponsibleEngineer() {
-    // return responsibleEngineerId;
-    // }
-    //
-    // public void setResponsibleEngineer(EmployeeEntity wpResponsibleEngineer)
-    // {
-    // responsibleEngineerId = wpResponsibleEngineer;
-    // }
+     // bi-directional many-to-one association to Timesheetentry
+     @OneToMany(fetch = FetchType.EAGER, mappedBy = "workPackage")
+     public Set<TimesheetentryEntity> getTimeSheetEntries() {
+     return this.timeSheetEntries;
+     }
+    
+     public void setTimeSheetEntries(Set<TimesheetentryEntity>
+     timeSheetEntries) {
+     this.timeSheetEntries = timeSheetEntries;
+     }
+    
+     // uni-directional many-to-one association to Employee
+     @ManyToOne
+     @JoinColumn(name = "RESPONSIBLEENGINEERID")
+     public EmployeeEntity getResponsibleEngineer() {
+     return responsibleEngineerId;
+     }
+    
+     public void setResponsibleEngineer(EmployeeEntity wpResponsibleEngineer)
+     {
+     responsibleEngineerId = wpResponsibleEngineer;
+     }
 
     // bi-directional many-to-many association to Employee
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "WORKPACKAGEEMPLOYEESASSIGNED", joinColumns = {
             @JoinColumn(name = "PROJID", referencedColumnName = "PROJID", nullable = false),
             @JoinColumn(name = "WPID", referencedColumnName = "ID", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "EMPID", nullable = false) })
-    public List<EmployeeEntity> getWpEmployeesAssigned() {
+    public Set<EmployeeEntity> getEmployeesAssigned() {
         return employeesAssigned;
     }
 
@@ -142,7 +149,6 @@ public class WorkpackageEntity extends Package {
 
     public void setProject(ProjectEntity project) {
         this.project = project;
-        this.projid = project.getId();
     }
 
     public void setProjid(String projid) {
@@ -153,7 +159,7 @@ public class WorkpackageEntity extends Package {
         setName(wptitle);
     }
 
-    public void setWpEmployeesAssigned(List<EmployeeEntity> wpEmployeesAssigned) {
+    public void setEmployeesAssigned(Set<EmployeeEntity> wpEmployeesAssigned) {
         employeesAssigned = wpEmployeesAssigned;
     }
 

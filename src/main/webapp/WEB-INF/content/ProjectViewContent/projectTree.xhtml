@@ -11,12 +11,20 @@
 <body>
 <ui:composition>
 	<h:form id="tree">
+	<h:commandButton value="Init" action="#{projectAction.initializeProject}"/>
+	<p:ajaxStatus style="width:16px;height:16px;">
+                    <f:facet name="start">
+                        <h:graphicImage value="/resources/gfx/ajaxloading.gif" />
+                    </f:facet>
 
-	
+                    <f:facet name="complete">
+                        <h:outputText value="" />
+                    </f:facet>
+                </p:ajaxStatus>
 		<p:tree value="#{tree.root}" var="node"
 			selectionMode="single" dynamic="true"
 			selection="#{tree.selectedNode}"
-			update="wp, child, child:campnou, messages"
+			update="wp,outchild, messages, outtbl, outacc"
 			nodeSelectListener="#{tree.onNodeSelect}">
 			<p:treeNode>
 				<h:outputText value="#{node}" />

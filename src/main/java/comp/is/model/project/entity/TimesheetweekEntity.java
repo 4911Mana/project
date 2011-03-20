@@ -26,9 +26,9 @@ public class TimesheetweekEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private List<EmployeelabourchargerateEntity> employeeLabourChargeRates;
 	private List<TimesheetEntity> timeSheets;
-	private Date tsweekend;
-	private long tsweekid;
-	private BigDecimal tsweeknum;
+	private Date weekend;
+	private long id;
+	private BigDecimal weeknum;
 
     public TimesheetweekEntity() {
     }
@@ -48,21 +48,21 @@ public class TimesheetweekEntity implements Serializable {
 
 
     @Temporal( TemporalType.DATE)
-	public Date getTsweekend() {
-		return this.tsweekend;
+	public Date getWeekend() {
+		return this.weekend;
 	}
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	//@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(unique=true, nullable=false, precision=16)
-	public long getTsweekid() {
-		return this.tsweekid;
+	public long getId() {
+		return id;
 	}
 
 
 	@Column(precision=2)
-	public BigDecimal getTsweeknum() {
-		return this.tsweeknum;
+	public BigDecimal getWeeknum() {
+		return weeknum;
 	}
 
 	public void setEmployeeLabourChargeRates(List<EmployeelabourchargerateEntity> employeeLabourChargeRates) {
@@ -74,16 +74,16 @@ public class TimesheetweekEntity implements Serializable {
 		this.timeSheets = timeSheets;
 	}
 
-	public void setTsweekend(Date tsweekend) {
-		this.tsweekend = tsweekend;
+	public void setWeekend(Date tsweekend) {
+		weekend = tsweekend;
 	}	
 
-	public void setTsweekid(long tsweekid) {
-		this.tsweekid = tsweekid;
+	public void setId(long tsweekid) {
+		id = tsweekid;
 	}
 
-	public void setTsweeknum(BigDecimal tsweeknum) {
-		this.tsweeknum = tsweeknum;
+	public void setWeeknum(BigDecimal tsweeknum) {
+		weeknum = tsweeknum;
 	}
 	
 }

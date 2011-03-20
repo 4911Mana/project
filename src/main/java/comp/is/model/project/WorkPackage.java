@@ -6,13 +6,16 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
+import comp.is.model.admin.Employee;
 import comp.is.model.admin.LabourGrade;
+import comp.is.model.project.entity.EmployeeEntity;
 import comp.is.model.project.entity.Package;
 import comp.is.model.project.entity.WorkpackageEntity;
 
 public class WorkPackage extends WorkpackageEntity implements
         Comparable<WorkPackage> {
 
+    //ArrayList<Employee> 
     public static String pad(String num) {
         String padNum = num;
         for (int i = padNum.length(); i < LENGTH; i++) {
@@ -34,7 +37,7 @@ public class WorkPackage extends WorkpackageEntity implements
     private Hashtable<LabourGrade, Double> budget = new Hashtable<LabourGrade, Double>(
             6);
 
-    //private boolean candidate = false;
+    // private boolean candidate = false;
 
     public WorkPackage() {
         super();
@@ -49,7 +52,7 @@ public class WorkPackage extends WorkpackageEntity implements
         id = p.id;
         name = p.name;
         description = p.description;
-        //this.candidate = false;
+        // this.candidate = false;
         setOpenForCharges(p.isOpenForCharges());
         this.parent = p.getParent();
         this.projid = p.getProjid();
@@ -60,7 +63,14 @@ public class WorkPackage extends WorkpackageEntity implements
     public WorkPackage(WorkpackageEntity p) {
         init(p);
         setParent(p.getParent());
-        System.out.println("Wp init " + this.getDetails());
+        responsibleEngineerId = p.getResponsibleEngineer();
+        timeSheetEntries = p.getTimeSheetEntries();
+        if (p.getEmployeesAssigned() != null) {
+            for (EmployeeEntity e : p.getEmployeesAssigned()) {
+                employees.add(new Employee(e));
+            }
+        }
+        System.out.println(id + " Emp: " + employees + " Timesheets: " + this.timeSheetEntries);
     }
 
     public WorkPackage getParentWp() {
@@ -82,9 +92,11 @@ public class WorkPackage extends WorkpackageEntity implements
     public ArrayList<Double> getBudgetVal() {
         return new ArrayList<Double>(budget.values());
     }
-    public boolean isRootChild(){
+
+    public boolean isRootChild() {
         return getParent().getId().equalsIgnoreCase(".");
     }
+
     public String getChildMask() {
         String mask = "*";
         // null is dif
@@ -107,29 +119,26 @@ public class WorkPackage extends WorkpackageEntity implements
                 + ((getParent() == null) ? "null" : getParent().getId());
     }
 
-    @CurrentWp
-    @ChildWp
-    @Override
+//    @CurrentWp
+//    @ChildWp
+//    @Override
     public String getNumber() {
         String id = getId();
         if (id == null) {
             System.out.println("Id is null");
-            return "";
+            return id;
         }
-//        if (candidate) {
-//            return id;
-//        }
         return pad(id);
     }
 
-    public void init(WorkPackage p) {
-        super.init(p);
-        this.projid = p.getProjid();
-        // responsibleEngineer = p.responsibleEngineer;
-        //this.candidate = false;
-        this.parent = p.getParent();
-        // this.project = p.getProject();
-    }
+    // public void init(WorkPackage p) {
+    // super.init(p);
+    // this.projid = p.getProjid();
+    // // responsibleEngineer = p.responsibleEngineer;
+    // //this.candidate = false;
+    // this.parent = p.getParent();
+    // // this.project = p.getProject();
+    // }
 
     // public String getParentMask() {
     // String parentNum = getWpParent().getNumber();
@@ -147,13 +156,13 @@ public class WorkPackage extends WorkpackageEntity implements
     // return mask;
     // }
 
-//    public boolean isCandidate() {
-//        return candidate;
-//    }
-//
-//    public void setCandidate(boolean candidate) {
-//        this.candidate = candidate;
-//    }
+    // public boolean isCandidate() {
+    // return candidate;
+    // }
+    //
+    // public void setCandidate(boolean candidate) {
+    // this.candidate = candidate;
+    // }
 
     public void setNumber(String num) {
         System.out.println("setting view wp to" + num);
@@ -186,6 +195,29 @@ public class WorkPackage extends WorkpackageEntity implements
         }
         return getId().matches(getParent().getId() + "\\w");
     }
-
-   
+    
+    public ArrayList<Employee> getAvailableStaff(){
+        WorkPackage p = new WorkPackage(getParent());
+        System.out.println("Aval staff: parent: " + p.getDetails());
+        if(parent.getEmployeesAssigned() == null || parent.getEmployeesAssigned().isEmpty()){
+            if(p.isRootChild()){ return null;}
+            return p.getAvailableStaff();
+        }
+        else return p.getEmployees();
+    }
+    
+    public void mereg(Package p){
+        description = p.getDescription();
+        id = p.getId();
+        name = p.getName();
+        startDate = p.getStartDate();
+        status = p.getStatus();
+        employees = p.getEmployees();
+    }
+    
+    public boolean isOpenForCharges(){
+        if(getResponsibleEngineer() == null){
+        return super.isOpenForCharges();}
+        return true;
+    }
 }

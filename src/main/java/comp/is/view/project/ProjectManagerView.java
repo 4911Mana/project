@@ -1,21 +1,31 @@
 package comp.is.view.project;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import comp.is.controller.project.ProjectAction;
+import org.primefaces.model.DualListModel;
+
+import comp.is.controller.project.ProjectActionLocal;
 import comp.is.controller.project.WorkPackageAction;
+import comp.is.model.admin.Employee;
+import comp.is.model.project.ProjectTree;
+import comp.is.model.project.ProjectView;
 import comp.is.model.project.WorkPackage;
 
 @Named("projectView")
-@SessionScoped
+@RequestScoped
 public class ProjectManagerView implements Serializable {
 
     @Inject
@@ -23,11 +33,12 @@ public class ProjectManagerView implements Serializable {
     @Inject
     private EmployeePickListBean empPickList;
     @Inject
-    ProjectAction projectAction;
+    ProjectActionLocal projectAction;
     @Inject
     private ProjectTreeBean projectTree;
-//    @Inject
-//    WorkPackageAction wpAction;
+
+    // @Inject
+    // WorkPackageAction wpAction;
 
     public void addChildToTree(String child, String parent) {
         childPanel.setRendered(false);
@@ -53,7 +64,8 @@ public class ProjectManagerView implements Serializable {
 
         projectAction.setWp(projectAction.getProject().getRoot());
         System.out.println("Root is selected "
-                + projectAction.getProject().getRoot());
+                + projectAction.getProject().getRoot().getEmployees());
+        empPickList.setRendered(false);
     }
 
     public ChildWpPanelBean getChildPanel() {
@@ -68,21 +80,20 @@ public class ProjectManagerView implements Serializable {
         return null;
     }
 
-    @PostConstruct
     public void init() {
+        System.out.println("View init start " + projectTree);
         projectTree.init(projectAction.getProject());
         displayRoot();
-        // empPickList = new
-        // EmployeePickListBean(projectAction.getWp().getParent().getWpEmployeesAssigned(),
-        // projectAction.getWp().getWpEmployeesAssigned());
+        System.out.println("View init end");
     }
 
     public void nodeIsNotValid() {
-       projectAction.reinit();
+        projectAction.reinit();
     }
 
     public void onNodeSelect() {
         String selectedNode = projectTree.getSelectedNode().toString();
+        
 
         System.out.println("View: Selected: " + selectedNode);
         if (selectedNode.isEmpty()) {
@@ -93,19 +104,36 @@ public class ProjectManagerView implements Serializable {
                     .unpad(selectedNode));
 
             if (wp != null)// should be exception
-                System.out.println("Not null, setting to : "
-                        + WorkPackage.unpad(selectedNode));
+            {    
+            empPickList.setRendered(true);
             projectAction.setWp(wp);
+            ArrayList<Employee> assignedEmp = projectAction.getTargetEmp(wp);
+            Collections.sort(assignedEmp);
+            ArrayList<Employee> availEmp = new ArrayList<Employee>(projectAction.getSourceEmp(wp));
+            Collections.sort(availEmp);
+            availEmp.removeAll(assignedEmp);
+            empPickList.arrangeEmployees(availEmp, assignedEmp, 
+                    (wp.getResponsibleEngineer()==null)? null : new Employee(wp.getResponsibleEngineer()));
+            System.out.println("Not null, setting to : "
+                    + WorkPackage.unpad(selectedNode) + "\navail: " + availEmp + "\nass: " + assignedEmp);
+            }
         }
     }
 
+    // public void setChildPanel(ChildWpPanelBean childPanel) {
+    // this.childPanel = childPanel;
+    // }
+    //
+    // public void setProjectTree(ProjectTreeBean projectTree) {
+    // this.projectTree = projectTree;
+    // }
 
-//    public void setChildPanel(ChildWpPanelBean childPanel) {
-//        this.childPanel = childPanel;
-//    }
-//
-//    public void setProjectTree(ProjectTreeBean projectTree) {
-//        this.projectTree = projectTree;
+//    public void initProjectEmp(ArrayList<Employee> arrayList) {
+//        System.out.println("Num of empl " + arrayList.size());
+//        for (Employee e : arrayList) {
+//            empTable.getEmployees().add(e);
+//        }
 //    }
 
+    
 }

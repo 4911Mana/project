@@ -10,4 +10,8 @@
    <var>msg</var>
   </resource-bundle>
  </application>
+ <converter>
+        <converter-id>employee</converter-id>
+        <converter-class>comp.is.view.admin.EmployeeConverter</converter-class>
+    </converter>
 </faces-config>

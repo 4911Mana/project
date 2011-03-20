@@ -44,7 +44,7 @@ public class ProjectTree extends Hashtable<String, WorkPackage> {
         return children;
     }
 
-    public Package getRoot() {
+    public ProjectPackage getRoot() {
         return root;
     }
 

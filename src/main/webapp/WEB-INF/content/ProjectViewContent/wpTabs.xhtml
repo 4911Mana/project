@@ -11,56 +11,90 @@
 </head>
 <body>
 <ui:composition>
-	<p:tabView>
-		<!-- first tab -->
-		<p:tab title="Info" dynamic="true" cache="false">
-			<h:form id="wp">
+	<h:form id="wp">
+		<p:tabView activeIndex="#{employeePickListBean.activeTabIndex}" 
+		tabChangeListener="#{employeePickListBean.onTabChange}">
+			<!-- first tab -->
+			<p:tab title="Info">
+
 				<l:wpInfoTag numberValue="#{wp.number}" numberReadonly="true"
 					titleValue="#{wp.name}" descValue="#{wp.description}"
 					startDate="#{wp.startDate}" charges="#{wp.openForCharges}" />
-				<p:commandButton id="addButton" action="#{projectAction.validParent}"
-					value="Add" update="child:campnou, messages">
+				<!-- <p:commandButton id="addButton"
+					 value="Add"
+					update="outchild, messages">
 					<f:setPropertyActionListener value="#{not wp.lowestLevel}"
 						target="#{childPanel.rendered}" />
 
-				</p:commandButton>
-			</h:form>
+				</p:commandButton>-->
+			</p:tab>
 
-			<br />
-			<h:form id="child">
-
-				<p:outputPanel id="campnou">
-					<p:panel id="innerPanel" rendered="#{childPanel.rendered}"
-						header="New WorkPackage for #{wp.number}" closable="true"
-						closeListener="#{childPanel.handleClose}"
-						onCloseUpdate="child:campnou, campnou">
-
-						<l:wpInfoTag numberValue="#{childWp.number}"
-							titleValue="#{childWp.name}" descValue="#{childWp.description}"
-							startDate="#{childWp.startDate}"
-							charges="#{childWp.openForCharges}" mask="#{wp.childMask}" />
-
-						<p:commandButton action="#{projectAction.addChild}"
-							update="child:campnou, tree, messages, wp" value="Save">
-						</p:commandButton>
-					</p:panel>
-				</p:outputPanel>
-			</h:form>
-		</p:tab>
-
-		<p:tab title="Staff">
-			<h:form>
+			<p:tab title="Staff">
 				<ui:insert name="wpStaff">
 					<ui:include src="wpStaff.xhtml" />
 				</ui:insert>
-			</h:form>
-		</p:tab>
-		<p:tab title="Cost">
-			<ui:insert name="wpCost">
-				<ui:include src="wpCost.xhtml" />
-			</ui:insert>
-		</p:tab>
-	</p:tabView>
+			</p:tab>
+			<p:tab title="Cost">
+				<ui:insert name="wpCost">
+					<ui:include src="wpCost.xhtml" />
+				</ui:insert>
+			</p:tab>
+		</p:tabView>
+		<p:toolbar>
+			<p:toolbarGroup align="left">
+				<p:commandButton value="New"
+					action="#{projectAction.validParent}" image="ui-icon-document"
+					update="outchild, messages">
+					<f:setPropertyActionListener value="#{not wp.lowestLevel}"
+						target="#{childPanel.rendered}" />
+				</p:commandButton>
+
+				<!-- <p:commandButton type="push" value="Open"
+					image="ui-icon-folder-open" />-->
+
+				<p:divider />
+
+				<p:commandButton title="Save" action="#{projectAction.doMerge}" image="ui-icon-disk" />
+				<p:commandButton type="push" title="Delete" image="ui-icon-trash" />
+				<p:commandButton type="push" title="Print" image="ui-icon-print" />
+			</p:toolbarGroup>
+
+			<p:divider />
+
+			<!--  <p:toolbarGroup align="right">
+				<p:menuButton value="Navigate">
+					<p:menuitem value="Home" url="http://www.primefaces.org" />
+					<p:menuitem value="ShowCase"
+						url="http://www.primefaces.org/showcase" />
+					<p:menuitem value="TouchFaces"
+						url="http://www.primefaces.org/showcase/touch" />
+				</p:menuButton>
+			</p:toolbarGroup>-->
+
+		</p:toolbar>
+		
+	</h:form>
+	<br />
+	<h:form prependId="false">
+
+		<p:outputPanel id="outchild">
+			<p:panel id="innerPanel" rendered="#{childPanel.rendered}"
+				header="New WorkPackage for #{wp.number}" closable="true"
+				closeListener="#{childPanel.handleClose}"
+				onCloseUpdate="child:campnou, campnou">
+
+				<l:wpInfoTag numberValue="#{childWp.number}"
+					titleValue="#{childWp.name}" descValue="#{childWp.description}"
+					startDate="#{childWp.startDate}"
+					charges="#{childWp.openForCharges}" mask="#{wp.childMask}" />
+
+				<p:commandButton action="#{projectAction.addChild}"
+					update="outchild, tree, messages, wp" value="Save">
+				</p:commandButton>
+			</p:panel>
+		</p:outputPanel>
+	</h:form>
+	
 </ui:composition>
 </body>
 
