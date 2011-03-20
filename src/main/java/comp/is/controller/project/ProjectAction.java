@@ -24,7 +24,6 @@ import comp.is.model.project.ChildWp;
 import comp.is.model.project.CurrentWp;
 import comp.is.model.project.ProjectPackage;
 import comp.is.model.project.ProjectTree;
-import comp.is.model.project.ProjectView;
 import comp.is.model.project.WorkPackage;
 import comp.is.model.project.entity.EmployeeEntity;
 import comp.is.model.project.entity.Package;

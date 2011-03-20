@@ -4,24 +4,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.primefaces.model.DualListModel;
-
 import comp.is.controller.project.ProjectActionLocal;
-import comp.is.controller.project.WorkPackageAction;
 import comp.is.model.admin.Employee;
-import comp.is.model.project.ProjectTree;
-import comp.is.model.project.ProjectView;
 import comp.is.model.project.WorkPackage;
 
 @Named("projectView")
