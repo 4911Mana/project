@@ -344,9 +344,9 @@ public class ProjectAction implements ProjectActionLocal {
      */
     @Override
     public ArrayList<Employee> getSourceEmp(WorkPackage wp) {
-        
+
         ArrayList<Employee> emp = wp.getAvailableStaff();
-        if ( emp != null) {
+        if (emp != null) {
             return emp;
         } else {
             return new ArrayList<Employee>(pp.getEmployees());
@@ -400,8 +400,10 @@ public class ProjectAction implements ProjectActionLocal {
         // msgs.add("Number update is not allowed");
         // err = true;
         // }
-        candidate.setResponsibleEngineer(new EmployeeEntity(pickList
-                .getRespEng()));
+        if (pickList.getRespEng() != null) {
+            candidate.setResponsibleEngineer(new EmployeeEntity(pickList
+                    .getRespEng()));
+        }
         candidate.mereg(currentP);
         Set<Employee> employeesAssigned = new HashSet<Employee>();
         Set<EmployeeEntity> empSet = new HashSet<EmployeeEntity>();

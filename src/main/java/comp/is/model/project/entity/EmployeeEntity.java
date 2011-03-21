@@ -47,6 +47,7 @@ public class EmployeeEntity implements Serializable {
 
 
 	public EmployeeEntity(Employee e) {
+	    if(e == null){return;}
 	    firstname = e.firstname;
 	    id = e.id;
 	    lastname = e.lastname;
