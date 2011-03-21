@@ -40,8 +40,7 @@ public class ProjectManagerView implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
                 msg, "");
-
-        context.addMessage(null, message);
+       context.addMessage(null, message);
     }
 
     public void displayMsgs(List<String> msgs) {

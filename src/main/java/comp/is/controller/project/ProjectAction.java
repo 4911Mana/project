@@ -2,9 +2,12 @@ package comp.is.controller.project;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -38,7 +41,6 @@ import comp.is.view.project.ProjectManagerView;
 @Named("projectAction")
 public class ProjectAction implements ProjectActionLocal {
 
-    
     private Package currentP;
     private WorkPackage childWp;
     private ProjectPackage pp;
@@ -53,7 +55,9 @@ public class ProjectAction implements ProjectActionLocal {
     public ProjectAction() {
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see comp.is.controller.project.ProjectActionLocal#addChild()
      */
     @Override
@@ -66,7 +70,6 @@ public class ProjectAction implements ProjectActionLocal {
         WorkPackage candidate = new WorkPackage(childWp);
         candidate.setParent(getWpById(currentP.getId()));
         candidate.setProject(pp);
-        
 
         System.out.println("CANDIDATE " + candidate.getDetails());
 
@@ -126,8 +129,12 @@ public class ProjectAction implements ProjectActionLocal {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see comp.is.controller.project.ProjectActionLocal#addWp(comp.is.model.project.WorkPackage)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * comp.is.controller.project.ProjectActionLocal#addWp(comp.is.model.project
+     * .WorkPackage)
      */
     @Override
     public void addWp(WorkPackage wp) {
@@ -162,7 +169,9 @@ public class ProjectAction implements ProjectActionLocal {
         return true;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see comp.is.controller.project.ProjectActionLocal#getChildWp()
      */
     @Override
@@ -174,7 +183,9 @@ public class ProjectAction implements ProjectActionLocal {
         return childWp;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see comp.is.controller.project.ProjectActionLocal#getProject()
      */
     @Override
@@ -182,7 +193,9 @@ public class ProjectAction implements ProjectActionLocal {
         return project;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see comp.is.controller.project.ProjectActionLocal#getWp()
      */
     @Override
@@ -193,8 +206,11 @@ public class ProjectAction implements ProjectActionLocal {
         return currentP;
     }
 
-    /* (non-Javadoc)
-     * @see comp.is.controller.project.ProjectActionLocal#getWpById(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * comp.is.controller.project.ProjectActionLocal#getWpById(java.lang.String)
      */
     @Override
     public WorkPackage getWpById(String wpNumber) {
@@ -202,7 +218,9 @@ public class ProjectAction implements ProjectActionLocal {
         return wp;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see comp.is.controller.project.ProjectActionLocal#initializeProject()
      */
     @Override
@@ -222,32 +240,47 @@ public class ProjectAction implements ProjectActionLocal {
                 .println("Post construct end =======================================================");
     }
 
-    /* (non-Javadoc)
-     * @see comp.is.controller.project.ProjectActionLocal#setChildWp(comp.is.model.project.WorkPackage)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * comp.is.controller.project.ProjectActionLocal#setChildWp(comp.is.model
+     * .project.WorkPackage)
      */
     @Override
     public void setChildWp(WorkPackage childWp) {
         this.childWp = childWp;
     }
 
-    /* (non-Javadoc)
-     * @see comp.is.controller.project.ProjectActionLocal#setProject(comp.is.model.project.ProjectTree)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * comp.is.controller.project.ProjectActionLocal#setProject(comp.is.model
+     * .project.ProjectTree)
      */
     @Override
     public void setProject(ProjectTree tree) {
         this.project = tree;
     }
 
-    /* (non-Javadoc)
-     * @see comp.is.controller.project.ProjectActionLocal#setWp(comp.is.model.project.entity.Package)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * comp.is.controller.project.ProjectActionLocal#setWp(comp.is.model.project
+     * .entity.Package)
      */
     @Override
     public void setWp(Package wp) {
         currentP = wp;
     }
 
-    /* (non-Javadoc)
-     * @see comp.is.controller.project.ProjectActionLocal#uniqueNum(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * comp.is.controller.project.ProjectActionLocal#uniqueNum(java.lang.String)
      */
     @Override
     public boolean uniqueNum(String number) {
@@ -255,8 +288,12 @@ public class ProjectAction implements ProjectActionLocal {
 
     }
 
-    /* (non-Javadoc)
-     * @see comp.is.controller.project.ProjectActionLocal#validStartDate(comp.is.model.project.WorkPackage, java.util.Date)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * comp.is.controller.project.ProjectActionLocal#validStartDate(comp.is.
+     * model.project.WorkPackage, java.util.Date)
      */
     @Override
     public boolean validStartDate(WorkPackage wp, Date newDate) {
@@ -273,7 +310,9 @@ public class ProjectAction implements ProjectActionLocal {
         em.persist(entity);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see comp.is.controller.project.ProjectActionLocal#reinit()
      */
     @Override
@@ -282,8 +321,10 @@ public class ProjectAction implements ProjectActionLocal {
         setChildWp(new WorkPackage());
 
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see comp.is.controller.project.ProjectActionLocal#validParent()
      */
     @Override
@@ -294,35 +335,58 @@ public class ProjectAction implements ProjectActionLocal {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see comp.is.controller.project.ProjectActionLocal#getSourceEmp(comp.is.model.project.WorkPackage)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * comp.is.controller.project.ProjectActionLocal#getSourceEmp(comp.is.model
+     * .project.WorkPackage)
      */
     @Override
     public ArrayList<Employee> getSourceEmp(WorkPackage wp) {
-        if (wp.getAvailableStaff() != null) {
-            return wp.getAvailableStaff();
+        
+        ArrayList<Employee> emp = wp.getAvailableStaff();
+        if ( emp != null) {
+            return emp;
         } else {
-            return pp.getEmployees();
+            return new ArrayList<Employee>(pp.getEmployees());
         }
     }
 
-    /* (non-Javadoc)
-     * @see comp.is.controller.project.ProjectActionLocal#getTargetEmp(comp.is.model.project.WorkPackage)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * comp.is.controller.project.ProjectActionLocal#getTargetEmp(comp.is.model
+     * .project.WorkPackage)
      */
-    @Override
     public ArrayList<Employee> getTargetEmp(WorkPackage wp) {
-        Set<Employee> emp = new HashSet<Employee>(wp.getEmployees());
+        Map<Integer, Employee> emp = new Hashtable<Integer, Employee>();
+        for (Employee e : wp.getEmployees()) {
+            if (!emp.containsKey(e.getId())) {
+                emp.put(e.getId(), e);
+            }
+        }
         if (project.getChildren(wp.getId()) == null) {
-            return wp.getEmployees();
+            return new ArrayList<Employee>(wp.getEmployees());
         } else {
             for (WorkPackage cwp : project.getChildren(wp.getId())) {
-                emp.addAll(getTargetEmp(cwp));
+                for (Employee e : getTargetEmp(cwp)) {
+                    if (!emp.containsKey(e.getId())) {
+                        emp.put(e.getId(), e);
+                    }
+                }
+                // emp.addAll(getTargetEmp(cwp));
+                System.out.println("getting targ emp after " + emp);
             }
-            return new ArrayList<Employee>(emp);
+
+            return new ArrayList<Employee>(emp.values());
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see comp.is.controller.project.ProjectActionLocal#doMerge()
      */
     @Override
@@ -332,16 +396,22 @@ public class ProjectAction implements ProjectActionLocal {
         boolean err = false;
 
         WorkPackage candidate = this.getWpById(currentP.getId());
-//        if (!candidate.getId().equalsIgnoreCase(currentP.getId())) {
-//            msgs.add("Number update is not allowed");
-//            err = true;
-//        }
+        // if (!candidate.getId().equalsIgnoreCase(currentP.getId())) {
+        // msgs.add("Number update is not allowed");
+        // err = true;
+        // }
+        candidate.setResponsibleEngineer(new EmployeeEntity(pickList
+                .getRespEng()));
         candidate.mereg(currentP);
-        List<Employee> employeesAssigned = pickList.getEmployees().getTarget();
+        Set<Employee> employeesAssigned = new HashSet<Employee>();
         Set<EmployeeEntity> empSet = new HashSet<EmployeeEntity>();
-        for(Employee e : employeesAssigned){
-            empSet.add(new EmployeeEntity(e));
+        for (Employee e : pickList.getEmployees().getTarget()) {
+            if (!candidate.getParent().getEmployees().contains(e)) {
+                employeesAssigned.add(e);
+                empSet.add(new EmployeeEntity(e));
+            }
         }
+        // candidate.setEmployees(employeesAssigned);
         candidate.setEmployeesAssigned(empSet);
         if (candidate.getStartDate() != null) {
             if (!validStartDate(candidate, candidate.getStartDate())) {
@@ -363,7 +433,8 @@ public class ProjectAction implements ProjectActionLocal {
             System.out.println("Saving " + candidate + " "
                     + candidate.getStartDate() + "/ "
                     + candidate.getEmployeesAssigned());
-            project.put(candidate.getId(), candidate);
+            // em.refresh(entity) ;
+            project.put(entity.getId(), new WorkPackage(entity));
         } catch (Exception ex) {
             view.displayMsg("Unable to update " + ex.toString());
             setWp(getWpById(currentP.getId()));

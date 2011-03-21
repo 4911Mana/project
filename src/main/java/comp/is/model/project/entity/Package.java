@@ -3,7 +3,9 @@ package comp.is.model.project.entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -67,7 +69,6 @@ public abstract class Package implements Serializable{
         description = candidate.description;
         startDate = candidate.startDate;
         status = candidate.status;
-        employees = candidate.employees;
     }
     @Transient
     public boolean isOpenForCharges(){
@@ -111,6 +112,11 @@ public abstract class Package implements Serializable{
     @Transient
     public ArrayList<Employee> getEmployees(){ return employees;}
 
+    public void setEmployees(ArrayList<Employee> employees) {
+        this.employees = employees;
+        System.out.println("Setting emp " + employees);
+    }
+    
     //abstract public void setWpEmployeesAssigned(List<EmployeeEntity> wpEmployeesAssigned);
     
     //abstract public Package getParent();

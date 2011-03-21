@@ -58,10 +58,8 @@ Comparable<Employee> {
         if (this == other) {
             return true;
         }
-        if (!(other instanceof Employee)) {
-            return false;
-        }
         Employee castOther = (Employee)other;
+        System.out.println("equals this id: " + this.id + "/other id: " + castOther.id);
         return 
             this.id == castOther.id;
         }

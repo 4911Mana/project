@@ -48,28 +48,31 @@
 			
 			<p:pickList id="pickList" value="#{employeePickListBean.employees}" var="employee"
 					itemLabel="#{employee}" itemValue="#{employee}"
-					converter="employee" iconOnly="true" immediate="true">
+					converter="employee" iconOnly="true" onTransfer="submit()">
 					<f:facet name="sourceCaption">Available</f:facet>
 					<f:facet name="targetCaption">Assigned</f:facet>
 				</p:pickList>
-		<p:commandButton value="Submit" update="respEngInplace" oncomplete="dialog.show()"/>  
+		
 </p:panel>
 			<!-- pick list end-->
 		</p:tab>
 		<p:panel id="respEngInplace" rendered="#{wp.openForCharges or tree.selectedNode.leaf}">
-			<h:outputText value="Responsible Engineer, double click to select: " />
-			<p:inplace editor="true" onEditUpdate="msgs"
-				label="#{empty employeePickListBean.respEng ? 'not selected' : employeePickListBean.respEng}" effectSpeed="fast"
+			<h:outputText value="Responsible Engineer, double click to select: " style="font-weight:bold"/>
+			<p:inplace editor="true" onEditUpdate="messages"
+				label="#{empty employeePickListBean.respEng ? 'not selected' : employeePickListBean.respEng}" 
+				effectSpeed="fast"
 				event="dblclick" widgetVar="respEngInplace">
-				<h:selectOneMenu value="#{employeePickListBean.respEng}">
+				<h:selectOneMenu value="#{employeePickListBean.respEng}" converter="employee">
 				<f:selectItems value="#{employeePickListBean.employees.target}"  
                     var="employee" itemLabel="#{employee}"  
                     itemValue="#{employee}" converter="employee"/>  
 				</h:selectOneMenu>
 			</p:inplace>
+			<p:spacer width="30"/>
+			<p:commandButton update="respEngInplace, displayEmp" image="ui-icon ui-icon-arrowrefresh-1-w"/>  
 		</p:panel>
 	</p:outputPanel>
-	<!-- <p:dialog modal="true" showEffect="fade" hideEffect="fade" widgetVar="dialog">
+	<!-- <p:dialog showEffect="fade" hideEffect="fade" widgetVar="dialog">
         <h:panelGrid id="displayEmp" columns="2">
             <h:outputText value="Source: " style="font-weight:bold"/>
             <ui:repeat value="#{employeePickListBean.employees.source}" var="emp">

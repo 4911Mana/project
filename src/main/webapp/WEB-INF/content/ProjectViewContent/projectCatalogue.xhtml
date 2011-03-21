@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+
+<head>
+<title>IGNORED</title>
+</head>
+<body>
+<ui:composition>
+	<h:form id="tree">
+	<h:commandButton value="Init" action="#{projectAction.initializeProject}"/>
+	<p:ajaxStatus style="width:16px;height:16px;">
+                    <f:facet name="start">
+                        <h:graphicImage value="/resources/gfx/ajaxloading.gif" />
+                    </f:facet>
+
+                    <f:facet name="complete">
+                        <h:outputText value="" />
+                    </f:facet>
+                </p:ajaxStatus>
+		<p:dataTable id="emptbl" var="emp" value="#{wp.employees}"
+			paginator="true" rows="10" emptyMessage="No employees assigned"
+			widgetVar="empTable">
+
+			<!--  <f:facet name="header">
+            <p:outputPanel>
+                <h:outputText value="Search all fields:" />
+                <p:inputText id="globalFilter" onkeyup="empTable.filter()" style="width:150px" />
+            </p:outputPanel>
+        </f:facet>-->
+
+			<p:column sortBy="#{emp.id}" filterBy="#{emp.strId}">
+				<f:facet name="header">
+					<h:outputText value="ID" />
+				</f:facet>
+				<h:outputText value="#{emp.strId}" />
+			</p:column>
+
+			<p:column sortBy="#{emp.lastname}" filterBy="#{emp.lastname}">
+				<f:facet name="header">
+					<h:outputText value="Name" />
+				</f:facet>
+				<h:outputText value="#{emp.lastname}, #{emp.firstname}" />
+			</p:column>
+		</p:dataTable>
+	</h:form>
+</ui:composition>
+</body>
+
+</html>

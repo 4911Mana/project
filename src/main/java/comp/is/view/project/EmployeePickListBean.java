@@ -34,10 +34,12 @@ public class EmployeePickListBean implements Serializable{
     }
 
     public DualListModel<Employee> getEmployees() {
+        System.out.println("Getting empls " + employees);
         return employees;
     }
 
     public void setEmployees(DualListModel<Employee> employees) {
+        System.out.println("Setting empls " + employees);
         this.employees = employees;
     }
 
@@ -50,19 +52,18 @@ public class EmployeePickListBean implements Serializable{
     }
     
     public Employee getRespEng() {
+        System.out.println("Getting resp eng " + respEng);
         return respEng;
     }
 
     public void setRespEng(Employee respEng) {
+        System.out.println("Setting resp eng " + respEng);
         this.respEng = respEng;
     }
 
     public void arrangeEmployees(ArrayList<Employee>source, ArrayList<Employee>target, Employee engineer){
         employees = new DualListModel<Employee>(source, target);
-        if(target != null & !target.isEmpty()){
-            respEng = target.get(0);
-        }
-        else{respEng = engineer;}
+        respEng = engineer;
     }
 
     public int getActiveTabIndex() {

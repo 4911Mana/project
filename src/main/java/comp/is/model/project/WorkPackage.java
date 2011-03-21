@@ -48,24 +48,24 @@ public class WorkPackage extends WorkpackageEntity implements
         init(p);
     }
 
-    public WorkPackage(WorkPackage p) {
-        id = p.id;
-        name = p.name;
-        description = p.description;
-        // this.candidate = false;
-        setOpenForCharges(p.isOpenForCharges());
-        this.parent = p.getParent();
-        this.projid = p.getProjid();
-        this.status = p.getStatus();
-        this.startDate = p.getStartDate();
-    }
+//    public WorkPackage(WorkPackage p) {
+//        id = p.id;
+//        name = p.name;
+//        description = p.description;
+//        setOpenForCharges(p.isOpenForCharges());
+//        this.parent = p.getParent();
+//        this.projid = p.getProjid();
+//        this.status = p.getStatus();
+//        this.startDate = p.getStartDate();
+//    }
 
     public WorkPackage(WorkpackageEntity p) {
         init(p);
         setParent(p.getParent());
         responsibleEngineerId = p.getResponsibleEngineer();
         timeSheetEntries = p.getTimeSheetEntries();
-        if (p.getEmployeesAssigned() != null) {
+        
+        if (p.getEmployeesAssigned() != null & (employees == null || employees.isEmpty())) {
             for (EmployeeEntity e : p.getEmployeesAssigned()) {
                 employees.add(new Employee(e));
             }
@@ -96,7 +96,7 @@ public class WorkPackage extends WorkpackageEntity implements
     public boolean isRootChild() {
         return getParent().getId().equalsIgnoreCase(".");
     }
-
+    
     public String getChildMask() {
         String mask = "*";
         // null is dif
@@ -198,12 +198,12 @@ public class WorkPackage extends WorkpackageEntity implements
     
     public ArrayList<Employee> getAvailableStaff(){
         WorkPackage p = new WorkPackage(getParent());
-        System.out.println("Aval staff: parent: " + p.getDetails());
+        System.out.println("Aval staff: parent: " + p.getEmployees());
         if(parent.getEmployeesAssigned() == null || parent.getEmployeesAssigned().isEmpty()){
             if(p.isRootChild()){ return null;}
             return p.getAvailableStaff();
         }
-        else return p.getEmployees();
+        else return new ArrayList<Employee>(p.getEmployees());
     }
     
     public void mereg(Package p){
@@ -212,7 +212,7 @@ public class WorkPackage extends WorkpackageEntity implements
         name = p.getName();
         startDate = p.getStartDate();
         status = p.getStatus();
-        employees = p.getEmployees();
+        setEmployees(p.getEmployees());
     }
     
     public boolean isOpenForCharges(){
