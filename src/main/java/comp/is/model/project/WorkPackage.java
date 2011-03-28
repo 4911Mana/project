@@ -1,21 +1,23 @@
 package comp.is.model.project;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Hashtable;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import comp.is.model.admin.Employee;
 import comp.is.model.admin.LabourGrade;
 import comp.is.model.project.entity.EmployeeEntity;
 import comp.is.model.project.entity.Package;
+import comp.is.model.project.entity.TimesheetEntity;
+import comp.is.model.project.entity.TimesheetentryEntity;
 import comp.is.model.project.entity.WorkpackageEntity;
 
 public class WorkPackage extends WorkpackageEntity implements
         Comparable<WorkPackage> {
 
-    //ArrayList<Employee> 
+    
     public static String pad(String num) {
         String padNum = num;
         for (int i = padNum.length(); i < LENGTH; i++) {
@@ -34,36 +36,20 @@ public class WorkPackage extends WorkpackageEntity implements
         return padNum;
     }
 
-    private Hashtable<LabourGrade, Double> budget = new Hashtable<LabourGrade, Double>(
-            6);
-
-    // private boolean candidate = false;
 
     public WorkPackage() {
-        super();
-        budget.put(LabourGrade.P1, 4.6);
     }
 
     public WorkPackage(Package p) {
         init(p);
     }
 
-//    public WorkPackage(WorkPackage p) {
-//        id = p.id;
-//        name = p.name;
-//        description = p.description;
-//        setOpenForCharges(p.isOpenForCharges());
-//        this.parent = p.getParent();
-//        this.projid = p.getProjid();
-//        this.status = p.getStatus();
-//        this.startDate = p.getStartDate();
-//    }
-
     public WorkPackage(WorkpackageEntity p) {
         init(p);
         setParent(p.getParent());
         responsibleEngineerId = p.getResponsibleEngineer();
         timeSheetEntries = p.getTimeSheetEntries();
+        
         
         if (p.getEmployeesAssigned() != null & (employees == null || employees.isEmpty())) {
             for (EmployeeEntity e : p.getEmployeesAssigned()) {
@@ -85,14 +71,7 @@ public class WorkPackage extends WorkpackageEntity implements
         return getId().compareTo(iWpNum);
     }
 
-    public List<LabourGrade> getBudgetKeys() {
-        return new ArrayList<LabourGrade>(budget.keySet());
-    }
-
-    public ArrayList<Double> getBudgetVal() {
-        return new ArrayList<Double>(budget.values());
-    }
-
+    
     public boolean isRootChild() {
         return getParent().getId().equalsIgnoreCase(".");
     }
@@ -131,39 +110,7 @@ public class WorkPackage extends WorkpackageEntity implements
         return pad(id);
     }
 
-    // public void init(WorkPackage p) {
-    // super.init(p);
-    // this.projid = p.getProjid();
-    // // responsibleEngineer = p.responsibleEngineer;
-    // //this.candidate = false;
-    // this.parent = p.getParent();
-    // // this.project = p.getProject();
-    // }
-
-    // public String getParentMask() {
-    // String parentNum = getWpParent().getNumber();
-    // if(parentNum.length() == LENGTH){return parentNum;} // should be
-    // exception
-    //
-    // String mask = "*";
-    // for (int i = 1; i < parentNum.length(); i++) {
-    // mask += "*";
-    // }
-    // for (int i = mask.length(); i < LENGTH; i++) {
-    // mask += PADDING;
-    // }
-    //
-    // return mask;
-    // }
-
-    // public boolean isCandidate() {
-    // return candidate;
-    // }
-    //
-    // public void setCandidate(boolean candidate) {
-    // this.candidate = candidate;
-    // }
-
+   
     public void setNumber(String num) {
         System.out.println("setting view wp to" + num);
         id = (unpad(num));
@@ -220,4 +167,49 @@ public class WorkPackage extends WorkpackageEntity implements
         return super.isOpenForCharges();}
         return true;
     }
+    
+    public void initBudget(){
+        if(this.employees == null){return;}
+        System.out.println("Budget init start--------------------------------");
+        for(Employee e: employees){
+            for(TimesheetEntity tsh : e.getTimeSheets()){
+                for(TimesheetentryEntity te: tsh.getTimeSheetEntries()){
+                    if(te.getWorkPackage().getId().equalsIgnoreCase(getId()) & 
+                            te.getWorkPackage().getProjid().equalsIgnoreCase(getProjid())){
+                        System.out.println("Time sheet entry " + te);
+                        //System.out.println("Current garde" + e.getCurrentGrade());
+                     budget.addToAccumulated(e.getCurrentGrade(),  getTotalForTimesheetEntry(te));}
+                }
+            }
+        }
+        System.out.println("Budget init end-----------------------------------");
+    }
+    
+    public Double getTotalForTimesheetEntry(TimesheetentryEntity te){
+        Double amount = 0D;
+        System.out.println("Fri" + te.getFrihours());
+        amount += te.getFrihours();
+        System.out.println("Mon" + te.getMonhours());
+        amount += te.getMonhours();
+        System.out.println("Sat" + te.getSathours());
+        amount += te.getSathours();
+        System.out.println("Sun" + te.getSunhours());
+        amount += te.getSunhours();
+        System.out.println("Thu" + te.getThuhours());
+        amount += te.getThuhours();
+        System.out.println("Tue" + te.getTuehours());
+        amount += te.getTuehours();
+        System.out.println("Wed" + te.getWedhours());
+        amount += te.getWedhours();
+        return amount;
+    }
+    public List<Entry<LabourGrade, Map<String, Double>>> getWpBudget() {
+        List<Entry<LabourGrade, Map<String, Double>>> budgetList = 
+            new ArrayList<Entry<LabourGrade, Map<String, Double>>>(budget.entrySet());
+        //Collections.sort(budgetList);
+        return budgetList;
+    }
+
+    
+    
 }

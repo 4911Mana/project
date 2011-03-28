@@ -2,6 +2,7 @@ package comp.is.controller.admin;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
@@ -115,23 +116,23 @@ public class EmployeeAction implements Serializable {
 //			return null;
 //		}
 //	}
-	public List<TimesheetEntity> getEmpTimeSheets() {
+	public Set<TimesheetEntity> getEmpTimeSheets() {
 		return emp.getTimeSheets();
 	}
-	public EmployeeEntity getEmpTSApprover() {
-		List<EmployeeEntity> tsApprovers = emp.getTimeSheetApprovers();
-		if (tsApprovers.size() == 1) {
-			return tsApprovers.get(0);
-		} else if (tsApprovers.size() > 1) {
-			// some logic required here if the business logic changed
-			// to involve more than one tsApprovers, which is currently
-			// not allowed.
-			return tsApprovers.get(0);
-		} else {
-			// none were found
-			return null;
-		}
-	}
+//	public EmployeeEntity getEmpTSApprover() {
+//		Set<EmployeeEntity> tsApprovers = emp.getTimeSheetApprovers();
+//		if (tsApprovers.size() == 1) {
+//			return tsApprovers.get(0);
+//		} else if (tsApprovers.size() > 1) {
+//			// some logic required here if the business logic changed
+//			// to involve more than one tsApprovers, which is currently
+//			// not allowed.
+//			return tsApprovers.get(0);
+//		} else {
+//			// none were found
+//			return null;
+//		}
+//	}
 //	public List<WorkpackageEntity> getEmpWorkPackages() {
 //		return emp.getEmployeesWorkPackages();
 //	}

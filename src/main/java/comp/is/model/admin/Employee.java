@@ -1,5 +1,7 @@
 package comp.is.model.admin;
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -39,6 +41,13 @@ Comparable<Employee> {
     }
     
     public LabourGrade getCurrentGrade() {
+        Calendar cal = Calendar.getInstance();
+        Date today = cal.getTime();
+        Integer weekNum = cal.get(Calendar.WEEK_OF_YEAR);
+        for(EmployeelabourchargerateEntity charge: this.getLabourChargeRates()){
+            System.out.println("All labour grades: " + charge.getLabourChargerRate().getRateclassid());
+            if (charge.getEndTimeSheetWeek() == null) return LabourGrade.getGrage(charge.getLabourChargerRate().getRateclassid());
+        }
         return currentGrade;
     }
     public String getStrId(){
@@ -59,7 +68,6 @@ Comparable<Employee> {
             return true;
         }
         Employee castOther = (Employee)other;
-        System.out.println("equals this id: " + this.id + "/other id: " + castOther.id);
         return 
             this.id == castOther.id;
         }

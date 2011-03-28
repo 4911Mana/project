@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -15,6 +17,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import comp.is.model.admin.Employee;
+import comp.is.model.admin.LabourGrade;
+import comp.is.model.project.Budget;
 
 @MappedSuperclass
 public abstract class Package implements Serializable{
@@ -26,11 +30,16 @@ public abstract class Package implements Serializable{
     protected Date startDate;
     protected String status;
     protected ArrayList<Employee> employees;
+    protected Budget budget;
+    
     
     public Package(){
         employees = new ArrayList<Employee>();
+        budget = new Budget();
     }
     
+   
+
     @Transient
     public String getChildMask(){return null;}
 
@@ -114,10 +123,16 @@ public abstract class Package implements Serializable{
 
     public void setEmployees(ArrayList<Employee> employees) {
         this.employees = employees;
-        System.out.println("Setting emp " + employees);
     }
+    
+    @Transient
+    public List<Entry<LabourGrade, Map<String, Double>>> getWpBudget() {
+        return null;
+    }
+   
     
     //abstract public void setWpEmployeesAssigned(List<EmployeeEntity> wpEmployeesAssigned);
     
     //abstract public Package getParent();
+    
 }

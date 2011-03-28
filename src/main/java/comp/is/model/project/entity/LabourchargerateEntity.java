@@ -23,7 +23,7 @@ public class LabourchargerateEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
 	private double rate;
-	private Date year;
+	private Date effectiveDate;
 	private String rateclassid;
 
     public LabourchargerateEntity() {
@@ -44,8 +44,8 @@ public class LabourchargerateEntity implements Serializable {
 
 
 	@Temporal( TemporalType.DATE)
-	public Date getYear() {
-		return year;
+	public Date getEffectiveDate() {
+		return effectiveDate;
 	}
 
 	@Column(length=16)
@@ -63,8 +63,8 @@ public class LabourchargerateEntity implements Serializable {
 	}
 
 
-	public void setYear(Date lcryear) {
-		year = lcryear;
+	public void setEffectiveDate(Date lcryear) {
+		effectiveDate = lcryear;
 	}
 
 	public void setRateclassid(String rateclassid) {

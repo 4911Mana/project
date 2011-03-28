@@ -2,10 +2,12 @@ package comp.is.model.project.entity;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,16 +33,16 @@ public class EmployeeEntity implements Serializable {
 	protected String firstname;
 	protected int id;
 	protected String lastname;
-	protected List<EmployeelabourchargerateEntity> labourChargeRates;
-	protected List<EmployeeroleEntity> roles;
-	protected List<EmployeeEntity> supervisors;
-	protected List<WorkpackageEntity> workPackages;
+	protected Set<EmployeelabourchargerateEntity> labourChargeRates;
+	protected Set<EmployeeroleEntity> roles;
+	protected Set<EmployeeEntity> supervisors;
+	protected Set<WorkpackageEntity> workPackages;
 	protected double percentfulltime;
 	//protected List<ProjectEntity> projects;
-	protected List<ProjectsummaryEntity> projectSummaries;
-	protected List<RatesheetEntity> rateSheets;
-	protected List<EmployeeEntity> timeSheetApprovers;
-	protected List<TimesheetEntity> timeSheets;
+	protected Set<ProjectsummaryEntity> projectSummaries;
+	protected Set<RatesheetEntity> rateSheets;
+	protected Set<EmployeeEntity> timeSheetApprovers;
+	protected Set<TimesheetEntity> timeSheets;
 
     public EmployeeEntity() {
     }
@@ -85,14 +87,14 @@ public class EmployeeEntity implements Serializable {
 
 	//bi-directional many-to-one association to Employeelabourchargerate
 	@OneToMany(mappedBy="employee", cascade={CascadeType.ALL})
-	public List<EmployeelabourchargerateEntity> getLabourChargeRates() {
+	public Set<EmployeelabourchargerateEntity> getLabourChargeRates() {
 		return this.labourChargeRates;
 	}
 
 
 	//bi-directional many-to-one association to Employeerole
 	@OneToMany(mappedBy="employee")
-	public List<EmployeeroleEntity> getRoles() {
+	public Set<EmployeeroleEntity> getRoles() {
 		return this.roles;
 	}
 
@@ -107,14 +109,14 @@ public class EmployeeEntity implements Serializable {
 			@JoinColumn(name="SUPERVISORID", nullable=false)
 			}
 		)
-	public List<EmployeeEntity> getSupervisors() {
+	public Set<EmployeeEntity> getSupervisors() {
 		return this.supervisors;
 	}
 
 
 	//bi-directional many-to-many association to Workpackage
 	@ManyToMany(mappedBy="employeesAssigned")
-	public List<WorkpackageEntity> getWorkPackages() {
+	public Set<WorkpackageEntity> getWorkPackages() {
 		return this.workPackages;
 	}
 
@@ -126,13 +128,13 @@ public class EmployeeEntity implements Serializable {
 
 	//bi-directional many-to-one association to Projectsummary
 	@OneToMany(mappedBy="projectManager")
-	public List<ProjectsummaryEntity> getProjectSummaries() {
+	public Set<ProjectsummaryEntity> getProjectSummaries() {
 		return this.projectSummaries;
 	}
 
 	//bi-directional many-to-one association to Ratesheet
 	@OneToMany(mappedBy="projectManager")
-	public List<RatesheetEntity> getRateSheets() {
+	public Set<RatesheetEntity> getRateSheets() {
 		return this.rateSheets;
 	}
 
@@ -148,13 +150,13 @@ public class EmployeeEntity implements Serializable {
 			@JoinColumn(name="TSAPPROVERID", nullable=false)
 			}
 		)
-	public List<EmployeeEntity> getTimeSheetApprovers() {
+	public Set<EmployeeEntity> getTimeSheetApprovers() {
 		return this.timeSheetApprovers;
 	}
 
 	//bi-directional many-to-one association to Timesheet
-	@OneToMany(mappedBy="employee")
-	public List<TimesheetEntity> getTimeSheets() {
+	@OneToMany(mappedBy="employee", fetch = FetchType.EAGER)
+	public Set<TimesheetEntity> getTimeSheets() {
 		return this.timeSheets;
 	}
 	
@@ -192,20 +194,20 @@ public class EmployeeEntity implements Serializable {
 		this.lastname = emplastname;
 	}
 
-	public void setLabourChargeRates(List<EmployeelabourchargerateEntity> employeeLabourChargeRates) {
+	public void setLabourChargeRates(Set<EmployeelabourchargerateEntity> employeeLabourChargeRates) {
 		this.labourChargeRates = employeeLabourChargeRates;
 	}
 	
 
-	public void setRoles(List<EmployeeroleEntity> employeeRoles) {
+	public void setRoles(Set<EmployeeroleEntity> employeeRoles) {
 		this.roles = employeeRoles;
 	}
 
-	public void setSupervisors(List<EmployeeEntity> employeeSupervisors) {
+	public void setSupervisors(Set<EmployeeEntity> employeeSupervisors) {
 		this.supervisors = employeeSupervisors;
 	}	
 
-	public void setWorkPackages(List<WorkpackageEntity> employeesWorkPackages) {
+	public void setWorkPackages(Set<WorkpackageEntity> employeesWorkPackages) {
 		this.workPackages = employeesWorkPackages;
 	}
 
@@ -214,20 +216,20 @@ public class EmployeeEntity implements Serializable {
 	}
 	
 
-	public void setProjectSummaries(List<ProjectsummaryEntity> projectSummaries) {
+	public void setProjectSummaries(Set<ProjectsummaryEntity> projectSummaries) {
 		this.projectSummaries = projectSummaries;
 	}
 
-	public void setRateSheets(List<RatesheetEntity> rateSheets) {
+	public void setRateSheets(Set<RatesheetEntity> rateSheets) {
 		this.rateSheets = rateSheets;
 	}
 	
 
-	public void setTimeSheetApprovers(List<EmployeeEntity> timeSheetApprovers) {
+	public void setTimeSheetApprovers(Set<EmployeeEntity> timeSheetApprovers) {
 		this.timeSheetApprovers = timeSheetApprovers;
 	}
 
-	public void setTimeSheets(List<TimesheetEntity> timeSheets) {
+	public void setTimeSheets(Set<TimesheetEntity> timeSheets) {
 		this.timeSheets = timeSheets;
 	}
 	

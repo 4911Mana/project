@@ -148,6 +148,7 @@ public class ProjectAction implements ProjectActionLocal {
         for (WorkpackageEntity wp : wps) {
             if (wp.getParent() != null & !wp.getId().equalsIgnoreCase(".")) {
                 WorkPackage newWp = new WorkPackage(wp);
+                newWp.initBudget();
                 project.put(newWp);
             }
         }

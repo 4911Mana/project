@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -10,15 +11,63 @@
 </head>
 <body>
 <ui:composition>
-	 <p:panel header="Spinners">  
-	 <h:panelGrid id="grid" columns="2" cellpadding="5">  
-	 <!--  <h:outputLabel for="spinner" value="P1" />  
-             <p:spinner id="spinner" value="123"><p:ajax process="@this"/></p:spinner>
-     <h:outputLabel for="showon" value="Show On: " />  
-             <p:spinner id="showon"   
-                     value="123" showOn="hover"/>  --> 
-	</h:panelGrid>
-	</p:panel>
+<p:dataTable var="entry" value="#{wp.wpBudget}" rendered="#{not empty wp.wpBudget}">
+		<p:column>
+			<f:facet name="header">
+                    Labour Grade
+            </f:facet>
+			<h:outputText value="#{entry.key}" sortBy="#{entry.key}"/>
+		</p:column>
+
+		<p:column>
+			<f:facet name="header">
+                    Estimated
+            </f:facet>
+			<p:spinner id="plannedSpinner" value='#{entry.value["planned"]}' stepFactor="0.5" 
+				min="0" max='#{entry.value["available"]}'>
+					<p:ajax update="plannedVal" process="plannedSpinner" />
+				</p:spinner>
+		</p:column>
+		<p:column>
+			<f:facet name="header">
+                    Available
+            </f:facet>
+			<h:outputText id="plannedVal" value='#{entry.value["available"] - entry.value["planned"]}' />
+		</p:column>
+	</p:dataTable>
+		<p:dataTable var="entry" value="#{wp.wpBudget}" rendered="#{not empty wp.wpBudget}">
+		<p:column>
+			<f:facet name="header">
+                    Labour Grade
+            </f:facet>
+			<h:outputText value="#{entry.key}" sortBy="#{entry.key}"/>
+		</p:column>
+
+		<p:column>
+			<f:facet name="header">
+                    Accumulated
+            </f:facet>
+			<h:outputText value='#{entry.value["accumulated"]}' />
+		</p:column>
+		<p:column>
+			<f:facet name="header">
+                    To complete
+            </f:facet>
+			<h:outputText value='#{entry.value["tocomplete"]}' />
+		</p:column>
+		<p:column>
+			<f:facet name="header">
+                    Planned
+            </f:facet>
+			<h:outputText value='#{entry.value["planned"]}' />
+		</p:column>
+		<p:column>
+			<f:facet name="header">
+                    Available
+            </f:facet>
+			<h:outputText value='#{entry.value["available"]}' />
+		</p:column>
+	</p:dataTable>
 </ui:composition>
 </body>
 </html>

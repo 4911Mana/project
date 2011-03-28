@@ -12,6 +12,7 @@
 <body>
 <ui:composition>
 	<h:form id="wp">
+	 <p:panel id="panel" header="Work Package #{wp.number} #{wp.name}" style="margin-bottom:10px;">  
 		<p:tabView activeIndex="#{employeePickListBean.activeTabIndex}" 
 		tabChangeListener="#{employeePickListBean.onTabChange}">
 			<!-- first tab -->
@@ -72,7 +73,7 @@
 			</p:toolbarGroup>-->
 
 		</p:toolbar>
-		
+		</p:panel>  
 	</h:form>
 	<br />
 	<h:form prependId="false">

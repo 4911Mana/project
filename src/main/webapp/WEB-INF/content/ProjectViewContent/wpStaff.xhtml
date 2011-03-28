@@ -43,8 +43,7 @@
 	<p:outputPanel id="outacc" rendered="#{employeePickListBean.rendered}">
 
 		<p:tab title="Available Staff">
-		<p:panel>
-			<!-- pick list start-->
+		<!-- pick list start-->
 			
 			<p:pickList id="pickList" value="#{employeePickListBean.employees}" var="employee"
 					itemLabel="#{employee}" itemValue="#{employee}"
@@ -52,8 +51,6 @@
 					<f:facet name="sourceCaption">Available</f:facet>
 					<f:facet name="targetCaption">Assigned</f:facet>
 				</p:pickList>
-		
-</p:panel>
 			<!-- pick list end-->
 		</p:tab>
 		<p:panel id="respEngInplace" rendered="#{wp.openForCharges or tree.selectedNode.leaf}">
