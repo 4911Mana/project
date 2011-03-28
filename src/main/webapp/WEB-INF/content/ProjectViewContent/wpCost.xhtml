@@ -11,39 +11,40 @@
 </head>
 <body>
 <ui:composition>
-<p:dataTable var="entry" value="#{wp.wpBudget}" rendered="#{not empty wp.wpBudget}">
-		<p:column>
+ <p:outputPanel id="dtplanned" rendered="#{not wp.budget.plannedCostSet}">
+	<p:dataTable var="entry" value="#{wp.wpBudget}">
+		<p:column footerText="Total">
 			<f:facet name="header">
                     Labour Grade
             </f:facet>
-			<h:outputText value="#{entry.key}" sortBy="#{entry.key}"/>
+			<h:outputText value="#{entry.key}" sortBy="#{entry.key}" />
 		</p:column>
 
 		<p:column>
 			<f:facet name="header">
                     Estimated
             </f:facet>
-			<p:spinner id="plannedSpinner" value='#{entry.value["planned"]}' stepFactor="0.5" 
-				min="0" max='#{entry.value["available"]}'>
-					<p:ajax update="plannedVal" process="plannedSpinner" />
-				</p:spinner>
+			<p:spinner id="plannedSpinner" value='#{entry.value["planned"]}'
+				stepFactor="0.5" min="0" max='#{entry.value["available"]}'>
+				<p:ajax update="plannedVal" process="plannedSpinner" />
+			</p:spinner>
 		</p:column>
 		<p:column>
 			<f:facet name="header">
                     Available
             </f:facet>
-			<h:outputText id="plannedVal" value='#{entry.value["available"] - entry.value["planned"]}' />
+			<h:outputText id="plannedVal"
+				value='#{entry.value["available"] - entry.value["planned"]}' />
 		</p:column>
 	</p:dataTable>
-		<p:dataTable var="entry" value="#{wp.wpBudget}" rendered="#{not empty wp.wpBudget}">
-		<p:column>
-			<f:facet name="header">
-                    Labour Grade
-            </f:facet>
-			<h:outputText value="#{entry.key}" sortBy="#{entry.key}"/>
+	</p:outputPanel>
+	<p:outputPanel id="dtactual" rendered="#{wp.budget.plannedCostSet}">
+	<p:dataTable var="entry" value="#{wp.wpBudget}">
+		<p:column headerText="Labour Grade" footerText="Total">
+			<h:outputText value="#{entry.key}" sortBy="#{entry.key}" />
 		</p:column>
 
-		<p:column>
+		<p:column footerText='#{entry.value["accumulated"]}$'>
 			<f:facet name="header">
                     Accumulated
             </f:facet>
@@ -68,6 +69,7 @@
 			<h:outputText value='#{entry.value["available"]}' />
 		</p:column>
 	</p:dataTable>
+	</p:outputPanel>
 </ui:composition>
 </body>
 </html>

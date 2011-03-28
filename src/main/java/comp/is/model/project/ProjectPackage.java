@@ -18,6 +18,8 @@ public class ProjectPackage extends ProjectEntity {
         projectEmployees = root.getProjectEmployees();
         rootFlag = new WorkPackage();
         rootFlag.setId(".");
+        rootFlag.setParent(rootFlag);
+        rootFlag.setProjid(root.getId());
         if (projectEmployees != null) {
             for (EmployeeEntity ee : root.getProjectEmployees()) {
                 employees.add(new Employee(ee));

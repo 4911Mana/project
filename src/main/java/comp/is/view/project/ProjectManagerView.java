@@ -53,8 +53,6 @@ public class ProjectManagerView implements Serializable {
     public void displayRoot() {
 
         projectAction.setWp(projectAction.getProject().getRoot());
-        System.out.println("Root is selected "
-                + projectAction.getProject().getRoot().getEmployees());
         empPickList.setRendered(false);
     }
 
@@ -74,7 +72,6 @@ public class ProjectManagerView implements Serializable {
         System.out.println("View init start " + projectTree);
         projectTree.init(projectAction.getProject());
         displayRoot();
-        System.out.println("View init end");
     }
 
     public void nodeIsNotValid() {

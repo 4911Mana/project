@@ -53,6 +53,8 @@ public class ProjectAction implements ProjectActionLocal {
     EmployeePickListBean pickList;
 
     public ProjectAction() {
+        currentP = new WorkPackage();
+        childWp = new WorkPackage();
     }
 
     /*
@@ -68,7 +70,8 @@ public class ProjectAction implements ProjectActionLocal {
         boolean err = false;
         // check for errors
         WorkPackage candidate = new WorkPackage(childWp);
-        candidate.setParent(getWpById(currentP.getId()));
+        //if(currentP.is)
+        candidate.setParent(currentP);
         candidate.setProject(pp);
 
         System.out.println("CANDIDATE " + candidate.getDetails());
@@ -116,7 +119,7 @@ public class ProjectAction implements ProjectActionLocal {
             doPersist(entity);
         } catch (Exception ex) {
             msgs.add("DB connection error. New Work Package #"
-                    + candidate.getNumber() + " was not saved.");
+                    + candidate.getNumber() + " was not saved." + ex.toString());
             view.displayMsgs(msgs);
             return null;
         }
@@ -203,6 +206,7 @@ public class ProjectAction implements ProjectActionLocal {
     @Produces
     @CurrentWp
     @Named("wp")
+    @RequestScoped
     public Package getWp() {
         return currentP;
     }
@@ -378,7 +382,6 @@ public class ProjectAction implements ProjectActionLocal {
                     }
                 }
                 // emp.addAll(getTargetEmp(cwp));
-                System.out.println("getting targ emp after " + emp);
             }
 
             return new ArrayList<Employee>(emp.values());
@@ -438,6 +441,7 @@ public class ProjectAction implements ProjectActionLocal {
                     + candidate.getEmployeesAssigned());
             // em.refresh(entity) ;
             project.put(entity.getId(), new WorkPackage(entity));
+            view.displayMsg( entity.getId() + "Successfully updated");
         } catch (Exception ex) {
             view.displayMsg("Unable to update " + ex.toString());
             setWp(getWpById(currentP.getId()));

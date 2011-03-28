@@ -37,9 +37,7 @@ public abstract class Package implements Serializable{
         employees = new ArrayList<Employee>();
         budget = new Budget();
     }
-    
-   
-
+ 
     @Transient
     public String getChildMask(){return null;}
 
@@ -78,6 +76,8 @@ public abstract class Package implements Serializable{
         description = candidate.description;
         startDate = candidate.startDate;
         status = candidate.status;
+        budget = candidate.budget;
+        employees = candidate.employees;
     }
     @Transient
     public boolean isOpenForCharges(){
@@ -129,10 +129,17 @@ public abstract class Package implements Serializable{
     public List<Entry<LabourGrade, Map<String, Double>>> getWpBudget() {
         return null;
     }
+    
+    @Transient
+    public Budget getBudget() {
+        return budget;
+    }
    
     
     //abstract public void setWpEmployeesAssigned(List<EmployeeEntity> wpEmployeesAssigned);
     
-    //abstract public Package getParent();
+    //need this one it to be able to use it in projectpackage 
+    @Transient
+    public Package getParent() { return null;}
     
 }

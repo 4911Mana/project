@@ -24,8 +24,8 @@
 		<p:tree value="#{tree.root}" var="node"
 			selectionMode="single" dynamic="true"
 			selection="#{tree.selectedNode}"
-			update="wp,outchild, messages, outtbl, outacc"
-			nodeSelectListener="#{tree.onNodeSelect}">
+			update="wp,outchild, messages, outtbl, outacc, wp:dtplanned, wp:dtactual"
+			nodeSelectListener="#{tree.onNodeSelect}" widgetVar="prTree" expanded="true">
 			<p:treeNode>
 				<h:outputText value="#{node}" />
 			</p:treeNode>

@@ -58,6 +58,7 @@ public class WorkpackageEntity extends Package {
         project = candidate.getProject();
         projid = candidate.getProjid();
         timeSheetEntries = candidate.getTimeSheetEntries();
+        //setParentId(candidate.getId());
     }
 
     // bi-directional many-to-one association to Workpackage
