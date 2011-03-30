@@ -19,6 +19,7 @@ import javax.persistence.PersistenceContext;
 
 import comp.is.model.admin.Employee;
 import comp.is.model.project.ChildWp;
+import comp.is.model.project.LoggedIn;
 import comp.is.model.project.Project;
 import comp.is.model.project.ProjectPackage;
 import comp.is.model.project.ProjectTree;
@@ -39,8 +40,10 @@ public class ProjectCatalogueAction implements Serializable{
     @PersistenceContext(unitName = "ProjectManager")
     private EntityManager em;
     
-    @Inject @SessionScoped
+    
     Employee manager;
+    
+    Employee loggedInEmployee;
     
     EmployeeEntity entity;
     
@@ -62,21 +65,21 @@ public class ProjectCatalogueAction implements Serializable{
 
     public void init() {
         try {
-            entity = em.find(EmployeeEntity.class, 100);
-            Employee empInj = new Employee(entity);
-            setManager(empInj);
-            System.err.println("Proj manager raw from db " + entity + "/ "+ manager.getAllProjects());
-            allProj = manager.getAllProjects();
+//            entity = em.find(EmployeeEntity.class, 100);
+//            //Employee empInj = new Employee(entity);
+//            loggedInEmployee = new Employee(entity);
+//            System.err.println("Proj manager raw from db " + entity + "/ "+ manager.getAllProjects());
+            
             System.out.println(entity.getPeons());
         } catch (Exception e) {
             System.err.println("Project Manager not found. " + e.toString());
         }
     }
-
+ 
     public Employee getManager() {
         return manager;
     }
-
+    
     public void setManager(Employee imanager) {
         manager = imanager;
     }
@@ -130,6 +133,21 @@ public class ProjectCatalogueAction implements Serializable{
     public void setSelectedEmp(Employee[] selectedEmp) {
         this.selectedEmp = new Employee[selectedEmp.length];
         this.selectedEmp = selectedEmp;
+    }
+    
+    @Produces
+    @LoggedIn
+    @SessionScoped
+    @Named("employee")
+    public Employee getLoggedInEmployee() {
+        entity = em.find(EmployeeEntity.class, 100);
+        loggedInEmployee = new Employee(entity);
+        allProj = loggedInEmployee.getAllProjects();
+        return loggedInEmployee;
+    }
+
+    public void setLoggedInEmployee(Employee loggedInEmployee) {
+        this.loggedInEmployee = loggedInEmployee;
     }
     
 }

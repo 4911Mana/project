@@ -10,15 +10,17 @@ import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
+import comp.is.model.project.LoggedIn;
 import comp.is.model.project.entity.EmployeeEntity;
 import comp.is.model.project.entity.EmployeelabourchargerateEntity;
 import comp.is.model.project.entity.ProjectEntity;
 
-@Named("employee")
+@SessionScoped
 public class Employee extends EmployeeEntity implements
 Comparable<Employee>, Serializable {
     private LabourGrade currentGrade; 
     public Employee(){ firstname= "boooooooooooo";}
+    
     
     public Employee(EmployeeEntity ee) {
         accumflextime = ee.getAccumflextime();

@@ -12,7 +12,7 @@
 <ui:composition>
 	<!-- data table -->
 	<p:outputPanel id="outtbl">
-		<p:dataTable id="emptbl" var="emp" value="#{catalogueAction.manager.allPeons}"
+		<p:dataTable id="emptbl" var="emp" value="#{employee.allPeons}"
 			paginator="true" rows="10" emptyMessage="No employees assigned"
 			widgetVar="empTable" selection="#{catalogueAction.selectedEmp}">
 
