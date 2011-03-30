@@ -36,9 +36,10 @@ public class EmployeeEntity implements Serializable {
 	protected Set<EmployeelabourchargerateEntity> labourChargeRates;
 	protected Set<EmployeeroleEntity> roles;
 	protected Set<EmployeeEntity> supervisors;
+	protected Set<EmployeeEntity> peons;
 	protected Set<WorkpackageEntity> workPackages;
 	protected double percentfulltime;
-	//protected List<ProjectEntity> projects;
+	protected Set<ProjectEntity> projects;
 	protected Set<ProjectsummaryEntity> projectSummaries;
 	protected Set<RatesheetEntity> rateSheets;
 	protected Set<EmployeeEntity> timeSheetApprovers;
@@ -86,7 +87,7 @@ public class EmployeeEntity implements Serializable {
 	}
 
 	//bi-directional many-to-one association to Employeelabourchargerate
-	@OneToMany(mappedBy="employee", cascade={CascadeType.ALL})
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="employee", cascade={CascadeType.ALL})
 	public Set<EmployeelabourchargerateEntity> getLabourChargeRates() {
 		return this.labourChargeRates;
 	}
@@ -112,6 +113,20 @@ public class EmployeeEntity implements Serializable {
 	public Set<EmployeeEntity> getSupervisors() {
 		return this.supervisors;
 	}
+	
+	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(
+        name="EMPLOYEESUPERVISOR"
+        , joinColumns={
+            @JoinColumn(name="SUPERVISORID", nullable=false)
+            }
+        , inverseJoinColumns={
+            @JoinColumn(name="EMPID", nullable=false)
+            }
+        )
+    public Set<EmployeeEntity> getPeons() {
+        return peons;
+    }
 
 
 	//bi-directional many-to-many association to Workpackage
@@ -179,16 +194,16 @@ public class EmployeeEntity implements Serializable {
 	}
 	
 
-//	//bi-directional many-to-many association to Project
-//	@ManyToMany(mappedBy="projectEmployees")
-//	public List<ProjectEntity> getProjects() {
-//		return this.projects;
-//	}
-//
-//	public void setProjects(List<ProjectEntity> projects) {
-//		this.projects = projects;
-//	}
-//	
+	//bi-directional many-to-many association to Project
+	@ManyToMany(fetch=FetchType.EAGER, mappedBy="projectEmployees")
+	public Set<ProjectEntity> getProjects() {
+		return this.projects;
+	}
+
+	public void setProjects(Set<ProjectEntity> projects) {
+		this.projects = projects;
+	}
+	
 
 	public void setLastname(String emplastname) {
 		this.lastname = emplastname;
@@ -205,7 +220,10 @@ public class EmployeeEntity implements Serializable {
 
 	public void setSupervisors(Set<EmployeeEntity> employeeSupervisors) {
 		this.supervisors = employeeSupervisors;
-	}	
+	}
+	public void setPeons(Set<EmployeeEntity> employeePeons) {
+        peons = employeePeons;
+    }
 
 	public void setWorkPackages(Set<WorkpackageEntity> employeesWorkPackages) {
 		this.workPackages = employeesWorkPackages;

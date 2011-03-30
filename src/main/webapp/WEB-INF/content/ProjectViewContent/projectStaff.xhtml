@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+
+<head>
+<title>IGNORED</title>
+</head>
+<body>
+<ui:composition>
+	<!-- data table -->
+	<p:outputPanel id="outtbl">
+		<p:dataTable id="emptbl" var="emp" value="#{catalogueAction.manager.allPeons}"
+			paginator="true" rows="10" emptyMessage="No employees assigned"
+			widgetVar="empTable" selection="#{catalogueAction.selectedEmp}">
+
+			<f:facet name="header">
+            <p:outputPanel>
+                <h:outputText value="Search all fields:" />
+                <p:inputText id="globalFilter" onkeyup="empTable.filter()" style="width:150px" />
+            </p:outputPanel>
+        </f:facet>
+        <p:column selectionMode="multiple" />  
+
+			<p:column sortBy="#{emp.id}" filterBy="#{emp.id}">
+				<f:facet name="header">
+					<h:outputText value="ID" />
+				</f:facet>
+				<h:outputText value="#{emp.id}" />
+			</p:column>
+			
+			<p:column sortBy="#{emp.lastname}" filterBy="#{emp.lastname}">
+				<f:facet name="header">
+					<h:outputText value="Name" />
+				</f:facet>
+				<h:outputText value="#{emp.lastname}, #{emp.firstname}" />
+			</p:column>
+			<p:column sortBy="#{emp.currentGrade}" filterBy="#{emp.currentGrade}">
+				<f:facet name="header">
+					<h:outputText value="Labour Grade" />
+				</f:facet>
+				<h:outputText value="#{emp.currentGrade}"/>
+			</p:column>
+
+			
+		</p:dataTable>
+	</p:outputPanel>
+	<!-- data table end -->
+</ui:composition> 
+</body>
+</html>

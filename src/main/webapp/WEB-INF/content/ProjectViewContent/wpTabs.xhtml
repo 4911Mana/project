@@ -12,68 +12,66 @@
 <body>
 <ui:composition>
 	<h:form id="wp">
-	 <p:panel id="panel" header="Work Package #{wp.number} #{wp.name}" style="margin-bottom:10px;">  
-		<p:tabView activeIndex="#{employeePickListBean.activeTabIndex}" 
-		tabChangeListener="#{employeePickListBean.onTabChange}">
-			<!-- first tab -->
-			<p:tab title="Info">
+		<p:panel id="panel" header="Work Package #{wp.number} #{wp.name}"
+			style="margin-bottom:10px;">
+			<p:tabView activeIndex="#{employeePickListBean.activeTabIndex}"
+				tabChangeListener="#{employeePickListBean.onTabChange}">
+				<!-- first tab -->
+				<p:tab title="Info">
 
-				<l:wpInfoTag numberValue="#{wp.number}" numberReadonly="true"
-					titleValue="#{wp.name}" descValue="#{wp.description}"
-					startDate="#{wp.startDate}" charges="#{wp.openForCharges}" />
-				<!-- <p:commandButton id="addButton"
-					 value="Add"
-					update="outchild, messages">
-					<f:setPropertyActionListener value="#{not wp.lowestLevel}"
-						target="#{childPanel.rendered}" />
+					<l:wpInfoTag numberValue="#{wp.number}" numberReadonly="true"
+						titleValue="#{wp.name}" descValue="#{wp.description}"
+						startDate="#{wp.startDate}" charges="#{wp.openForCharges}" />
+				</p:tab>
 
-				</p:commandButton>-->
-			</p:tab>
+				<p:tab title="Staff">
+					<ui:insert name="wpStaff">
+						<ui:include src="wpStaff.xhtml" />
+					</ui:insert>
+				</p:tab>
+				<p:tab title="Cost">
+					<ui:insert name="wpCost">
+						<ui:include src="wpCost.xhtml" />
+					</ui:insert>
+				</p:tab>
+			</p:tabView>
+			<p:toolbar>
+				<p:toolbarGroup align="left">
+					<p:commandButton value="New" action="#{projectAction.validParent}"
+						image="ui-icon-document" update="outchild, messages">
+						<f:setPropertyActionListener value="#{not wp.lowestLevel}"
+							target="#{childPanel.rendered}" />
+					</p:commandButton>
 
-			<p:tab title="Staff">
-				<ui:insert name="wpStaff">
-					<ui:include src="wpStaff.xhtml" />
-				</ui:insert>
-			</p:tab>
-			<p:tab title="Cost">
-				<ui:insert name="wpCost">
-					<ui:include src="wpCost.xhtml" />
-				</ui:insert>
-			</p:tab>
-		</p:tabView>
-		<p:toolbar>
-			<p:toolbarGroup align="left">
-				<p:commandButton value="New"
-					action="#{projectAction.validParent}" image="ui-icon-document"
-					update="outchild, messages">
-					<f:setPropertyActionListener value="#{not wp.lowestLevel}"
-						target="#{childPanel.rendered}" />
-				</p:commandButton>
 
-				<!-- <p:commandButton type="push" value="Open"
-					image="ui-icon-folder-open" />-->
+
+					<p:divider />
+
+					<p:commandButton title="Save" action="#{projectAction.doMerge}"
+						image="ui-icon-disk" />
+					<p:commandButton type="push" title="Delete" image="ui-icon-trash" />
+					<p:commandButton type="push" title="Print" image="ui-icon-print" />
+				</p:toolbarGroup>
 
 				<p:divider />
 
-				<p:commandButton title="Save" action="#{projectAction.doMerge}" image="ui-icon-disk" />
-				<p:commandButton type="push" title="Delete" image="ui-icon-trash" />
-				<p:commandButton type="push" title="Print" image="ui-icon-print" />
-			</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:commandButton type="push" value="Progress Report"
+						update="wp:dtactual, report" image="ui-icon-folder-open">
+						<f:setPropertyActionListener value="#{true}"
+							target="#{requestScope.renderReport}" />
+					</p:commandButton>
+					<p:menuButton value="Reports">
+						<p:menuitem value="Earned Value Report" onclick="dlg1.show();" >
+						<f:setPropertyActionListener value="#{true}"
+							target="#{requestScope.renderReport}" /></p:menuitem>
+						<p:menuitem value="Other Report"
+							url="http://www.primefaces.org/showcase" />
+					</p:menuButton>
+				</p:toolbarGroup>
 
-			<p:divider />
-
-			<!--  <p:toolbarGroup align="right">
-				<p:menuButton value="Navigate">
-					<p:menuitem value="Home" url="http://www.primefaces.org" />
-					<p:menuitem value="ShowCase"
-						url="http://www.primefaces.org/showcase" />
-					<p:menuitem value="TouchFaces"
-						url="http://www.primefaces.org/showcase/touch" />
-				</p:menuButton>
-			</p:toolbarGroup>-->
-
-		</p:toolbar>
-		</p:panel>  
+			</p:toolbar>
+		</p:panel>
 	</h:form>
 	<br />
 	<h:form prependId="false">
@@ -95,7 +93,7 @@
 			</p:panel>
 		</p:outputPanel>
 	</h:form>
-	
+
 </ui:composition>
 </body>
 

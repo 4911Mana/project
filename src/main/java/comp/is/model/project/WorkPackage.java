@@ -177,8 +177,8 @@ public class WorkPackage extends WorkpackageEntity implements
                     if(te.getWorkPackage().getId().equalsIgnoreCase(getId()) & 
                             te.getWorkPackage().getProjid().equalsIgnoreCase(getProjid())){
                         System.out.println("Time sheet entry " + te);
-                        //System.out.println("Current garde" + e.getCurrentGrade());
-                     budget.addToAccumulated(e.getCurrentGrade(),  getTotalForTimesheetEntry(te));}
+                        //System.out.println("Current grade" + e.getCurrentGrade());
+                     budget.addToAccumulated(LabourGrade.getGrade(e.getCurrentGrade()),  getTotalForTimesheetEntry(te));}
                 }
             }
         }

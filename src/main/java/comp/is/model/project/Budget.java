@@ -13,7 +13,13 @@ public class Budget extends Hashtable<LabourGrade, Map<String, Double>> {
     public Budget() {
         add(LabourGrade.P1, "available", 34D);
         add(LabourGrade.P1, "planned", 0D);
-
+        add(LabourGrade.P2, "planned", 0D);
+        add(LabourGrade.P3, "planned", 0D);
+        add(LabourGrade.P4, "planned", 0D);
+        add(LabourGrade.P5, "planned", 0D);
+        add(LabourGrade.P6, "planned", 0D);
+        add(LabourGrade.DS, "planned", 0D);
+        add(LabourGrade.JS, "planned", 0D);
     }
     
     public boolean isPlannedCostSet() {

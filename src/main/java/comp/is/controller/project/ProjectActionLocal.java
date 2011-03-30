@@ -35,7 +35,7 @@ public interface ProjectActionLocal {
 
     public WorkPackage getWpById(String wpNumber);
 
-    public void initializeProject();
+    //public String init();
 
     public void setChildWp(WorkPackage childWp);
 
@@ -56,5 +56,7 @@ public interface ProjectActionLocal {
     public ArrayList<Employee> getTargetEmp(WorkPackage wp);
 
     public String doMerge();
+
+    String init(String id);
 
 }

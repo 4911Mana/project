@@ -11,41 +11,47 @@
 <body>
 <ui:composition>
 	<h:form id="tree">
-	<h:commandButton value="Init" action="#{projectAction.initializeProject}"/>
-	<p:ajaxStatus style="width:16px;height:16px;">
-                    <f:facet name="start">
-                        <h:graphicImage value="/resources/gfx/ajaxloading.gif" />
-                    </f:facet>
+		<h:commandButton value="Init" action="#{catalogueAction.init}" />
+		<br />
+		<p:toolbarGroup align="centre" width="250" style="padding:5px">
+			<p:commandButton type="push" value="Create New Project"
+				update="wp:dtactual, report" image="ui-icon-folder-open">
+				<f:setPropertyActionListener value="#{true}"
+					target="#{requestScope.renderReport}" />
+			</p:commandButton>
+		</p:toolbarGroup>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/resources/gfx/ajaxloading.gif" />
+			</f:facet>
 
-                    <f:facet name="complete">
-                        <h:outputText value="" />
-                    </f:facet>
-                </p:ajaxStatus>
-		<p:dataTable id="emptbl" var="emp" value="#{wp.employees}"
-			paginator="true" rows="10" emptyMessage="No employees assigned"
-			widgetVar="empTable">
+			<f:facet name="complete">
+				<h:outputText value="" />
+			</f:facet>
+		</p:ajaxStatus>
+		<p:dataGrid var="proj" value="#{catalogueAction.manager.allProjects}"
+			columns="1" rows="12" effect="true" paginator="true"
+			rowsPerPageTemplate="9,12,15" paginatorAlwaysVisible="false">
 
-			<!--  <f:facet name="header">
-            <p:outputPanel>
-                <h:outputText value="Search all fields:" />
-                <p:inputText id="globalFilter" onkeyup="empTable.filter()" style="width:150px" />
-            </p:outputPanel>
-        </f:facet>-->
+			<p:column>
+				<p:panel header="#{proj.id}" style="text-align:center">
+					<h:panelGrid columns="1" style="width:100%">
+						<p:graphicImage value="/resources/gfx/.jpg" />
 
-			<p:column sortBy="#{emp.id}" filterBy="#{emp.strId}">
-				<f:facet name="header">
-					<h:outputText value="ID" />
-				</f:facet>
-				<h:outputText value="#{emp.strId}" />
+						<h:outputText value="#{proj.name}" />
+						<h:outputText value="#{proj.customer}" />
+
+						<p:commandLink update="proj, proj:panel" 
+							action="#{catalogueAction.displayProj}" title="View Detail">
+							<p:graphicImage value="/resources/gfx/search.png" style="border:none"/>
+							<f:setPropertyActionListener value="#{proj.id}"
+								target="#{catalogueAction.selectedProj}" />
+						</p:commandLink>
+					</h:panelGrid>
+				</p:panel>
 			</p:column>
 
-			<p:column sortBy="#{emp.lastname}" filterBy="#{emp.lastname}">
-				<f:facet name="header">
-					<h:outputText value="Name" />
-				</f:facet>
-				<h:outputText value="#{emp.lastname}, #{emp.firstname}" />
-			</p:column>
-		</p:dataTable>
+		</p:dataGrid>
 	</h:form>
 </ui:composition>
 </body>

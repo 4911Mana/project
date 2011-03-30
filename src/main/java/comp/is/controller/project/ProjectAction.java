@@ -1,5 +1,6 @@
 package comp.is.controller.project;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,13 +34,13 @@ import comp.is.model.project.entity.Package;
 import comp.is.model.project.entity.ProjectEntity;
 import comp.is.model.project.entity.WorkpackageEntity;
 import comp.is.view.project.EmployeePickListBean;
-import comp.is.view.project.ProjectManagerView;
+import comp.is.view.project.ProjectView;
 
 @Stateful
 @SessionScoped
 @Local
 @Named("projectAction")
-public class ProjectAction implements ProjectActionLocal {
+public class ProjectAction implements Serializable, ProjectActionLocal {
 
     private Package currentP;
     private WorkPackage childWp;
@@ -48,7 +49,9 @@ public class ProjectAction implements ProjectActionLocal {
     @PersistenceContext(unitName = "ProjectManager")
     private EntityManager em;
     @Inject
-    private ProjectManagerView view;
+    private ProjectView view;
+    @Inject
+    private ProjectCatalogueAction catalogue;
     @Inject
     EmployeePickListBean pickList;
 
@@ -157,10 +160,10 @@ public class ProjectAction implements ProjectActionLocal {
         }
     }
 
-    private boolean findAndSetRoot() {
+    private boolean findAndSetRoot(String id) {
         ProjectEntity pr = null;
         try {
-            pr = em.find(ProjectEntity.class, "1000");
+            pr = em.find(ProjectEntity.class, id);
 
         } catch (Exception e) {
             System.out.println("Project not found. " + e.toString());
@@ -178,7 +181,7 @@ public class ProjectAction implements ProjectActionLocal {
      * 
      * @see comp.is.controller.project.ProjectActionLocal#getChildWp()
      */
-    @Override
+    
     @Produces
     @ChildWp
     @Named("childWp")
@@ -229,20 +232,18 @@ public class ProjectAction implements ProjectActionLocal {
      * @see comp.is.controller.project.ProjectActionLocal#initializeProject()
      */
     @Override
-    public void initializeProject() {
-        System.out
-                .println("Post construct start =======================================================");
-        if (!findAndSetRoot()) {
+    public String init(String id) {
+        
+        if (!findAndSetRoot(id)) {
             view.displayMsg("Project not found");
-            return;
+            return "failure";
         }
         fillWpMap();
         currentP = new WorkPackage(project.getRoot());
         childWp = new WorkPackage();
         childWp.setParent(currentP);
         view.init();
-        System.out
-                .println("Post construct end =======================================================");
+        return "success";
     }
 
     /*

@@ -8,7 +8,7 @@ import javax.inject.Named;
 
 import comp.is.model.project.WorkPackage;
 
-public class ProjectManager extends Employee implements Serializable{
+public class ProjectManager implements Serializable{
     private static List<WorkPackage> projects;
     private List<Employee> assignedStaff;
     
@@ -24,15 +24,15 @@ public class ProjectManager extends Employee implements Serializable{
         return assignedStaff;
     }
 
-    public List<WorkPackage> getProjects() {
-        return projects;
-    }
+//    public List<WorkPackage> getProjects() {
+//        return projects;
+//    }
 
     public void setAssignedStaff(List<Employee> assignedStaff) {
         this.assignedStaff = assignedStaff;
     }
 
-    public void setProjects(List<WorkPackage> projects) {
-        ProjectManager.projects = projects;
-    }
+//    public void setProjects(List<WorkPackage> projects) {
+//        ProjectManager.projects = projects;
+//    }
 }

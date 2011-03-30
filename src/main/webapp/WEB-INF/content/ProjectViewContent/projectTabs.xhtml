@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:l="http://java.sun.com/jsf/composite/tags">
+
+<head>
+<title>IGNORED</title>
+</head>
+<body>
+<ui:composition>
+	<h:form id="proj" rendered="#{not empty catalogueAction.currentPP}">
+		<p:panel id="panel" header="Project #{project.id} #{project.name}"
+			style="margin-bottom:10px;">
+			<p:tabView activeIndex="#{employeePickListBean.activeTabIndex}"
+				tabChangeListener="#{employeePickListBean.onTabChange}">
+				<!-- first tab -->
+				<p:tab title="Info">
+
+					<l:wpInfoTag numberValue="#{project.number}" numberReadonly="true"
+						titleValue="#{project.name}" descValue="#{project.description}"
+						startDate="#{project.startDate}"
+						charges="#{project.openForCharges}" />
+					<p:panel header="Budget Calculator:">
+						<h:panelGrid column="3">
+							<h:outputLabel value="Initial Budget: " />
+							<h:outputText value="#{project.number}$"/>
+						</h:panelGrid>
+
+					</p:panel>
+
+				</p:tab>
+
+				<p:tab title="Staff">
+					<ui:insert name="projStaff">
+						<ui:include src="projectStaff.xhtml" />
+					</ui:insert>
+				</p:tab>
+			</p:tabView>
+			<p:toolbar>
+				<p:toolbarGroup align="left">
+					<p:commandButton title="Save" 
+						image="ui-icon-disk" />
+					<p:commandButton type="push" title="Delete" image="ui-icon-trash" />
+					<p:commandButton type="push" title="Print" image="ui-icon-print" />
+				</p:toolbarGroup>
+
+				<p:divider />
+
+				<p:toolbarGroup align="right">
+					<p:commandButton type="push" value="Open tree" ajax="false"
+						update="wp:dtactual, report" action="#{projectAction.init(project.id)}"
+						image="ui-icon-folder-open">
+					</p:commandButton>
+					<p:menuButton value="Reports">
+						<p:menuitem value="Earned Value Report" onclick="dlg1.show();">
+							<f:setPropertyActionListener value="#{true}"
+								target="#{requestScope.renderReport}" />
+						</p:menuitem>
+						<p:menuitem value="Other Report"
+							url="http://www.primefaces.org/showcase" />
+					</p:menuButton>
+				</p:toolbarGroup>
+
+			</p:toolbar>
+		</p:panel>
+	</h:form>
+</ui:composition>
+</body>
+
+</html>

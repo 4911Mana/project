@@ -3,7 +3,7 @@ package comp.is.model.admin;
 public enum LabourGrade {
     DS, JS, P1, P2, P3, P4, P5, P6;
     
-    public static LabourGrade getGrage(String s){
+    public static LabourGrade getGrade(String s){
         if(s.equalsIgnoreCase("P1")) return P1; 
         if(s.equalsIgnoreCase("P2")) return P2;
         if(s.equalsIgnoreCase("P3")) return P3;

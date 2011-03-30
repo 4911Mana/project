@@ -31,7 +31,7 @@ public class ProjectTreeBean implements Serializable {
     private TreeNode selectedNode;
 
     @Inject
-    ProjectManagerView view;
+    ProjectView view;
 
     public ProjectTreeBean() {
         root = new DefaultTreeNode("Roooooot", null);

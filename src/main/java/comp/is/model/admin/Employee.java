@@ -1,26 +1,24 @@
 package comp.is.model.admin;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
-import javax.inject.Inject;
+import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Named;
 
-import comp.is.model.project.WorkPackage;
 import comp.is.model.project.entity.EmployeeEntity;
 import comp.is.model.project.entity.EmployeelabourchargerateEntity;
-import comp.is.model.project.entity.EmployeeroleEntity;
-import comp.is.model.project.entity.ProjectsummaryEntity;
-import comp.is.model.project.entity.RatesheetEntity;
-import comp.is.model.project.entity.TimesheetEntity;
-import comp.is.model.project.entity.WorkpackageEntity;
-import comp.is.model.project.key.WorkpackagePK;
+import comp.is.model.project.entity.ProjectEntity;
 
-
+@Named("employee")
 public class Employee extends EmployeeEntity implements
-Comparable<Employee> {
+Comparable<Employee>, Serializable {
     private LabourGrade currentGrade; 
-    public Employee(){}
+    public Employee(){ firstname= "boooooooooooo";}
     
     public Employee(EmployeeEntity ee) {
         accumflextime = ee.getAccumflextime();
@@ -33,29 +31,26 @@ Comparable<Employee> {
         supervisors = ee.getSupervisors();
         workPackages = ee.getWorkPackages();
         percentfulltime = ee.getPercentfulltime();
-        //private List<ProjectEntity> projects;
+        projects = ee.getProjects();
         projectSummaries = ee.getProjectSummaries();
         rateSheets = ee.getRateSheets();
         timeSheetApprovers = ee.getTimeSheetApprovers();
         timeSheets = ee.getTimeSheets();
+        peons = ee.getPeons();
     }
     
-    public LabourGrade getCurrentGrade() {
-        Calendar cal = Calendar.getInstance();
-        Date today = cal.getTime();
-        Integer weekNum = cal.get(Calendar.WEEK_OF_YEAR);
+    public String getCurrentGrade() {
         for(EmployeelabourchargerateEntity charge: this.getLabourChargeRates()){
-            System.out.println("All labour grades: " + charge.getLabourChargerRate().getRateclassid());
-            if (charge.getEndTimeSheetWeek() == null) return LabourGrade.getGrage(charge.getLabourChargerRate().getRateclassid());
+            if (charge.getEndTimeSheetWeek() == null) return charge.getLabourChargerRate().getRateclassid();
         }
-        return currentGrade;
+        return null;// throw exception
     }
     public String getStrId(){
         return String.valueOf(getId());
     }
 
-    public void setCurrentGrade(LabourGrade currentGrade) {
-        this.currentGrade = currentGrade;
+    public void setCurrentGrade(String currentGrade) {
+        this.currentGrade = LabourGrade.getGrade(currentGrade);
     }
     public String toString(){
         return getStrId() 
@@ -78,5 +73,25 @@ Comparable<Employee> {
             throw new ClassCastException("A Employee object expected.");
         int empId = (emp).getId();
         return id - empId;
+    }
+    
+    public ArrayList<ProjectEntity> getAllProjects(){
+        if(projects == null) {return null;}
+        return new ArrayList<ProjectEntity>(this.projects);
+    }
+    
+    public ArrayList<Employee> getAllPeons(){
+        if(peons != null){
+            return convertToEmp(peons);
+        }
+        return null;
+    }
+    
+    private ArrayList<Employee> convertToEmp(Set<EmployeeEntity> empSet){
+        ArrayList<Employee> employees = new ArrayList<Employee>();
+        for(EmployeeEntity e : empSet){
+            employees.add(new Employee(e));
+        }
+        return employees;
     }
 }

@@ -1,6 +1,7 @@
 package comp.is.controller.admin;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -78,130 +79,130 @@ public class EmployeeAction implements Serializable {
 	public double getAccumFlexTime() {
 		return emp.getAccumflextime();
 	}
-//	public double getEmpAccumVacation() {
-//		return emp.getEmpaccumvacation();
-//	}
-//	public String getEmpFisrtName() {
-//		return emp.getEmpfirstname();
-//	}
-//	/** note that empId is auto-generated so a setter is not provided */
-//	
-//	
-//	public int getEmpId() {
-//		return emp.getEmpid();
-//	}
-//	public List<EmployeelabourchargerateEntity> getEmpLabourChargeRates() {
-//		return emp.getEmployeeLabourChargeRates();
-//	}
-//	public String getEmpLastName() {
-//		return emp.getEmplastname();
-//	}
-//	public double getEmpPercentFullTime() {
-//		return emp.getEmppercentfulltime();
-//	}
-//	public List<EmployeeroleEntity> getEmpRoles() {
-//		return emp.getEmployeeRoles();
-//	}
-//	public EmployeeEntity getEmpSupervisor() {
-//		List<EmployeeEntity> supervisors = emp.getEmployeeSupervisors();
-//		if (supervisors.size() == 1) {
-//			return supervisors.get(0);
-//		} else if (supervisors.size() > 1) {
-//			// some logic required here if the business logic changed
-//			// to involve more than one supervisor, which is currently
-//			// not allowed.
-//			return supervisors.get(0);
-//		} else {
-//			// none were found
-//			return null;
-//		}
-//	}
+	public double getEmpAccumVacation() {
+		return emp.getAccumvacation();
+	}
+	public String getEmpFisrtName() {
+		return emp.getFirstname();
+	}
+	/** note that empId is auto-generated so a setter is not provided */
+	
+	
+	public int getEmpId() {
+		return emp.getId();
+	}
+	public Set<EmployeelabourchargerateEntity> getEmpLabourChargeRates() {
+		return emp.getLabourChargeRates();
+	}
+	public String getEmpLastName() {
+		return emp.getLastname();
+	}
+	public double getEmpPercentFullTime() {
+		return emp.getPercentfulltime();
+	}
+	public List<EmployeeroleEntity> getEmpRoles() {
+		return new ArrayList<EmployeeroleEntity>(emp.getRoles());
+	}
+	public EmployeeEntity getEmpSupervisor() {
+		List<EmployeeEntity> supervisors = new ArrayList(emp.getSupervisors());
+		if (supervisors.size() == 1) {
+			return supervisors.get(0);
+		} else if (supervisors.size() > 1) {
+			// some logic required here if the business logic changed
+			// to involve more than one supervisor, which is currently
+			// not allowed.
+			return supervisors.get(0);
+		} else {
+			// none were found
+			return null;
+		}
+	}
 	public Set<TimesheetEntity> getEmpTimeSheets() {
 		return emp.getTimeSheets();
 	}
-//	public EmployeeEntity getEmpTSApprover() {
-//		Set<EmployeeEntity> tsApprovers = emp.getTimeSheetApprovers();
-//		if (tsApprovers.size() == 1) {
-//			return tsApprovers.get(0);
-//		} else if (tsApprovers.size() > 1) {
-//			// some logic required here if the business logic changed
-//			// to involve more than one tsApprovers, which is currently
-//			// not allowed.
-//			return tsApprovers.get(0);
-//		} else {
-//			// none were found
-//			return null;
-//		}
-//	}
-//	public List<WorkpackageEntity> getEmpWorkPackages() {
-//		return emp.getEmployeesWorkPackages();
-//	}
-//	public void initEmp(int empId) {
-//		/* initialize the employee from the database */
-//		emp = em.find(EmployeeEntity.class, empId);
-//	}
-//	public void persistAll() {
-//		
-//	}
-//	public void removeEmpAccumFlexTime(double timeRemoved) {
-//		double current = emp.getEmpaccumflextime();
-//		double updated = current - timeRemoved;
-//		emp.setEmpaccumflextime(updated);
-//	}
-//	public void removeEmpAccumVacation(double timeRemoved) {
-//		double current = emp.getEmpaccumvacation();
-//		double updated = current - timeRemoved;
-//		emp.setEmpaccumvacation(updated);
-//	}
-//	public void removeEmpRole(EmployeeroleEntity role) {
-//		int indx = emp.getEmployeeRoles().indexOf(role);
-//		if (indx >= 0) {
-//			emp.getEmployeeRoles().remove(indx);
-//		}
-//	}
-//	public boolean removeEmpSupervisor(EmployeeEntity supervisor) {
-//		int indx = emp.getEmployeeSupervisors().indexOf(supervisor);
-//		if (indx >= 0) {
-//			emp.getEmployeesWorkPackages().remove(indx);
-//			return true;
-//		} else {
-//			return false;
-//		}
-//	}
-//	public boolean removeEmpTSApprover(EmployeeEntity tsApprover) {
-//		int indx = emp.getTimeSheetApprovers().indexOf(tsApprover);
-//		if (indx >= 0) {
-//			emp.getTimeSheetApprovers().remove(indx);
-//			return true;
-//		} else {
-//			return false;
-//		}
-//	}
-//	public boolean removeEmpWorkPackage(WorkpackageEntity workpackage) {
-//		int indx = emp.getEmployeesWorkPackages().indexOf(workpackage);
-//		if (indx >= 0) {
-//			emp.getEmployeesWorkPackages().remove(indx);
-//			return true;
-//		} else {
-//			return false;
-//		}
-//	}
-//	public void setEmpFisrtName(String firstName) {
-//		emp.setEmpfirstname(firstName);
-//	}
-//	public void setEmpLabourChargeRates(LabourchargerateEntity lcr, 
-//			TimesheetweekEntity tswStart) {
-//	// need to update the employeelabourchargerate table with the 
-//	// employees new labourcharge rate, and also put a closing date
-//	// on the previous employeelabourchargerate entry
-//	}
-//	public void setEmpLastName(String lastName) {
-//		emp.setEmplastname(lastName);
-//	}
-//	public void setEmpPercentFullTime(Double percentage) {
-//		emp.setEmppercentfulltime(percentage);
-//	}
-//	public void setEmpTimeSheets(TimesheetEntity ts) {
-//		emp.getTimeSheets().add(ts);
-//	}
+	public EmployeeEntity getEmpTSApprover() {
+		Set<EmployeeEntity> tsApprovers = emp.getTimeSheetApprovers();
+		if (tsApprovers.size() == 1) {
+			return (EmployeeEntity) tsApprovers.toArray()[0];
+		} else if (tsApprovers.size() > 1) {
+			// some logic required here if the business logic changed
+			// to involve more than one tsApprovers, which is currently
+			// not allowed.
+			return (EmployeeEntity) tsApprovers.toArray()[0];
+		} else {
+			// none were found
+			return null;
+		}
+	}
+	public Set<WorkpackageEntity> getEmpWorkPackages() {
+		return emp.getWorkPackages();
+	}
+	public void initEmp(int empId) {
+		/* initialize the employee from the database */
+		emp = em.find(EmployeeEntity.class, empId);
+	}
+	public void persistAll() {
+		
+	}
+	public void removeEmpAccumFlexTime(double timeRemoved) {
+		double current = emp.getAccumflextime();
+		double updated = current - timeRemoved;
+		emp.setAccumflextime(updated);
+	}
+	public void removeEmpAccumVacation(double timeRemoved) {
+		double current = emp.getAccumvacation();
+		double updated = current - timeRemoved;
+		emp.setAccumvacation(updated);
+	}
+	public void removeEmpRole(EmployeeroleEntity role) {
+		boolean indx = emp.getRoles().contains(role);
+		if (indx) {
+			emp.getRoles().remove(indx);
+		}
+	}
+	public boolean removeEmpSupervisor(EmployeeEntity supervisor) {
+		boolean indx = emp.getSupervisors().contains(supervisor);
+		if (indx) {
+			emp.getWorkPackages().remove(indx);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public boolean removeEmpTSApprover(EmployeeEntity tsApprover) {
+		boolean indx = emp.getTimeSheetApprovers().contains(tsApprover);
+		if (indx) {
+			emp.getTimeSheetApprovers().remove(indx);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public boolean removeEmpWorkPackage(WorkpackageEntity workpackage) {
+		boolean indx = emp.getWorkPackages().contains(workpackage);
+		if (indx) {
+			emp.getWorkPackages().remove(indx);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public void setFisrtName(String firstName) {
+		emp.setFirstname(firstName);
+	}
+	public void setEmpLabourChargeRates(LabourchargerateEntity lcr, 
+			TimesheetweekEntity tswStart) {
+	// need to update the employeelabourchargerate table with the 
+	// employees new labourcharge rate, and also put a closing date
+	// on the previous employeelabourchargerate entry
+	}
+	public void setEmpLastName(String lastName) {
+		emp.setLastname(lastName);
+	}
+	public void setEmpPercentFullTime(Double percentage) {
+		emp.setPercentfulltime(percentage);
+	}
+	public void setEmpTimeSheets(TimesheetEntity ts) {
+		emp.getTimeSheets().add(ts);
+	}
 }

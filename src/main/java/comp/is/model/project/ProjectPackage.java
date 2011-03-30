@@ -10,6 +10,9 @@ import comp.is.model.project.entity.WorkpackageEntity;
 public class ProjectPackage extends ProjectEntity {
     final WorkPackage rootFlag;
 
+    public ProjectPackage() {
+        rootFlag = null;
+    }
     public ProjectPackage(ProjectEntity root) {
         init(root);
         customer = root.getCustomer();

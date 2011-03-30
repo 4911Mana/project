@@ -12,26 +12,6 @@
 	background-color: white;
 }
 </style>
-<script type="text/javascript">
-PrimeFaces.widget.PickList.prototype.selectedSource = function() {
-	var selectedSource = [];
-	jQuery(this.sourceId + " > option:selected").each(function (i) {
-		selectedSource.push(this.value());
-	});
-	jQuery(this.targetId).trigger('change');
-	return selectedSource;
-}
-
-PrimeFaces.widget.PickList.prototype.selectedTarget = function() {
-	var selectedTarget = [];
-	jQuery(this.targetId + " > option:selected").each(function (i) {
-		selectedTarget.push(this.value());
-	});
-	jQuery(this.targetId).trigger('change');
-	return selectedTarget;
-}
-
-</script>
 	<title>Login</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link type="text/css" rel="stylesheet"
@@ -77,7 +57,7 @@ PrimeFaces.widget.PickList.prototype.selectedTarget = function() {
 			<h:outputText value="All Rights Reserved by Me" />
 		</p:layoutUnit>
 
-		<p:layoutUnit position="left" width="200" resizable="false"
+		<p:layoutUnit position="left" width="30" resizable="false"
 			closable="false" collapsible="false">
 			<h:outputText value="Login" />
 		</p:layoutUnit>

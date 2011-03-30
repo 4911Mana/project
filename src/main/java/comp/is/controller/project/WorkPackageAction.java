@@ -9,7 +9,7 @@ import javax.inject.Named;
 import comp.is.model.project.ChildWp;
 import comp.is.model.project.CurrentWp;
 import comp.is.model.project.WorkPackage;
-import comp.is.view.project.ProjectManagerView;
+import comp.is.view.project.ProjectView;
 
 /**
  * Session Bean implementation class WorkPackageAction
@@ -29,7 +29,7 @@ public class WorkPackageAction implements WorkPackageLocal {
     @Inject
     private ProjectActionLocal projectAction;
     @Inject
-    private ProjectManagerView view;
+    private ProjectView view;
 
     // @PersistenceContext(unitName="primary")
     // private EntityManager em;

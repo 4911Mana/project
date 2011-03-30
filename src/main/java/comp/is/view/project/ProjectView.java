@@ -17,7 +17,7 @@ import comp.is.model.project.WorkPackage;
 
 @Named("projectView")
 @RequestScoped
-public class ProjectManagerView implements Serializable {
+public class ProjectView implements Serializable {
 
     @Inject
     private ChildWpPanelBean childPanel;
