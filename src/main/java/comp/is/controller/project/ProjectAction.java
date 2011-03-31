@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.PermitAll;
 import javax.ejb.Local;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
@@ -40,6 +42,8 @@ import comp.is.view.project.ProjectView;
 @SessionScoped
 @Local
 @Named("projectAction")
+@DeclareRoles({ "Troy", "2", "3", "4" , "5", "6" })
+@PermitAll
 public class ProjectAction implements Serializable, ProjectActionLocal {
 
     private Package currentP;
@@ -233,7 +237,10 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
      */
     @Override
     public String init(String id) {
-        
+        if(id == null){
+            System.err.println(" Project Id is null");
+            return "failure";
+        }
         if (!findAndSetRoot(id)) {
             view.displayMsg("Project not found");
             return "failure";

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.PermitAll;
 import javax.ejb.Local;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
@@ -35,17 +37,17 @@ import comp.is.view.project.ProjectView;
 @SessionScoped
 @LocalBean
 @Named("catalogueAction")
+@DeclareRoles({ "Troy", "2", "3", "4" , "5", "6" })
+@PermitAll
 public class ProjectCatalogueAction implements Serializable{
 
     @PersistenceContext(unitName = "ProjectManager")
     private EntityManager em;
     
-    
+    @Inject @LoggedIn
     Employee manager;
     
-    Employee loggedInEmployee;
     
-    EmployeeEntity entity;
     
     ArrayList<ProjectEntity> allProj;
     
@@ -63,18 +65,10 @@ public class ProjectCatalogueAction implements Serializable{
         selectedEmp = new Employee[0];
     }
 
-    public void init() {
-        try {
-//            entity = em.find(EmployeeEntity.class, 100);
-//            //Employee empInj = new Employee(entity);
-//            loggedInEmployee = new Employee(entity);
-//            System.err.println("Proj manager raw from db " + entity + "/ "+ manager.getAllProjects());
-            
-            System.out.println(entity.getPeons());
-        } catch (Exception e) {
-            System.err.println("Project Manager not found. " + e.toString());
-        }
-    }
+   @PostConstruct
+   public void init(){
+       allProj = manager.getAllProjects();
+   }
  
     public Employee getManager() {
         return manager;
@@ -135,19 +129,6 @@ public class ProjectCatalogueAction implements Serializable{
         this.selectedEmp = selectedEmp;
     }
     
-    @Produces
-    @LoggedIn
-    @SessionScoped
-    @Named("employee")
-    public Employee getLoggedInEmployee() {
-        entity = em.find(EmployeeEntity.class, 100);
-        loggedInEmployee = new Employee(entity);
-        allProj = loggedInEmployee.getAllProjects();
-        return loggedInEmployee;
-    }
-
-    public void setLoggedInEmployee(Employee loggedInEmployee) {
-        this.loggedInEmployee = loggedInEmployee;
-    }
+    
     
 }
