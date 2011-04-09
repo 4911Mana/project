@@ -1,34 +1,24 @@
 package comp.is.model.project.entity;
 
-import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 
-import javax.persistence.AttributeOverride;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.PrimaryKeyJoinColumns;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
 
-import comp.is.model.project.ProjectPackage;
 import comp.is.model.project.WorkPackage;
 import comp.is.model.project.key.WorkpackagePK;
-import comp.is.model.project.entity.Package;
 
 /**
  * The persistent class for the WORKPACKAGE database table.
@@ -47,8 +37,13 @@ public class WorkpackageEntity extends Package {
     protected Set<WorkpackagestatusreportEntity> statusReports;
     protected ProjectEntity project;
     protected String projid;
+    protected Set<WorkPackageBudgetEntity> plannedBudget;
 
-    public WorkpackageEntity(){}
+    
+
+    public WorkpackageEntity(){
+        
+    }
     public WorkpackageEntity(WorkPackage candidate) {
         init(candidate);
         setParent(candidate.getParent());
@@ -58,7 +53,8 @@ public class WorkpackageEntity extends Package {
         project = candidate.getProject();
         projid = candidate.getProjid();
         timeSheetEntries = candidate.getTimeSheetEntries();
-        //setParentId(candidate.getId());
+        plannedBudget = candidate.plannedBudget;
+        System.out.println("Planned budget " + candidate.plannedBudget);
     }
 
     // bi-directional many-to-one association to Workpackage
@@ -110,7 +106,7 @@ public class WorkpackageEntity extends Package {
     }
 
      // bi-directional many-to-one association to Timesheetentry
-     @OneToMany(fetch = FetchType.EAGER, mappedBy = "workPackage")
+     @OneToMany( mappedBy = "workPackage", fetch = FetchType.EAGER)
      public Set<TimesheetentryEntity> getTimeSheetEntries() {
      return this.timeSheetEntries;
      }
@@ -133,7 +129,7 @@ public class WorkpackageEntity extends Package {
      }
 
     // bi-directional many-to-many association to Employee
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "WORKPACKAGEEMPLOYEESASSIGNED", joinColumns = {
             @JoinColumn(name = "PROJID", referencedColumnName = "PROJID", nullable = false),
             @JoinColumn(name = "WPID", referencedColumnName = "ID", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "EMPID", nullable = false) })
@@ -167,5 +163,13 @@ public class WorkpackageEntity extends Package {
     public String toString() {
         return getId();
     }
-
+    
+    @OneToMany(mappedBy = "wp", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    public Set<WorkPackageBudgetEntity> getPlannedBudget() {
+        return plannedBudget;
+    }
+    public void setPlannedBudget(Set<WorkPackageBudgetEntity> plannedBudget) {
+        this.plannedBudget = plannedBudget;
+    }
+    
 }

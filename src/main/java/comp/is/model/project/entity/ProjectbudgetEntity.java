@@ -23,34 +23,45 @@ public class ProjectbudgetEntity implements Serializable {
 	private String projbudgetdesc;
 	private ProjectEntity project;
 	private String projid;
+	private Double amount;
 
     public ProjectbudgetEntity() {
     }
 
 
-	@Column(length=2048)
-	public String getProjbudgetdesc() {
-		return this.projbudgetdesc;
-	}
+//	@Column(name="desc",length=2048)
+//	public String getDescr() {
+//		return this.projbudgetdesc;
+//	}
 
 	//bi-directional one-to-one association to Project
 	@OneToOne
-	@JoinColumn(name="PROJID", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="PROJID")
 	public ProjectEntity getProject() {
 		return this.project;
 	}
 
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(unique=true, nullable=false, length=16)
 	public String getProjid() {
 		return this.projid;
 	}
+	
+	@Column
+	public Double getInitBudget() {
+        return amount;
+    }
 
-	public void setProjbudgetdesc(String projbudgetdesc) {
-		this.projbudgetdesc = projbudgetdesc;
-	}
+
+    public void setInitBudget(Double budget) {
+        this.amount = budget;
+    }
+
+//
+//    public void setDescr(String projbudgetdesc) {
+//		this.projbudgetdesc = projbudgetdesc;
+//	}
 
 
 	public void setProject(ProjectEntity project) {

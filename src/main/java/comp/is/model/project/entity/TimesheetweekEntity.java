@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,11 +25,11 @@ import javax.persistence.TemporalType;
 @Table(name="TIMESHEETWEEK")
 public class TimesheetweekEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private List<EmployeelabourchargerateEntity> employeeLabourChargeRates;
-	private List<TimesheetEntity> timeSheets;
+	private Set<EmployeelabourchargerateEntity> employeeLabourChargeRates;
+	private Set<TimesheetEntity> timeSheets;
 	private Date weekend;
 	private long id;
-	private BigDecimal weeknum;
+	private Integer weeknum;
 
     public TimesheetweekEntity() {
     }
@@ -36,13 +37,13 @@ public class TimesheetweekEntity implements Serializable {
 
 	//bi-directional many-to-one association to Employeelabourchargerate
 	@OneToMany(mappedBy="startTimeSheetWeek")
-	public List<EmployeelabourchargerateEntity> getEmployeeLabourChargeRates() {
+	public Set<EmployeelabourchargerateEntity> getEmployeeLabourChargeRates() {
 		return this.employeeLabourChargeRates;
 	}
 
 	//bi-directional many-to-one association to Timesheet
 	@OneToMany(mappedBy="timeSheetWeek")
-	public List<TimesheetEntity> getTimeSheets() {
+	public Set<TimesheetEntity> getTimeSheets() {
 		return this.timeSheets;
 	}
 
@@ -53,7 +54,7 @@ public class TimesheetweekEntity implements Serializable {
 	}
 
 	@Id
-	//@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(unique=true, nullable=false, precision=16)
 	public long getId() {
 		return id;
@@ -61,16 +62,16 @@ public class TimesheetweekEntity implements Serializable {
 
 
 	@Column(precision=2)
-	public BigDecimal getWeeknum() {
+	public Integer getWeeknum() {
 		return weeknum;
 	}
 
-	public void setEmployeeLabourChargeRates(List<EmployeelabourchargerateEntity> employeeLabourChargeRates) {
+	public void setEmployeeLabourChargeRates(Set<EmployeelabourchargerateEntity> employeeLabourChargeRates) {
 		this.employeeLabourChargeRates = employeeLabourChargeRates;
 	}
 
 
-	public void setTimeSheets(List<TimesheetEntity> timeSheets) {
+	public void setTimeSheets(Set<TimesheetEntity> timeSheets) {
 		this.timeSheets = timeSheets;
 	}
 
@@ -82,7 +83,7 @@ public class TimesheetweekEntity implements Serializable {
 		id = tsweekid;
 	}
 
-	public void setWeeknum(BigDecimal tsweeknum) {
+	public void setWeeknum(Integer tsweeknum) {
 		weeknum = tsweeknum;
 	}
 	

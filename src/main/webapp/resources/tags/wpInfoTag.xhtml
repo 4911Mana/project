@@ -13,27 +13,36 @@
 	<composite:attribute name="charges" />
 	<composite:attribute name="mask" />
 	<composite:attribute name="numberReadonly" />
+	<composite:attribute name="customerValue" />
+	<composite:attribute name="customerReadonly" />
 </composite:interface>
 
 <composite:implementation>
 	<h:panelGrid columns="6">
-		<h:outputLabel for="number" value="Number:" />
-
+	
+		<h:outputLabel for="number" value="Number:" /> 
 		<p:inputMask id="number" readonly="#{cc.attrs.numberReadonly}" value="#{cc.attrs.numberValue}"
 			required="true" mask="#{cc.attrs.mask}" />
-		<p:spacer />
-
+		<p:message for="number" errorClass="invalid" />
+		<h:outputLabel for="title" value="Title:" />
+		<p:inputText id="title" label="title" value="#{cc.attrs.titleValue}" width="00px"/>
+		<p:spacer/>	
+		
+		<h:outputLabel for="customer" value="Customer:" />
+		<p:inputText id="customer" value="#{cc.attrs.customerValue}" readonly="#{cc.attrs.customerReadonly}"/>
+			
+		<p:spacer/>
+		
+		
+		
 		<h:outputLabel for="date" value="Start Date:" />
 		<p:calendar id="date" value="#{cc.attrs.startDate}" pattern="EEE, dd MMM, yyyy"/>
 		<p:message for="date" errorClass="invalid" />
-		<h:outputLabel for="title" value="Title:" />
-		<p:inputText id="title" label="title" value="#{cc.attrs.titleValue}" />
-		<p:message for="title" errorClass="invalid" />
-
-		<h:outputLabel for="charges" value="Open for Charges:" />
-		<h:selectBooleanCheckbox id="charges" value="#{cc.attrs.charges}" />
-	</h:panelGrid>
+		</h:panelGrid>
 	<br />
+	<h:outputLabel for="charges" value="Open for Charges:" />
+	<h:selectBooleanCheckbox id="charges" value="#{cc.attrs.charges}" />
+		<p />
 	<h:outputLabel for="desc" value="Description:" />
 	<p:inputTextarea id="desc" label="desc" value="#{cc.attrs.descValue}"
 		style="width:300px;height:60px;" effectDuration="400" />

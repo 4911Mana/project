@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import comp.is.model.admin.Employee;
 import comp.is.model.project.key.EmployeerolePK;
 
 
@@ -18,7 +19,6 @@ import comp.is.model.project.key.EmployeerolePK;
 @Entity
 @Table(name="EMPLOYEEROLES")
 public class EmployeeroleEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
 	private EmployeeEntity employee;
 	private EmployeerolePK id;
 	private ProjectEntity project;
@@ -73,4 +73,15 @@ public class EmployeeroleEntity implements Serializable {
 		this.role = role;
 	}
 	
+	@Override
+	public boolean equals(Object emp) {
+	        if (!(emp instanceof EmployeeroleEntity))
+	            throw new ClassCastException("A Employee object expected.");
+	        EmployeerolePK empId = ((EmployeeroleEntity) emp).getId();
+	        return empId.equals(getId());
+	    }
+	
+	public String toString(){
+	    return "Proj " + getId().getProjid() + "/Emp " + getId().getEmpid() + "/Role " + getId().getRoleid();
+	}
 }

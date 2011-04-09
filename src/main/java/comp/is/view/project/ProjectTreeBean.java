@@ -66,6 +66,7 @@ public class ProjectTreeBean implements Serializable {
     }
 
     private void buildTree(ProjectTree project) {
+        root = new DefaultTreeNode("Roooooot", null);
         rootWp = new DefaultTreeNode(project.getRoot(), root);
         addObjChildrenRecursively(rootWp);
     }

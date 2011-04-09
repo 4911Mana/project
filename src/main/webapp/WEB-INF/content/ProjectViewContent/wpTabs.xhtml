@@ -19,7 +19,8 @@
 				<!-- first tab -->
 				<p:tab title="Info">
 
-					<l:wpInfoTag numberValue="#{wp.number}" numberReadonly="true"
+					<l:wpInfoTag customerValue="#{project.customer}" customerReadonly="true"
+					numberValue="#{wp.number}" numberReadonly="true"
 						titleValue="#{wp.name}" descValue="#{wp.description}"
 						startDate="#{wp.startDate}" charges="#{wp.openForCharges}" />
 				</p:tab>
@@ -47,17 +48,17 @@
 
 					<p:divider />
 
-					<p:commandButton title="Save" action="#{projectAction.doMerge}"
+					<p:commandButton title="Save" update="dtplanned" action="#{projectAction.doMerge}"
 						image="ui-icon-disk" />
-					<p:commandButton type="push" title="Delete" image="ui-icon-trash" />
-					<p:commandButton type="push" title="Print" image="ui-icon-print" />
+					<p:commandButton ajax="false" title="Delete" image="ui-icon-trash" />
+					<p:commandButton ajax="false" update="dtplanned" title="Print" image="ui-icon-print" action="#{wp.print}"/>
 				</p:toolbarGroup>
 
 				<p:divider />
 
 				<p:toolbarGroup align="right">
 					<p:commandButton type="push" value="Progress Report"
-						update="wp:dtactual, report" image="ui-icon-folder-open">
+						 image="ui-icon-folder-open">
 						<f:setPropertyActionListener value="#{true}"
 							target="#{requestScope.renderReport}" />
 					</p:commandButton>

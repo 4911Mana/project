@@ -3,6 +3,7 @@ package comp.is.controller.project;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -24,32 +25,41 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import comp.is.model.admin.Employee;
+import comp.is.model.admin.LabourGrade;
 import comp.is.model.project.ChildWp;
 import comp.is.model.project.CurrentWp;
 import comp.is.model.project.ProjectPackage;
 import comp.is.model.project.ProjectTree;
 import comp.is.model.project.WorkPackage;
 import comp.is.model.project.entity.EmployeeEntity;
+import comp.is.model.project.entity.LabourchargerateEntity;
 import comp.is.model.project.entity.Package;
 import comp.is.model.project.entity.ProjectEntity;
+import comp.is.model.project.entity.WorkPackageBudgetEntity;
 import comp.is.model.project.entity.WorkpackageEntity;
 import comp.is.view.project.EmployeePickListBean;
 import comp.is.view.project.ProjectView;
 
 @Stateful
 @SessionScoped
-@Local
+@LocalBean
 @Named("projectAction")
-@DeclareRoles({ "Troy", "2", "3", "4" , "5", "6" })
+@DeclareRoles({ "Troy", "2", "3", "4", "5", "6" })
 @PermitAll
-public class ProjectAction implements Serializable, ProjectActionLocal {
+public class ProjectAction {
+
+    final String RATE_SQL = "SELECT r FROM LabourchargerateEntity r WHERE r.rateclassid = ";
 
     private Package currentP;
     private WorkPackage childWp;
     private ProjectPackage pp;
     private ProjectTree project;
+    private Hashtable<String, LabourchargerateEntity> rates;
+    private final List<String> sql;
+
     @PersistenceContext(unitName = "ProjectManager")
     private EntityManager em;
     @Inject
@@ -57,11 +67,14 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
     @Inject
     private ProjectCatalogueAction catalogue;
     @Inject
-    EmployeePickListBean pickList;
+    private EmployeePickListBean pickList;
 
     public ProjectAction() {
         currentP = new WorkPackage();
         childWp = new WorkPackage();
+        rates = new Hashtable<String, LabourchargerateEntity>();
+        sql = new ArrayList<String>();
+
     }
 
     /*
@@ -69,7 +82,7 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
      * 
      * @see comp.is.controller.project.ProjectActionLocal#addChild()
      */
-    @Override
+
     public String addChild() {
         System.out.println("Saving: " + childWp.toString());
         // validate
@@ -77,7 +90,7 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
         boolean err = false;
         // check for errors
         WorkPackage candidate = new WorkPackage(childWp);
-        //if(currentP.is)
+        // if(currentP.is)
         candidate.setParent(currentP);
         candidate.setProject(pp);
 
@@ -96,7 +109,7 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
         // }
         // }
         if (currentP.isOpenForCharges()) {
-            msgs.add("Parent is open for charges. Parent is a leaf.");
+            msgs.add("Chils cannot be added: Parent is closed.");
             err = true;
 
         }
@@ -146,7 +159,7 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
      * comp.is.controller.project.ProjectActionLocal#addWp(comp.is.model.project
      * .WorkPackage)
      */
-    @Override
+
     public void addWp(WorkPackage wp) {
         // validate
         project.put(wp);
@@ -158,7 +171,10 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
         for (WorkpackageEntity wp : wps) {
             if (wp.getParent() != null & !wp.getId().equalsIgnoreCase(".")) {
                 WorkPackage newWp = new WorkPackage(wp);
-                newWp.initBudget();
+                newWp.setRates(getEffectiveRatesForDate(newWp.getStartDate()));
+                newWp.initAccumulatedBudget();
+                newWp.initPlannedBudget();
+                newWp.PlannedBudgetInit();
                 project.put(newWp);
             }
         }
@@ -185,7 +201,7 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
      * 
      * @see comp.is.controller.project.ProjectActionLocal#getChildWp()
      */
-    
+
     @Produces
     @ChildWp
     @Named("childWp")
@@ -199,7 +215,7 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
      * 
      * @see comp.is.controller.project.ProjectActionLocal#getProject()
      */
-    @Override
+
     public ProjectTree getProject() {
         return project;
     }
@@ -209,7 +225,7 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
      * 
      * @see comp.is.controller.project.ProjectActionLocal#getWp()
      */
-    @Override
+
     @Produces
     @CurrentWp
     @Named("wp")
@@ -224,7 +240,7 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
      * @see
      * comp.is.controller.project.ProjectActionLocal#getWpById(java.lang.String)
      */
-    @Override
+
     public WorkPackage getWpById(String wpNumber) {
         WorkPackage wp = project.get(wpNumber);
         return wp;
@@ -235,12 +251,13 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
      * 
      * @see comp.is.controller.project.ProjectActionLocal#initializeProject()
      */
-    @Override
+
     public String init(String id) {
-        if(id == null){
+        if (id == null) {
             System.err.println(" Project Id is null");
             return "failure";
         }
+        view.resetTabs();
         if (!findAndSetRoot(id)) {
             view.displayMsg("Project not found");
             return "failure";
@@ -260,7 +277,7 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
      * comp.is.controller.project.ProjectActionLocal#setChildWp(comp.is.model
      * .project.WorkPackage)
      */
-    @Override
+
     public void setChildWp(WorkPackage childWp) {
         this.childWp = childWp;
     }
@@ -272,7 +289,7 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
      * comp.is.controller.project.ProjectActionLocal#setProject(comp.is.model
      * .project.ProjectTree)
      */
-    @Override
+
     public void setProject(ProjectTree tree) {
         this.project = tree;
     }
@@ -284,7 +301,7 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
      * comp.is.controller.project.ProjectActionLocal#setWp(comp.is.model.project
      * .entity.Package)
      */
-    @Override
+
     public void setWp(Package wp) {
         currentP = wp;
     }
@@ -295,7 +312,7 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
      * @see
      * comp.is.controller.project.ProjectActionLocal#uniqueNum(java.lang.String)
      */
-    @Override
+
     public boolean uniqueNum(String number) {
         return !project.containsKey(number);
 
@@ -308,9 +325,12 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
      * comp.is.controller.project.ProjectActionLocal#validStartDate(comp.is.
      * model.project.WorkPackage, java.util.Date)
      */
-    @Override
+
     public boolean validStartDate(WorkPackage wp, Date newDate) {
+
         if (wp.isRootChild()) {
+            if (pp.getStartDate() == null)
+                return true;
             return !pp.getStartDate().after(newDate);
         }
         if (wp.getParent().getStartDate() == null) {
@@ -328,7 +348,7 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
      * 
      * @see comp.is.controller.project.ProjectActionLocal#reinit()
      */
-    @Override
+
     public void reinit() {
         setWp(new WorkPackage());
         setChildWp(new WorkPackage());
@@ -340,7 +360,7 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
      * 
      * @see comp.is.controller.project.ProjectActionLocal#validParent()
      */
-    @Override
+
     public String validParent() {
         if (currentP.isLowestLevel()) {
             view.displayMsg("Work Package is a leaf");
@@ -355,7 +375,7 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
      * comp.is.controller.project.ProjectActionLocal#getSourceEmp(comp.is.model
      * .project.WorkPackage)
      */
-    @Override
+
     public ArrayList<Employee> getSourceEmp(WorkPackage wp) {
 
         ArrayList<Employee> emp = wp.getAvailableStaff();
@@ -374,25 +394,29 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
      * .project.WorkPackage)
      */
     public ArrayList<Employee> getTargetEmp(WorkPackage wp) {
-        Map<Integer, Employee> emp = new Hashtable<Integer, Employee>();
-        for (Employee e : wp.getEmployees()) {
-            if (!emp.containsKey(e.getId())) {
-                emp.put(e.getId(), e);
-            }
-        }
+        Set<Employee> emp = new HashSet<Employee>();
+//        Map<Integer, Employee> emp = new Hashtable<Integer, Employee>();
+//        for (Employee e : wp.getEmployees()) {
+//            if (!emp.containsKey(e.getId())) {
+//                emp.put(e.getId(), e);
+//            }
+//        }
         if (project.getChildren(wp.getId()) == null) {
             return new ArrayList<Employee>(wp.getEmployees());
         } else {
             for (WorkPackage cwp : project.getChildren(wp.getId())) {
-                for (Employee e : getTargetEmp(cwp)) {
-                    if (!emp.containsKey(e.getId())) {
-                        emp.put(e.getId(), e);
-                    }
-                }
-                // emp.addAll(getTargetEmp(cwp));
+//                for (Employee e : getTargetEmp(cwp)) {
+//                    if (!emp.containsKey(e.getId())) {
+//                        emp.put(e.getId(), e);
+//                    }
+//                }
+                 emp.addAll(getTargetEmp(cwp));
             }
-
-            return new ArrayList<Employee>(emp.values());
+            System.err
+                    .println("P1 "
+                            + getEffectiveRatesForDate(Calendar.getInstance()
+                                    .getTime()));
+            return new ArrayList<Employee>(emp);
         }
     }
 
@@ -401,13 +425,16 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
      * 
      * @see comp.is.controller.project.ProjectActionLocal#doMerge()
      */
-    @Override
+
     public String doMerge() {
         System.out.println("Saving " + currentP);
         List<String> msgs = new ArrayList<String>();
         boolean err = false;
 
         WorkPackage candidate = this.getWpById(currentP.getId());
+        candidate.flushPlannedBudget();
+ 
+        WorkpackageEntity entity = null;
         // if (!candidate.getId().equalsIgnoreCase(currentP.getId())) {
         // msgs.add("Number update is not allowed");
         // err = true;
@@ -416,6 +443,7 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
             candidate.setResponsibleEngineer(new EmployeeEntity(pickList
                     .getRespEng()));
         }
+
         candidate.mereg(currentP);
         Set<Employee> employeesAssigned = new HashSet<Employee>();
         Set<EmployeeEntity> empSet = new HashSet<EmployeeEntity>();
@@ -442,19 +470,70 @@ public class ProjectAction implements Serializable, ProjectActionLocal {
             return null;
         }
         try {
-            WorkpackageEntity entity = new WorkpackageEntity(candidate);
+            entity = new WorkpackageEntity(candidate);
             em.merge(entity);
             System.out.println("Saving " + candidate + " "
                     + candidate.getStartDate() + "/ "
                     + candidate.getEmployeesAssigned());
             // em.refresh(entity) ;
-            project.put(entity.getId(), new WorkPackage(entity));
-            view.displayMsg( entity.getId() + "Successfully updated");
+
         } catch (Exception ex) {
             view.displayMsg("Unable to update " + ex.toString());
             setWp(getWpById(currentP.getId()));
             System.out.println("Unable to update " + ex.toString());
+            return null;
+            
         }
+        project.put(entity.getId(), new WorkPackage(entity));
+        currentP.getBudget().reinitType("planned");
+        view.displayMsg(entity.getId() + "Successfully updated");
         return null;
     }
+
+    public Set<LabourchargerateEntity> getEffectiveRatesForDate(Date date) {
+        if (date == null) {
+            date = Calendar.getInstance().getTime();
+        }
+        Set<LabourchargerateEntity> rateSheet = new HashSet<LabourchargerateEntity>();
+        for (LabourGrade grade : LabourGrade.values()) {
+            String queryStr = RATE_SQL + "'" + grade.toString() + "'";
+            System.err.println(queryStr);
+            Query query = em.createQuery(queryStr);
+            final List<LabourchargerateEntity> p1result = query.getResultList();
+            System.err.println("All rates: " + p1result);
+            if (p1result == null || p1result.isEmpty()) {
+                break;
+            }
+            LabourchargerateEntity rate = p1result.get(0);
+            for (LabourchargerateEntity e : p1result) {
+                if (!e.getEffectiveDate().before(date)
+                        & e.getEffectiveDate().after(rate.getEffectiveDate())) {
+                    rate = e;
+                    System.err
+                            .println("Rates: "
+                                    + e
+                                    + "******************************************************************");
+                }
+            }
+            rateSheet.add(rate);
+        }
+        return rateSheet;
+    }
+    
+    public boolean isLeaf(){
+        if(currentP == null){return false;}
+        return (project.getChildren(currentP.getId()).isEmpty());
+    }
+    
+    public void initSummaryPlannedBudget(){
+        
+//        if(project.getChildren(currentP.getId()) == null)
+//            return;
+//        currentP.getBudget().reinitPlanned();
+//        for(WorkPackage child : project.getChildren(currentP.getId())){
+//            currentP.getBudget().addAllToPlanned(child.getBudget().getPlanned());
+//        }
+    }
+   
+    
 }

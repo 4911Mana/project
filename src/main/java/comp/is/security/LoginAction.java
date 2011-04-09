@@ -12,9 +12,11 @@ import javax.ejb.SessionContext;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.LoginContext;
@@ -32,9 +34,10 @@ import comp.is.model.project.entity.ProjectEntity;
 //@RolesAllowed({ Roles.ADMIN, Roles.HR, Roles.PROJECT_MANAGER,
  //       Roles.RESPONSIBLE_ENGINEER, Roles.SUPERVISOR, Roles.TIMESHEET_APPROVER })
 //@RolesAllowed({ "1", "2", "3", "4" , "5", "6"  })
+@Named
 @PermitAll
 public class LoginAction {
-    @PersistenceContext(unitName = "ProjectManager")
+    @PersistenceContext(unitName = "ProjectManager", type=PersistenceContextType.EXTENDED)
     private EntityManager em;
     @Resource
     SessionContext ctx;
@@ -60,6 +63,14 @@ public class LoginAction {
 
     public void setLoggedInEmployee(Employee loggedInEmployee) {
         this.loggedInEmployee = loggedInEmployee;
+    }
+    
+    public String logout(){
+        FacesContext.getCurrentInstance()
+        .getExternalContext()
+        .invalidateSession();
+        System.err.println("Logged out");
+        return "LoginContent";
     }
 
 

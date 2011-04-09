@@ -1,10 +1,13 @@
 package comp.is.model.project.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.AttributeOverride;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,7 +18,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import comp.is.model.project.ProjectPackage;
 
 /**
  * The persistent class for the PROJECT database table.
@@ -29,22 +35,47 @@ public class ProjectEntity extends Package implements Serializable {
 
     private static final long serialVersionUID = 1L;
     protected String customer;
-    protected double labourratemarkup;
+    //protected double labourratemarkup;
     protected Set<WorkpackageEntity> workPackages;
     protected Set<EmployeeEntity> projectEmployees;
+    protected ProjectbudgetEntity initBudget;
+    protected Set<ProjectsummaryEntity> projectSummaries;
+    protected Set<TimesheetentryEntity> timeSheetEntries;
+    protected Set<EmployeeroleEntity> employeeRoles;
+    protected Set<RatesheetEntity> rateSheets;
+
+    public ProjectEntity(){
+        workPackages = new HashSet<WorkpackageEntity>();
+        projectEmployees = new HashSet<EmployeeEntity>();
+        projectSummaries = new HashSet<ProjectsummaryEntity>();
+        timeSheetEntries = new HashSet<TimesheetentryEntity>();
+        employeeRoles =  new HashSet<EmployeeroleEntity>();
+        rateSheets = new HashSet<RatesheetEntity>();
+    }
+    public ProjectEntity(ProjectPackage pp) {
+        init(pp);
+        customer = pp.customer;
+        workPackages = new HashSet<WorkpackageEntity>(pp.workPackages);
+        projectEmployees = new HashSet<EmployeeEntity>(pp.projectEmployees);
+        initBudget = pp.initBudget;
+        projectSummaries = new HashSet<ProjectsummaryEntity>(pp.projectSummaries);
+        timeSheetEntries = new HashSet<TimesheetentryEntity>(pp.timeSheetEntries);
+        employeeRoles =  new HashSet<EmployeeroleEntity>(pp.employeeRoles);
+        rateSheets = new HashSet<RatesheetEntity>(pp.rateSheets);
+    }
 
     @Column(length = 256)
     public String getCustomer() {
         return customer;
     }
 
-    @Column(precision = 126)
-    public double getLabourratemarkup() {
-        return labourratemarkup;
-    }
+//    @Column(precision = 126)
+//    public double getLabourratemarkup() {
+//        return labourratemarkup;
+//    }
 
     // bi-directional many-to-one association to Workpackage
-    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "project")
     public Set<WorkpackageEntity> getWorkPackages() {
         return this.workPackages;
     }
@@ -53,27 +84,27 @@ public class ProjectEntity extends Package implements Serializable {
         this.customer = customer;
     }
 
-//     //bi-directional many-to-one association to Employeerole
-//     @OneToMany(mappedBy="project")
-//     public List<EmployeeroleEntity> getEmployeeRoles() {
-//     return this.employeeRoles;
-//     }
-//    
-//     public void setEmployeeRoles(List<EmployeeroleEntity> employeeRoles) {
-//     this.employeeRoles = employeeRoles;
-//     }
+     //bi-directional many-to-one association to Employeerole
+     @OneToMany(mappedBy="project", fetch = FetchType.EAGER)
+     public Set<EmployeeroleEntity> getEmployeeRoles() {
+     return this.employeeRoles;
+     }
+    
+     public void setEmployeeRoles(Set<EmployeeroleEntity> employeeRoles) {
+     this.employeeRoles = employeeRoles;
+     }
     
     
-//     //bi-directional one-to-one association to Projectbudget
-//     @OneToOne(mappedBy="project")
-//     public ProjectbudgetEntity getProjectBudget() {
-//     return this.projectBudget;
-//     }
-//    
-//     public void setProjectBudget(ProjectbudgetEntity projectBudget) {
-//     this.projectBudget = projectBudget;
-//     }
-//    
+     //bi-directional one-to-one association to Projectbudget
+     @OneToOne(mappedBy="project")
+     public ProjectbudgetEntity getProjectBudget() {
+     return this.initBudget;
+     }
+    
+     public void setProjectBudget(ProjectbudgetEntity projectBudget) {
+     this.initBudget = projectBudget;
+     }
+    
     
      //bi-directional many-to-many association to Employee
     @ManyToMany(fetch = FetchType.EAGER)
@@ -88,46 +119,46 @@ public class ProjectEntity extends Package implements Serializable {
         this.projectEmployees = projectEmployees;
     }
 
-    //
-    //
-    // //bi-directional many-to-one association to Projectsummary
-    // @OneToMany(mappedBy="project")
-    // public List<ProjectsummaryEntity> getProjectSummaries() {
-    // return this.projectSummaries;
-    // }
-    //
-    // public void setProjectSummaries(List<ProjectsummaryEntity>
-    // projectSummaries) {
-    // this.projectSummaries = projectSummaries;
-    // }
-    //
-    //
-    // //bi-directional many-to-one association to Ratesheet
-    // @OneToMany(mappedBy="project")
-    // public List<RatesheetEntity> getRateSheets() {
-    // return this.rateSheets;
-    // }
-    //
-    // public void setRateSheets(List<RatesheetEntity> rateSheets) {
-    // this.rateSheets = rateSheets;
-    // }
-    //
-    //
-    // //bi-directional many-to-one association to Timesheetentry
-    // @OneToMany(mappedBy="project")
-    // public List<TimesheetentryEntity> getTimeSheetEntries() {
-    // return this.timeSheetEntries;
-    // }
-    //
-    // public void setTimeSheetEntries(List<TimesheetentryEntity>
-    // timeSheetEntries) {
-    // this.timeSheetEntries = timeSheetEntries;
-    // }
-    //
+    
+    
+     //bi-directional many-to-one association to Projectsummary
+     @OneToMany(mappedBy="project")
+     public Set<ProjectsummaryEntity> getProjectSummaries() {
+     return this.projectSummaries;
+     }
+    
+     public void setProjectSummaries(Set<ProjectsummaryEntity>
+     projectSummaries) {
+     this.projectSummaries = projectSummaries;
+     }
+    
+    
+//     //bi-directional many-to-one association to Ratesheet
+//     @OneToMany(mappedBy="project")
+//     public Set<RatesheetEntity> getRateSheets() {
+//     return this.rateSheets;
+//     }
+//    
+//     public void setRateSheets(Set<RatesheetEntity> rateSheets) {
+//     this.rateSheets = rateSheets;
+//     }
+    
+    
+//     //bi-directional many-to-one association to Timesheetentry
+//     @OneToMany(mappedBy="project")
+//     public Set<TimesheetentryEntity> getTimeSheetEntries() {
+//     return this.timeSheetEntries;
+//     }
+//    
+//     public void setTimeSheetEntries(Set<TimesheetentryEntity>
+//     timeSheetEntries) {
+//     this.timeSheetEntries = timeSheetEntries;
+//     }
+    
 
-    public void setLabourratemarkup(double labourratemarkup) {
-        this.labourratemarkup = labourratemarkup;
-    }
+//    public void setLabourratemarkup(double labourratemarkup) {
+//        this.labourratemarkup = labourratemarkup;
+//    }
 
     public void setWorkPackages(Set<WorkpackageEntity> workPackages) {
         this.workPackages = workPackages;

@@ -11,75 +11,72 @@
 </head>
 <body>
 <ui:composition>
-	<p:outputPanel id="dtplanned"
-		rendered="#{not wp.budget.plannedCostSet}">
-		<p:dataTable var="entry" value="#{wp.wpBudget}">
-		 <f:facet name="header">  
-             <p:outputPanel> 
-             	<h:outputText value="Alvailable budget:" align="right"/>  
-                 <h:outputText  value="1234$"  align="right" />  
-             </p:outputPanel>  
-         </f:facet> 
-			<p:column footerText="Total" sortBy="#{entry.key}" >
+	<p:outputPanel id="dtplanned">
+		<p:dataTable var="entry" value="#{wp.plannedBudgetList}">
+			<f:facet name="header">
+				<p:outputPanel>
+					<h:outputText value="Alvailable budget:" align="right" />
+					<h:outputText value="1234$" align="right" />
+				</p:outputPanel>
+			</f:facet>
+			<p:column footerText="Total" sortBy="#{entry.lg}">
 				<f:facet name="header">
                     Labour Grade
             </f:facet>
-				<h:outputText value="#{entry.key}" />
+				<h:outputText value="#{entry.lg}" />
 			</p:column>
-
-			<p:column>
+			<p:column >
 				<f:facet name="header">
-                    Estimated
+                    Current Value
             </f:facet>
-				<p:spinner id="plannedSpinner" value='#{entry.value["planned"]}'
-					stepFactor="0.5" min="0"
-					max='#{empty entry.value["available"] ? "999999999999" : entry.value["available"]}'>
+				<h:outputText value='#{entry.currentAmount}' />
+			</p:column>
+			<p:column rendered="#{projectAction.leaf}">
+				<f:facet name="header">
+                   Adjust +/-
+            </f:facet>
+				<p:spinner id="plannedSpinner" value='#{entry.adjustmentAmount}'
+					disabled="false" stepFactor="0.5" 
+					converter="javax.faces.Double" style="width:100px"
+					>
 					<p:ajax update="plannedVal" process="plannedSpinner" />
 				</p:spinner>
 			</p:column>
-			<p:column>
-				<f:facet name="header">
-                    Available
-            </f:facet>
-				<h:outputText id="plannedVal"
-					value='#{( empty entry.value["available"] or entry.value["available"] le 0) ? "-" : entry.value["available"] - entry.value["planned"]}' />
-			</p:column>
+			
 		</p:dataTable>
 	</p:outputPanel>
-	<p:outputPanel id="dtactual">
-	<p:dialog header="Basic Dialog" widgetVar="dlg1">  
-		<p:dataTable id="report" var="entry" value="#{wp.wpBudget}" >
-			<p:column headerText="Labour Grade" footerText="Total">
-				<h:outputText value="#{entry.key}" sortBy="#{entry.key}" />
-			</p:column>
+		<p:dialog header="Basic Dialog" widgetVar="dlg1" width="450">
+			<p:dataTable id="report" var="entry" value="#{wp.wpBudget}">
+				<p:column headerText="Labour Grade" footerText="Total">
+					<h:outputText value="#{entry.key}" sortBy="#{entry.key}" />
+				</p:column>
 
-			<p:column footerText='#{entry.value["accumulated"]}$'>
-				<f:facet name="header">
+				<p:column footerText='#{entry.value["accumulated"]}$'>
+					<f:facet name="header">
                     Accumulated
             </f:facet>
-				<h:outputText value='#{entry.value["accumulated"]}' />
-			</p:column>
-			<p:column>
-				<f:facet name="header">
+					<h:outputText value='#{entry.value["accumulated"]}' />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
                     To complete
             </f:facet>
-				<h:outputText value='#{entry.value["tocomplete"]}' />
-			</p:column>
-			<p:column>
-				<f:facet name="header">
+					<h:outputText value='#{entry.value["tocomplete"]}' />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
                     Planned
             </f:facet>
-				<h:outputText value='#{entry.value["planned"]}' />
-			</p:column>
-			<p:column>
-				<f:facet name="header">
+					<h:outputText value='#{entry.value["initplanned"]}' />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
                     Available
             </f:facet>
-				<h:outputText value='#{entry.value["available"]}' />
-			</p:column>
-		</p:dataTable>
+					<h:outputText value='#{entry.value["available"]}' />
+				</p:column>
+			</p:dataTable>
 		</p:dialog>
-	</p:outputPanel>
 </ui:composition>
 </body>
 </html>

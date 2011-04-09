@@ -11,9 +11,15 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.primefaces.event.SelectEvent;
+
+
+import comp.is.controller.project.ProjectAction;
 import comp.is.controller.project.ProjectActionLocal;
 import comp.is.model.admin.Employee;
+import comp.is.model.admin.LabourGrade;
 import comp.is.model.project.WorkPackage;
+import comp.is.model.project.entity.WorkPackageBudgetEntity;
 
 @Named("projectView")
 @RequestScoped
@@ -24,7 +30,7 @@ public class ProjectView implements Serializable {
     @Inject
     private EmployeePickListBean empPickList;
     @Inject
-    ProjectActionLocal projectAction;
+    ProjectAction projectAction;
     @Inject
     private ProjectTreeBean projectTree;
 
@@ -92,8 +98,9 @@ public class ProjectView implements Serializable {
 
             if (wp != null)// should be exception
             {    
-            empPickList.setRendered(true);
+            empPickList.setRendered(true);         
             projectAction.setWp(wp);
+            projectAction.initSummaryPlannedBudget();
             ArrayList<Employee> assignedEmp = projectAction.getTargetEmp(wp);
             Collections.sort(assignedEmp);
             ArrayList<Employee> availEmp = new ArrayList<Employee>(projectAction.getSourceEmp(wp));
@@ -104,23 +111,13 @@ public class ProjectView implements Serializable {
             System.out.println("Not null, setting to : "
                     + WorkPackage.unpad(selectedNode) + "\navail: " + availEmp + "\nass: " + assignedEmp);
             }
+            
         }
     }
-
-    // public void setChildPanel(ChildWpPanelBean childPanel) {
-    // this.childPanel = childPanel;
-    // }
-    //
-    // public void setProjectTree(ProjectTreeBean projectTree) {
-    // this.projectTree = projectTree;
-    // }
-
-//    public void initProjectEmp(ArrayList<Employee> arrayList) {
-//        System.out.println("Num of empl " + arrayList.size());
-//        for (Employee e : arrayList) {
-//            empTable.getEmployees().add(e);
-//        }
-//    }
-
+    
+    public void resetTabs(){
+        empPickList.setActiveTabIndex(0);
+    }
+   
     
 }

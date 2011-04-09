@@ -43,6 +43,7 @@
   </web-resource-collection>
   <auth-constraint>
    <role-name>Troy</role-name>
+   <role-name>Homer</role-name>
   </auth-constraint>
   <user-data-constraint>
    <transport-guarantee>NONE</transport-guarantee>
@@ -51,5 +52,9 @@
  <login-config>
   <auth-method>BASIC</auth-method>
   <realm-name>projRealm</realm-name>
+  <form-login-config>
+   <form-login-page>/LoginContent.xhtml</form-login-page>
+   <form-error-page>/LoginContent.xhtml</form-error-page>
+  </form-login-config>
  </login-config>
 </web-app>

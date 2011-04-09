@@ -2,13 +2,13 @@ package comp.is.model.project;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.Map.Entry;
 
-import comp.is.model.project.entity.Package;
-import comp.is.model.project.entity.WorkpackageEntity;
 
 public class ProjectTree extends Hashtable<String, WorkPackage> {
     private ProjectPackage root;
@@ -48,15 +48,13 @@ public class ProjectTree extends Hashtable<String, WorkPackage> {
         return root;
     }
 
-    // public WorkPackage add(String id, WorkPackage wp) {
-    // if (!containsKey(id)) {
-    // wp.setNumber(id);
-    // WorkPackage old = put(id, wp);
-    // return old;
-    // }
-    // // exception
-    // return null;
-    // }
+    public Set<WorkPackage> getLeafs(){
+        Set<WorkPackage> set = new HashSet<WorkPackage>();
+        for(WorkPackage wp : this.values()){
+            if(wp.isLeaf()){set.add(wp);}
+        }
+        return set;
+    }
 
     public void put(WorkPackage wp) {
         if (!containsKey(wp.getId())) {

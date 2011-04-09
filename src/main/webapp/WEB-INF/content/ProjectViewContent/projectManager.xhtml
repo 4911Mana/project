@@ -13,16 +13,16 @@
 	<!-- data table -->
 	<p:outputPanel id="outtbl">
 		<p:dataTable id="emptbl" var="emp" value="#{employee.allPeons}"
-			paginator="true" rows="10" emptyMessage="No employees assigned"
-			widgetVar="empTable" selection="#{catalogueAction.selectedEmp}">
+			paginator="true" rows="10" emptyMessage="No employees found"
+			widgetVar="empTable" selection="#{project.manager}">
 
 			<f:facet name="header">
             <p:outputPanel>
                 <h:outputText value="Search all fields:" />
-                <p:inputText id="globalFilter" onkeyup="empTable.filter()" style="width:150px" />
+                <p:inputText id="globalFilter" onkeyup="empTable.filter()" style="width:100px, align:right" />
             </p:outputPanel>
         </f:facet>
-        <p:column selectionMode="multiple" />  
+        <p:column selectionMode="single" />  
 
 			<p:column sortBy="#{emp.id}" filterBy="#{emp.id}">
 				<f:facet name="header">
@@ -36,15 +36,7 @@
 					<h:outputText value="Name" />
 				</f:facet>
 				<h:outputText value="#{emp.lastname}, #{emp.firstname}" />
-			</p:column>
-			<p:column sortBy="#{emp.currentGrade}" filterBy="#{emp.currentGrade}">
-				<f:facet name="header">
-					<h:outputText value="Labour Grade" />
-				</f:facet>
-				<h:outputText value="#{emp.currentGrade}"/>
-			</p:column>
-
-			
+			</p:column>			
 		</p:dataTable>
 	</p:outputPanel>
 	<!-- data table end -->

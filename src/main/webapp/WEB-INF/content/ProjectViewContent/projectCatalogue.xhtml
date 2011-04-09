@@ -11,13 +11,35 @@
 <body>
 <ui:composition>
 	<h:form id="tree">
-		<p:toolbarGroup align="centre" width="250" style="padding:5px">
+		<p:toolbarGroup align="centre" width="250" style="padding:25px">
 			<p:commandButton type="push" value="Create New Project"
-				update="wp:dtactual, report" image="ui-icon-folder-open">
+				update="proj, proj:panel" action="#{catalogueAction.initNew}" image="ui-icon-folder-open">
 				<f:setPropertyActionListener value="#{true}"
 					target="#{requestScope.renderReport}" />
 			</p:commandButton>
 		</p:toolbarGroup>
+		
+		<p:dataGrid id="projGrid" var="proj" value="#{catalogueAction.allProj}"
+			columns="1" rows="12" effect="true" paginator="true"
+			rowsPerPageTemplate="9,12,15" paginatorAlwaysVisible="false">
+
+			<p:column sortBy="#{proj.id}">
+				<p:panel header="#{proj.id}" style="text-align:center">
+					<h:panelGrid columns="1" style="width:100%">
+						<h:outputText value="#{proj.name}" />
+						<h:outputText value="#{proj.customer}" />
+
+						<p:commandLink update="proj, proj:panel, proj:emptbl" 
+							action="#{catalogueAction.displayProj}" title="View Detail">
+							<p:graphicImage value="/resources/gfx/search.png" style="border:none"/>
+							<f:setPropertyActionListener value="#{proj.id}"
+								target="#{catalogueAction.selectedProjId}" />
+						</p:commandLink>
+					</h:panelGrid>
+				</p:panel>
+			</p:column>
+
+		</p:dataGrid>
 		<p:ajaxStatus style="width:16px;height:16px;">
 			<f:facet name="start">
 				<h:graphicImage value="/resources/gfx/ajaxloading.gif" />
@@ -27,29 +49,6 @@
 				<h:outputText value="" />
 			</f:facet>
 		</p:ajaxStatus>
-		<p:dataGrid var="proj" value="#{employee.allProjects}"
-			columns="1" rows="12" effect="true" paginator="true"
-			rowsPerPageTemplate="9,12,15" paginatorAlwaysVisible="false">
-
-			<p:column>
-				<p:panel header="#{proj.id}" style="text-align:center">
-					<h:panelGrid columns="1" style="width:100%">
-						<p:graphicImage value="/resources/gfx/.jpg" />
-
-						<h:outputText value="#{proj.name}" />
-						<h:outputText value="#{proj.customer}" />
-
-						<p:commandLink update="proj, proj:panel" 
-							action="#{catalogueAction.displayProj}" title="View Detail">
-							<p:graphicImage value="/resources/gfx/search.png" style="border:none"/>
-							<f:setPropertyActionListener value="#{proj.id}"
-								target="#{catalogueAction.selectedProj}" />
-						</p:commandLink>
-					</h:panelGrid>
-				</p:panel>
-			</p:column>
-
-		</p:dataGrid>
 	</h:form>
 </ui:composition>
 </body>

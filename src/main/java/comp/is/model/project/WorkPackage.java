@@ -1,23 +1,26 @@
 package comp.is.model.project;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import comp.is.model.admin.Employee;
 import comp.is.model.admin.LabourGrade;
+import comp.is.model.project.Budget.RateAmountPair;
 import comp.is.model.project.entity.EmployeeEntity;
+import comp.is.model.project.entity.LabourchargerateEntity;
 import comp.is.model.project.entity.Package;
-import comp.is.model.project.entity.TimesheetEntity;
+import comp.is.model.project.entity.RespEngReportBudgetEntryEntity;
 import comp.is.model.project.entity.TimesheetentryEntity;
+import comp.is.model.project.entity.WorkPackageBudgetEntity;
 import comp.is.model.project.entity.WorkpackageEntity;
+import comp.is.model.project.entity.WorkpackagestatusreportEntity;
 
 public class WorkPackage extends WorkpackageEntity implements
         Comparable<WorkPackage> {
 
-    
     public static String pad(String num) {
         String padNum = num;
         for (int i = padNum.length(); i < LENGTH; i++) {
@@ -36,7 +39,6 @@ public class WorkPackage extends WorkpackageEntity implements
         return padNum;
     }
 
-
     public WorkPackage() {
     }
 
@@ -49,14 +51,25 @@ public class WorkPackage extends WorkpackageEntity implements
         setParent(p.getParent());
         responsibleEngineerId = p.getResponsibleEngineer();
         timeSheetEntries = p.getTimeSheetEntries();
-        
-        
-        if (p.getEmployeesAssigned() != null & (employees == null || employees.isEmpty())) {
+        employeesAssigned = p.getEmployeesAssigned();
+        statusReports = p.getStatusReports();
+        project = p.getProject();
+        plannedBudget = p.getPlannedBudget();
+
+        if (p.getEmployeesAssigned() != null
+                & (employees == null || employees.isEmpty())) {
             for (EmployeeEntity e : p.getEmployeesAssigned()) {
                 employees.add(new Employee(e));
             }
         }
-        System.out.println(id + " Emp: " + employees + " Timesheets: " + this.timeSheetEntries);
+        for (WorkPackageBudgetEntity entry : getPlannedBudget()) {
+            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$"
+                    + "getBudgetEntryForLaborGrade "
+                    + entry.getLabourChargeRate().getRateclassid());
+
+        }
+        System.out.println(id + " Emp: " + employees + " Timesheets: "
+                + this.timeSheetEntries + " plannedBgt " + plannedBudget);
     }
 
     public WorkPackage getParentWp() {
@@ -71,11 +84,10 @@ public class WorkPackage extends WorkpackageEntity implements
         return getId().compareTo(iWpNum);
     }
 
-    
     public boolean isRootChild() {
         return getParent().getId().equalsIgnoreCase(".");
     }
-    
+
     public String getChildMask() {
         String mask = "*";
         // null is dif
@@ -98,9 +110,6 @@ public class WorkPackage extends WorkpackageEntity implements
                 + ((getParent() == null) ? "null" : getParent().getId());
     }
 
-//    @CurrentWp
-//    @ChildWp
-//    @Override
     public String getNumber() {
         String id = getId();
         if (id == null) {
@@ -110,7 +119,6 @@ public class WorkPackage extends WorkpackageEntity implements
         return pad(id);
     }
 
-   
     public void setNumber(String num) {
         System.out.println("setting view wp to" + num);
         id = (unpad(num));
@@ -142,18 +150,21 @@ public class WorkPackage extends WorkpackageEntity implements
         }
         return getId().matches(getParent().getId() + "\\w");
     }
-    
-    public ArrayList<Employee> getAvailableStaff(){
+
+    public ArrayList<Employee> getAvailableStaff() {
         WorkPackage p = new WorkPackage(getParent());
         System.out.println("Aval staff: parent: " + p.getEmployees());
-        if(parent.getEmployeesAssigned() == null || parent.getEmployeesAssigned().isEmpty()){
-            if(p.isRootChild()){ return null;}
+        if (parent.getEmployeesAssigned() == null
+                || parent.getEmployeesAssigned().isEmpty()) {
+            if (p.isRootChild()) {
+                return null;
+            }
             return p.getAvailableStaff();
-        }
-        else return new ArrayList<Employee>(p.getEmployees());
+        } else
+            return new ArrayList<Employee>(p.getEmployees());
     }
-    
-    public void mereg(Package p){
+
+    public void mereg(Package p) {
         description = p.getDescription();
         id = p.getId();
         name = p.getName();
@@ -161,31 +172,38 @@ public class WorkPackage extends WorkpackageEntity implements
         status = p.getStatus();
         setEmployees(p.getEmployees());
     }
-    
-    public boolean isOpenForCharges(){
-        if(getResponsibleEngineer() == null){
-        return super.isOpenForCharges();}
+
+    public boolean isOpenForCharges() {
+        if (getResponsibleEngineer() == null) {
+            return super.isOpenForCharges();
+        }
         return true;
     }
-    
-    public void initBudget(){
-        if(this.employees == null){return;}
+
+    public void initAccumulatedBudget() {
+
+        if (this.employees == null) {
+            return;
+        }
         System.out.println("Budget init start--------------------------------");
-        for(Employee e: employees){
-            for(TimesheetEntity tsh : e.getTimeSheets()){
-                for(TimesheetentryEntity te: tsh.getTimeSheetEntries()){
-                    if(te.getWorkPackage().getId().equalsIgnoreCase(getId()) & 
-                            te.getWorkPackage().getProjid().equalsIgnoreCase(getProjid())){
-                        System.out.println("Time sheet entry " + te);
-                        //System.out.println("Current grade" + e.getCurrentGrade());
-                     budget.addToAccumulated(LabourGrade.getGrade(e.getCurrentGrade()),  getTotalForTimesheetEntry(te));}
-                }
+
+        for (TimesheetentryEntity te : getTimeSheetEntries()) {
+            if (te.getWorkPackage().getId().equalsIgnoreCase(getId())
+                    & te.getWorkPackage().getProjid()
+                            .equalsIgnoreCase(getProjid())) {
+                System.out.println("Time sheet entry " + te);
+                // System.out.println("Current grade" + e.getCurrentGrade());
+
+                budget.addToAccumulated(LabourGrade.getGrade(new Employee((te
+                        .getTimeSheet().getEmployee())).getCurrentGrade()),
+                        getTotalForTimesheetEntry(te));
             }
         }
-        System.out.println("Budget init end-----------------------------------");
+        System.out
+                .println("Budget init end-----------------------------------");
     }
-    
-    public Double getTotalForTimesheetEntry(TimesheetentryEntity te){
+
+    public Double getTotalForTimesheetEntry(TimesheetentryEntity te) {
         Double amount = 0D;
         System.out.println("Fri" + te.getFrihours());
         amount += te.getFrihours();
@@ -203,13 +221,129 @@ public class WorkPackage extends WorkpackageEntity implements
         amount += te.getWedhours();
         return amount;
     }
-    public List<Entry<LabourGrade, Map<String, Double>>> getWpBudget() {
-        List<Entry<LabourGrade, Map<String, Double>>> budgetList = 
-            new ArrayList<Entry<LabourGrade, Map<String, Double>>>(budget.entrySet());
-        //Collections.sort(budgetList);
+
+    public List<Entry<LabourGrade, Hashtable<String, Budget.RateAmountPair>>> getWpBudget() {
+        List<Entry<LabourGrade, Hashtable<String, Budget.RateAmountPair>>> budgetList = new ArrayList<Entry<LabourGrade, Hashtable<String, Budget.RateAmountPair>>>(
+                budget.entrySet());
+
         return budgetList;
     }
 
+    public void initPlannedBudget() {
+        System.out
+                .println("Planned Budget init start--------------------------------=============================");
+        if (getPlannedBudget() == null) {
+            return;
+        }
+        for (WorkPackageBudgetEntity entry : getPlannedBudget()) {
+            Hashtable<String, Budget.RateAmountPair> bugEntry = new Hashtable<String, Budget.RateAmountPair>();
+            LabourGrade lg = LabourGrade.getGrade(entry.getLabourChargeRate()
+                    .getRateclassid());
+            Double amount = new Double(entry.getWpAmount());
+            bugEntry.put("initplanned", this.budget.new RateAmountPair(amount));
+            budget.put(lg, bugEntry);
+            System.out.println("Planned budget : "
+                    + LabourGrade.getGrade(entry.getLabourChargeRate()
+                            .getRateclassid()) + ":" + entry.getWpAmount()
+                    + "$");
+        }
+        System.out
+                .println("Planned Budget init end--------------------------------=================================");
+    }
+
+    public void initToCompleteBudget() {
+        for (WorkpackagestatusreportEntity report : getStatusReports()) {
+            for (RespEngReportBudgetEntryEntity entry : report.getEntries()) {
+                Hashtable<String, Budget.RateAmountPair> bugEntry = new Hashtable<String, Budget.RateAmountPair>();
+                Budget.RateAmountPair pair = this.budget.new RateAmountPair(entry.getAmount());
+                bugEntry.put("toComplete", pair);
+                budget.put(LabourGrade.getGrade(entry.getLabourChargeRate()
+                        .getRateclassid()), bugEntry);
+            }
+        }
+    }
+
+    public void flushPlannedBudget() {
+        try {
+            for (LabourGrade grade : LabourGrade.values()) {
+                System.out.print("Flushing planned, grade -" + grade);
+                Double amount = budget.get(grade).get("planned").getHrsVal();
+                if (amount != null & amount > 0) {
+                    WorkPackageBudgetEntity entity = getBudgetEntryForLaborGrade(grade);
+                    if (entity == null) {
+                        entity = new WorkPackageBudgetEntity();
+                        entity.setProjId(getProjid());
+                        entity.setWpId(id);
+                        entity.setWp(this);
+
+                        entity.setLabourChargeRateId(getRateForGrade(grade)
+                                .getId());
+                        entity.setLabourChargeRate(getRateForGrade(grade));
+                    } else if (entity.getLabourChargeRate().equals(
+                            getRateForGrade(grade))) {
+                        amount += budget.get(grade).get("initplanned").getHrsVal();
+                    }
+                    entity.setWpAmount(amount);
+                    plannedBudget.add(entity);
+                    budget.addToPlanned(grade, amount);
+                    System.out.println("Amount==" + amount);
+
+                }
+
+            }
+            budget.reinitType("planned");
+        } catch (Exception e) {
+            System.out.println("Flshing " + e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    public LabourchargerateEntity getRateForGrade(LabourGrade grade) {
+        if (rates == null) {
+            return null;
+        }
+        System.out.println("Total raltes: " + rates.size());
+        for (LabourchargerateEntity lbchr : rates) {
+            if (lbchr.getRateclassid().equalsIgnoreCase(grade.name())) {
+                return lbchr;
+            }
+        }
+        return null;
+    }
+
+    public String print() {
+        flushPlannedBudget();
+        System.out.println(getBudget());
+        return null;
+    }
+
+    WorkPackageBudgetEntity getBudgetEntryForLaborGrade(LabourGrade grade) {
+        if (getPlannedBudget() == null)
+            return null;
+        System.out.println("getBudgetEntryForLaborGrade " + getPlannedBudget());
+        for (WorkPackageBudgetEntity entry : getPlannedBudget()) {
+            System.out.println("getBudgetEntryForLaborGrade " + grade
+                    + entry.getLabourChargeRate().getRateclassid());
+            if (entry.getLabourChargeRate().getRateclassid()
+                    .equalsIgnoreCase(grade.toString()))
+                return entry;
+        }
+        return null;
+    }
+
+    public void UpdateParentBudget() {
+        
+        getParent().getBudget().addAllToPlanned(getBudget().getBudgetForType("initplanned"));
+        //getParent().
+    }
     
-    
+    public void PlannedBudgetInit(){
+        for (Iterator<Entry<LabourGrade, RateAmountPair>> it = budget.getBudgetForType("initplanned").entrySet().iterator(); it.hasNext();){
+             Entry<LabourGrade, RateAmountPair> entry = it.next();
+             PlannedBudgetEntry newEntry = new PlannedBudgetEntry();
+             newEntry.setLg(entry.getKey());
+             newEntry.setCurrentAmount(entry.getValue().getHrsVal());
+             getPlannedBudgetList().add(newEntry);
+    }
+    }
 }

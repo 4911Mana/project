@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -28,17 +29,17 @@ import comp.is.model.admin.Employee;
 @Table(name="EMPLOYEE")
 public class EmployeeEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
-	protected double accumflextime;
-	protected double accumvacation;
+	protected Double accumflextime;
+	protected Double accumvacation;
 	protected String firstname;
 	protected int id;
 	protected String lastname;
 	protected Set<EmployeelabourchargerateEntity> labourChargeRates;
 	protected Set<EmployeeroleEntity> roles;
-	protected Set<EmployeeEntity> supervisors;
+	protected EmployeeEntity supervisor;
 	protected Set<EmployeeEntity> peons;
 	protected Set<WorkpackageEntity> workPackages;
-	protected double percentfulltime;
+	protected Double percentfulltime;
 	protected Set<ProjectEntity> projects;
 	protected Set<ProjectsummaryEntity> projectSummaries;
 	protected Set<RatesheetEntity> rateSheets;
@@ -57,15 +58,15 @@ public class EmployeeEntity implements Serializable {
     }
 
 
-    @Column(precision=126)
-	public double getAccumflextime() {
-		return this.accumflextime;
-	}
-
-	@Column(precision=126)
-	public double getAccumvacation() {
-		return this.accumvacation;
-	}
+//    @Column(precision=126)
+//	public Double getAccumflextime() {
+//		return this.accumflextime;
+//	}
+//
+//	@Column(precision=126)
+//	public Double getAccumvacation() {
+//		return this.accumvacation;
+//	}
 
 
 	@Column(length=64)
@@ -87,34 +88,34 @@ public class EmployeeEntity implements Serializable {
 	}
 
 	//bi-directional many-to-one association to Employeelabourchargerate
-	@OneToMany(fetch=FetchType.EAGER, mappedBy="employee", cascade={CascadeType.ALL})
+	@OneToMany(mappedBy="employee", cascade={CascadeType.ALL})
 	public Set<EmployeelabourchargerateEntity> getLabourChargeRates() {
 		return this.labourChargeRates;
 	}
 
 
 	//bi-directional many-to-one association to Employeerole
-	@OneToMany(mappedBy="employee")
+	@OneToMany(mappedBy="employee", cascade={CascadeType.ALL}, fetch = FetchType.EAGER)
 	public Set<EmployeeroleEntity> getRoles() {
 		return this.roles;
 	}
 
 	//uni-directional many-to-many association to Employee
-	@ManyToMany
+	@ManyToOne
 	@JoinTable(
 		name="EMPLOYEESUPERVISOR"
 		, joinColumns={
-			@JoinColumn(name="ID", nullable=false)
+			@JoinColumn(name="EMPID", nullable=false)
 			}
 		, inverseJoinColumns={
 			@JoinColumn(name="SUPERVISORID", nullable=false)
 			}
 		)
-	public Set<EmployeeEntity> getSupervisors() {
-		return this.supervisors;
+	public EmployeeEntity getSupervisor() {
+		return supervisor;
 	}
 	
-	@ManyToMany(fetch=FetchType.EAGER)
+	@OneToMany(fetch=FetchType.EAGER)
 	@JoinTable(
         name="EMPLOYEESUPERVISOR"
         , joinColumns={
@@ -135,10 +136,10 @@ public class EmployeeEntity implements Serializable {
 		return this.workPackages;
 	}
 
-	@Column(precision=126)
-	public double getPercentfulltime() {
-		return this.percentfulltime;
-	}
+//	@Column(precision=126)
+//	public Double getPercentfulltime() {
+//		return this.percentfulltime;
+//	}
 
 
 	//bi-directional many-to-one association to Projectsummary
@@ -147,40 +148,40 @@ public class EmployeeEntity implements Serializable {
 		return this.projectSummaries;
 	}
 
-	//bi-directional many-to-one association to Ratesheet
-	@OneToMany(mappedBy="projectManager")
-	public Set<RatesheetEntity> getRateSheets() {
-		return this.rateSheets;
-	}
+//	//bi-directional many-to-one association to Ratesheet
+//	@OneToMany(mappedBy="projectManager")
+//	public Set<RatesheetEntity> getRateSheets() {
+//		return this.rateSheets;
+//	}
 
 
-	//uni-directional many-to-many association to Employee
-	@ManyToMany
-	@JoinTable(
-		name="TIMESHEETAPPROVER"
-		, joinColumns={
-			@JoinColumn(name="ID", nullable=false)
-			}
-		, inverseJoinColumns={
-			@JoinColumn(name="TSAPPROVERID", nullable=false)
-			}
-		)
-	public Set<EmployeeEntity> getTimeSheetApprovers() {
-		return this.timeSheetApprovers;
-	}
+////	//uni-directional many-to-many association to Employee
+////	@ManyToMany
+////	@JoinTable(
+////		name="TIMESHEETAPPROVER"
+////		, joinColumns={
+////			@JoinColumn(name="ID", nullable=false)
+////			}
+////		, inverseJoinColumns={
+////			@JoinColumn(name="TSAPPROVERID", nullable=false)
+////			}
+////		)
+//	public Set<EmployeeEntity> getTimeSheetApprovers() {
+//		return this.timeSheetApprovers;
+//	}
 
 	//bi-directional many-to-one association to Timesheet
-	@OneToMany(mappedBy="employee", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="employee")
 	public Set<TimesheetEntity> getTimeSheets() {
 		return this.timeSheets;
 	}
 	
 
-	public void setAccumflextime(double empaccumflextime) {
+	public void setAccumflextime(Double empaccumflextime) {
 		this.accumflextime = empaccumflextime;
 	}
 
-	public void setAccumvacation(double empaccumvacation) {
+	public void setAccumvacation(Double empaccumvacation) {
 		this.accumvacation = empaccumvacation;
 	}
 	
@@ -195,7 +196,7 @@ public class EmployeeEntity implements Serializable {
 	
 
 	//bi-directional many-to-many association to Project
-	@ManyToMany(fetch=FetchType.EAGER, mappedBy="projectEmployees")
+	@ManyToMany(mappedBy="projectEmployees")
 	public Set<ProjectEntity> getProjects() {
 		return this.projects;
 	}
@@ -218,8 +219,8 @@ public class EmployeeEntity implements Serializable {
 		this.roles = employeeRoles;
 	}
 
-	public void setSupervisors(Set<EmployeeEntity> employeeSupervisors) {
-		this.supervisors = employeeSupervisors;
+	public void setSupervisor(EmployeeEntity employeeSupervisors) {
+		this.supervisor = employeeSupervisors;
 	}
 	public void setPeons(Set<EmployeeEntity> employeePeons) {
         peons = employeePeons;
@@ -229,7 +230,7 @@ public class EmployeeEntity implements Serializable {
 		this.workPackages = employeesWorkPackages;
 	}
 
-	public void setPercentfulltime(double emppercentfulltime) {
+	public void setPercentfulltime(Double emppercentfulltime) {
 		this.percentfulltime = emppercentfulltime;
 	}
 	
@@ -251,4 +252,10 @@ public class EmployeeEntity implements Serializable {
 		this.timeSheets = timeSheets;
 	}
 	
+	public int compareTo(Employee emp) {
+        if (!(emp instanceof Employee))
+            throw new ClassCastException("A Employee object expected.");
+        int empId = (emp).getId();
+        return id - empId;
+    }
 }

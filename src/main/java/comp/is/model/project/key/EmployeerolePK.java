@@ -12,7 +12,7 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class EmployeerolePK implements Serializable {
 	//default serial version id, required for serializable classes.
-	private static final long serialVersionUID = 1L;
+	
 	private long empid;
 	private String projid;
 	private long roleid;

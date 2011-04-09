@@ -21,7 +21,7 @@ import javax.persistence.Table;
 @Table(name="TIMESHEETENTRY")
 public class TimesheetentryEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
-	//private ProjectEntity project;
+	private ProjectEntity project;
 	private TimesheetEntity timeSheet;
 	private double frihours;
 	private long id;
@@ -39,11 +39,11 @@ public class TimesheetentryEntity implements Serializable {
 
 
 	//bi-directional many-to-one association to Project
-//    @ManyToOne
-//	@JoinColumn(name="PROJID", insertable=false, updatable=false)
-//	public ProjectEntity getProject() {
-//		return this.project;
-//	}
+    @ManyToOne
+	@JoinColumn(name="PROJID", insertable=false, updatable=false)
+	public ProjectEntity getProject() {
+		return this.project;
+	}
 
 	//bi-directional many-to-one association to Timesheet
     @ManyToOne
@@ -109,9 +109,9 @@ public class TimesheetentryEntity implements Serializable {
 		return this.workPackage;
 	}
 
-//	public void setProject(ProjectEntity project) {
-//		this.project = project;
-//	}
+	public void setProject(ProjectEntity project) {
+		this.project = project;
+	}
 
 
 	public void setTimeSheet(TimesheetEntity timeSheet) {

@@ -21,8 +21,8 @@ import javax.persistence.Table;
 public class RoleEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private List<EmployeeroleEntity> employeeRoles;
-	private long roleid;
-	private String rolename;
+	private long id;
+	private String name;
 
     public RoleEntity() {
     }
@@ -37,14 +37,14 @@ public class RoleEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(unique=true, nullable=false, precision=16)
-	public long getRoleid() {
-		return this.roleid;
+	public long getId() {
+		return id;
 	}
 
 
 	@Column(length=64)
-	public String getRolename() {
-		return this.rolename;
+	public String getName() {
+		return name;
 	}
 
 	public void setEmployeeRoles(List<EmployeeroleEntity> employeeRoles) {
@@ -52,12 +52,12 @@ public class RoleEntity implements Serializable {
 	}
 
 
-	public void setRoleid(long roleid) {
-		this.roleid = roleid;
+	public void setId(long roleid) {
+		id = roleid;
 	}
 
-	public void setRolename(String rolename) {
-		this.rolename = rolename;
+	public void setName(String rolename) {
+		name = rolename;
 	}
 	
 }

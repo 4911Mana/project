@@ -18,31 +18,30 @@
 				tabChangeListener="#{employeePickListBean.onTabChange}">
 				<!-- first tab -->
 				<p:tab title="Info">
-
-					<l:wpInfoTag numberValue="#{project.number}" numberReadonly="true"
+					<l:wpInfoTag customerValue="#{project.customer}" customerReadonly="false"
+					numberValue="#{project.id}" numberReadonly="false"
 						titleValue="#{project.name}" descValue="#{project.description}"
 						startDate="#{project.startDate}"
 						charges="#{project.openForCharges}" />
 					<p:panel header="Budget Calculator:">
 						<h:panelGrid column="3">
-							<h:outputLabel value="Initial Budget: " />
-							<h:outputText value="#{project.number}$"/>
+							<h:outputLabel value="Initial Budget in $$$: " />
+							<p:inputText id="budget" value="#{project.inBudget}" />
 						</h:panelGrid>
 
 					</p:panel>
 
 				</p:tab>
 
-				<p:tab title="Staff">
-					<ui:insert name="projStaff">
-						<ui:include src="projectStaff.xhtml" />
+				<p:tab title="Project Manager">
+					<ui:insert name="projManager">
+						<ui:include src="projectManager.xhtml" />
 					</ui:insert>
 				</p:tab>
 			</p:tabView>
 			<p:toolbar>
 				<p:toolbarGroup align="left">
-					<p:commandButton title="Save" 
-						image="ui-icon-disk" />
+					<p:commandButton title="Save" action="#{catalogueAction.doPersist}" update="tree:projGrid, emptbl" ajax="false" image="ui-icon-disk" />
 					<p:commandButton type="push" title="Delete" image="ui-icon-trash" />
 					<p:commandButton type="push" title="Print" image="ui-icon-print" />
 				</p:toolbarGroup>
@@ -51,7 +50,7 @@
 
 				<p:toolbarGroup align="right">
 					<p:commandButton type="push" value="Open tree" ajax="false"
-						update="wp:dtactual, report" action="#{projectAction.init(project.id)}"
+						action="#{catalogueAction.openTree}"
 						image="ui-icon-folder-open">
 					</p:commandButton>
 					<p:menuButton value="Reports">

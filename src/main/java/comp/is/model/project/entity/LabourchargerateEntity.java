@@ -21,8 +21,8 @@ import javax.persistence.TemporalType;
 @Table(name="LABOURCHARGERATE")
 public class LabourchargerateEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private long id;
-	private double rate;
+	private Integer id;
+	private Double rate;
 	private Date effectiveDate;
 	private String rateclassid;
 
@@ -33,12 +33,12 @@ public class LabourchargerateEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(unique=true, nullable=false, precision=16)
-	public long getId() {
+	public Integer getId() {
 		return id;
 	}
 
 	@Column(precision=126)
-	public double getRate() {
+	public Double getRate() {
 		return rate;
 	}
 
@@ -54,7 +54,7 @@ public class LabourchargerateEntity implements Serializable {
 	}
 
 
-    public void setId(long labourchargerateid) {
+    public void setId(Integer labourchargerateid) {
 		id = labourchargerateid;
 	}
 
