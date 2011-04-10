@@ -33,7 +33,7 @@ public class WorkpackagestatusreportEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 //	private EmployeeEntity projectAssistant;
 //	private EmployeeEntity projectManager;
-	private List<WorkpackageEntity> workPackages;
+	private Set<WorkpackageEntity> workPackages;
 	private long id;
 	private EmployeeEntity responsibleEngineer;
 //	private String wpsraccompthisperiod;
@@ -76,14 +76,14 @@ public class WorkpackagestatusreportEntity implements Serializable {
 	@JoinTable(
 		name="WORKPACKAGESTATUSREPORTS"
 		, joinColumns={
-			@JoinColumn(name="WORKPACKAGESTATUSREPORTID", nullable=false)
+			@JoinColumn(name="REPORTID", nullable=false)
 			}
 		, inverseJoinColumns={
 			@JoinColumn(name="PROJID", referencedColumnName="PROJID", nullable=false),
 			@JoinColumn(name="WPID", referencedColumnName="ID", nullable=false)
 			}
 		)
-	public List<WorkpackageEntity> getWorkPackages() {
+	public Set<WorkpackageEntity> getWorkPackages() {
 		return this.workPackages;
 	}
 
@@ -194,7 +194,7 @@ public class WorkpackagestatusreportEntity implements Serializable {
 //	}
 
 
-	public void setWorkPackages(List<WorkpackageEntity> workPackages) {
+	public void setWorkPackages(Set<WorkpackageEntity> workPackages) {
 		this.workPackages = workPackages;
 	}
 

@@ -60,6 +60,7 @@ public class ProjectView implements Serializable {
 
         projectAction.setWp(projectAction.getProject().getRoot());
         empPickList.setRendered(false);
+        projectAction.initProjectPlannedBudget();
     }
 
     public ChildWpPanelBean getChildPanel() {
@@ -100,7 +101,7 @@ public class ProjectView implements Serializable {
             {    
             empPickList.setRendered(true);         
             projectAction.setWp(wp);
-            projectAction.initSummaryPlannedBudget();
+            projectAction.initSummaryPlannedBudget(projectAction.getWp());
             ArrayList<Employee> assignedEmp = projectAction.getTargetEmp(wp);
             Collections.sort(assignedEmp);
             ArrayList<Employee> availEmp = new ArrayList<Employee>(projectAction.getSourceEmp(wp));

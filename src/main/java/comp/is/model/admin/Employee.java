@@ -53,7 +53,7 @@ public class Employee extends EmployeeEntity implements Comparable<Employee>,
             if (charge.getEndTimeSheetWeek() == null)
                 return charge.getLabourChargerRate().getRateclassid();
         }
-        return null;// throw exception
+        return "";// throw exception
     }
 
     public String getStrId() {

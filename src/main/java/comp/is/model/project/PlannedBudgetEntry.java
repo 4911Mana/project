@@ -7,6 +7,16 @@ public class PlannedBudgetEntry {
     private LabourGrade lg;
     private Double currentAmount;
     private Double adjustmentAmount;
+    
+    
+    public PlannedBudgetEntry() {}
+    public PlannedBudgetEntry(LabourGrade lg) {
+        super();
+        this.lg = lg;
+        this.currentAmount = new Double(0);
+        this.adjustmentAmount = new Double(0);
+    }
+
     public Double getCurrentAmount() {
         return currentAmount;
     }
@@ -28,5 +38,6 @@ public class PlannedBudgetEntry {
     public void setAdjustmentAmount(Double adjustmentAmount) {
         this.adjustmentAmount = adjustmentAmount;
     }
+    
     
 }

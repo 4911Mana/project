@@ -54,7 +54,7 @@ public class WorkpackageEntity extends Package {
         projid = candidate.getProjid();
         timeSheetEntries = candidate.getTimeSheetEntries();
         plannedBudget = candidate.plannedBudget;
-        System.out.println("Planned budget " + candidate.plannedBudget);
+        System.out.println("budget " + candidate.budget);
     }
 
     // bi-directional many-to-one association to Workpackage

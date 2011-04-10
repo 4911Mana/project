@@ -12,31 +12,31 @@
 <body>
 <ui:composition>
 	<p:outputPanel id="dtplanned">
-		<p:dataTable var="entry" value="#{wp.plannedBudgetList}">
+		<p:dataTable var="entry" value="#{wp.wpPlannedBudgetList}">
 			<f:facet name="header">
 				<p:outputPanel>
 					<h:outputText value="Alvailable budget:" align="right" />
 					<h:outputText value="1234$" align="right" />
 				</p:outputPanel>
 			</f:facet>
-			<p:column footerText="Total" sortBy="#{entry.lg}">
+			<p:column footerText="Total" sortBy="#{entry.key}">
 				<f:facet name="header">
                     Labour Grade
             </f:facet>
-				<h:outputText value="#{entry.lg}" />
+				<h:outputText value="#{entry.key}" />
 			</p:column>
 			<p:column >
 				<f:facet name="header">
                     Current Value
             </f:facet>
-				<h:outputText value='#{entry.currentAmount}' />
+				<h:outputText value='#{entry.value.currentAmount}' />
 			</p:column>
 			<p:column rendered="#{projectAction.leaf}">
 				<f:facet name="header">
                    Adjust +/-
             </f:facet>
-				<p:spinner id="plannedSpinner" value='#{entry.adjustmentAmount}'
-					disabled="false" stepFactor="0.5" 
+				<p:spinner id="plannedSpinner" value='#{entry.value.adjustmentAmount}' showOn="true"
+					disabled="false" stepFactor="0.5" min="#{entry.value.currentAmount * -1} "
 					converter="javax.faces.Double" style="width:100px"
 					>
 					<p:ajax update="plannedVal" process="plannedSpinner" />
@@ -55,25 +55,25 @@
 					<f:facet name="header">
                     Accumulated
             </f:facet>
-					<h:outputText value='#{entry.value["accumulated"]}' />
+					<h:outputText value='#{entry.value["accumulated"].hrsVal}' />
 				</p:column>
 				<p:column>
 					<f:facet name="header">
                     To complete
             </f:facet>
-					<h:outputText value='#{entry.value["tocomplete"]}' />
+					<h:outputText value='#{entry.value["tocomplete"].hrsVal}' />
 				</p:column>
 				<p:column>
 					<f:facet name="header">
                     Planned
             </f:facet>
-					<h:outputText value='#{entry.value["initplanned"]}' />
+					<h:outputText value='#{entry.value["initplanned"].hrsVal}' />
 				</p:column>
 				<p:column>
 					<f:facet name="header">
                     Available
             </f:facet>
-					<h:outputText value='#{entry.value["available"]}' />
+					<h:outputText value='#{entry.value["available"].hrsVal}' />
 				</p:column>
 			</p:dataTable>
 		</p:dialog>

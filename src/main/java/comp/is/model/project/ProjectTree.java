@@ -20,7 +20,6 @@ public class ProjectTree extends Hashtable<String, WorkPackage> {
     public List<WorkPackage> getChildren(String parent) {
         if (parent.equalsIgnoreCase(root.getId())) {
             parent = ".";
-            System.out.println("Root is a parent " + parent);
         } else {
             parent = WorkPackage.unpad(parent);
         }

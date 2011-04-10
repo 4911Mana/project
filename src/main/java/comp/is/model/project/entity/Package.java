@@ -2,6 +2,7 @@ package comp.is.model.project.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -22,6 +23,7 @@ import comp.is.model.admin.LabourGrade;
 import comp.is.model.project.Budget;
 import comp.is.model.project.Budget.RateAmountPair;
 import comp.is.model.project.PlannedBudgetEntry;
+import comp.is.model.project.PlannedBudgetList;
 
 @MappedSuperclass
 public abstract class Package implements Serializable {
@@ -35,12 +37,13 @@ public abstract class Package implements Serializable {
     protected ArrayList<Employee> employees;
     protected Budget budget;
     protected Set<LabourchargerateEntity> rates;
-    protected List<PlannedBudgetEntry> plannedBudget;
+    protected PlannedBudgetList plannedBudgetList;
 
     public Package() {
         id = "";
         employees = new ArrayList<Employee>();
         budget = new Budget();
+        plannedBudgetList = new PlannedBudgetList();
     }
 
     @Transient
@@ -88,6 +91,7 @@ public abstract class Package implements Serializable {
         }
         status = candidate.status;
         budget = candidate.budget;
+        plannedBudgetList = candidate.plannedBudgetList;
         employees = candidate.employees;
     }
 
@@ -186,12 +190,17 @@ public abstract class Package implements Serializable {
         return null;
     }
     @Transient
-    public List<PlannedBudgetEntry> getPlannedBudgetList() {
-        return plannedBudget;
+    public PlannedBudgetList getPlannedBudgetList() {
+        return plannedBudgetList;
     }
-
-    public void setPlannedBudgetList(List<PlannedBudgetEntry> plannedBudget) {
-        this.plannedBudget = plannedBudget;
+    @Transient
+    public List<Entry<LabourGrade, PlannedBudgetEntry>> getWpPlannedBudgetList() {
+        return null;
     }
+    public void setPlannedBudgetList(PlannedBudgetList plannedBudget) {
+        this.plannedBudgetList = plannedBudget;
+    }
+    
+    
     
 }

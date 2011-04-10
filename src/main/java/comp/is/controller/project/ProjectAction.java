@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,6 +32,7 @@ import comp.is.model.admin.Employee;
 import comp.is.model.admin.LabourGrade;
 import comp.is.model.project.ChildWp;
 import comp.is.model.project.CurrentWp;
+import comp.is.model.project.PlannedBudgetEntry;
 import comp.is.model.project.ProjectPackage;
 import comp.is.model.project.ProjectTree;
 import comp.is.model.project.WorkPackage;
@@ -174,10 +176,12 @@ public class ProjectAction {
                 newWp.setRates(getEffectiveRatesForDate(newWp.getStartDate()));
                 newWp.initAccumulatedBudget();
                 newWp.initPlannedBudget();
-                newWp.PlannedBudgetInit();
+                newWp.initToCompleteBudget();
+                newWp.initPlannedBudgetEntries();
                 project.put(newWp);
             }
         }
+        
     }
 
     private boolean findAndSetRoot(String id) {
@@ -263,9 +267,13 @@ public class ProjectAction {
             return "failure";
         }
         fillWpMap();
+        
         currentP = new WorkPackage(project.getRoot());
+       
         childWp = new WorkPackage();
         childWp.setParent(currentP);
+        System.out.println(currentP.getBudget());
+        updateTreeBudget((WorkPackage)currentP);
         view.init();
         return "success";
     }
@@ -395,22 +403,22 @@ public class ProjectAction {
      */
     public ArrayList<Employee> getTargetEmp(WorkPackage wp) {
         Set<Employee> emp = new HashSet<Employee>();
-//        Map<Integer, Employee> emp = new Hashtable<Integer, Employee>();
-//        for (Employee e : wp.getEmployees()) {
-//            if (!emp.containsKey(e.getId())) {
-//                emp.put(e.getId(), e);
-//            }
-//        }
+        // Map<Integer, Employee> emp = new Hashtable<Integer, Employee>();
+        // for (Employee e : wp.getEmployees()) {
+        // if (!emp.containsKey(e.getId())) {
+        // emp.put(e.getId(), e);
+        // }
+        // }
         if (project.getChildren(wp.getId()) == null) {
             return new ArrayList<Employee>(wp.getEmployees());
         } else {
             for (WorkPackage cwp : project.getChildren(wp.getId())) {
-//                for (Employee e : getTargetEmp(cwp)) {
-//                    if (!emp.containsKey(e.getId())) {
-//                        emp.put(e.getId(), e);
-//                    }
-//                }
-                 emp.addAll(getTargetEmp(cwp));
+                // for (Employee e : getTargetEmp(cwp)) {
+                // if (!emp.containsKey(e.getId())) {
+                // emp.put(e.getId(), e);
+                // }
+                // }
+                emp.addAll(getTargetEmp(cwp));
             }
             System.err
                     .println("P1 "
@@ -433,7 +441,7 @@ public class ProjectAction {
 
         WorkPackage candidate = this.getWpById(currentP.getId());
         candidate.flushPlannedBudget();
- 
+
         WorkpackageEntity entity = null;
         // if (!candidate.getId().equalsIgnoreCase(currentP.getId())) {
         // msgs.add("Number update is not allowed");
@@ -482,7 +490,7 @@ public class ProjectAction {
             setWp(getWpById(currentP.getId()));
             System.out.println("Unable to update " + ex.toString());
             return null;
-            
+
         }
         project.put(entity.getId(), new WorkPackage(entity));
         currentP.getBudget().reinitType("planned");
@@ -519,21 +527,68 @@ public class ProjectAction {
         }
         return rateSheet;
     }
-    
-    public boolean isLeaf(){
-        if(currentP == null){return false;}
+
+    public boolean isLeaf() {
+        if (currentP == null) {
+            return false;
+        }
         return (project.getChildren(currentP.getId()).isEmpty());
     }
-    
-    public void initSummaryPlannedBudget(){
-        
-//        if(project.getChildren(currentP.getId()) == null)
-//            return;
-//        currentP.getBudget().reinitPlanned();
-//        for(WorkPackage child : project.getChildren(currentP.getId())){
-//            currentP.getBudget().addAllToPlanned(child.getBudget().getPlanned());
-//        }
+
+    public void initSummaryPlannedBudget(Package p) {
+
+        if (!isLeaf()) {
+            System.out.println("Current P is not a leaf " + p.getId());
+            p.getPlannedBudgetList().init();
+            for (WorkPackage child : project.getChildren(p.getId())) {
+                p.getPlannedBudgetList().addAllToPlanned(
+                        child.getPlannedBudgetList());
+            }
+            System.out.println("Current P is not a leaf "
+                    + p.getPlannedBudgetList());
+        }
+
     }
-   
-    
+
+    public void initProjectPlannedBudget() {
+
+        project.getRoot().getPlannedBudgetList().init();
+        for (WorkPackage child : project.getChildren(getProject().getRoot()
+                .getId())) {
+            project.getRoot().getPlannedBudgetList().addAllToPlanned(
+                    child.getPlannedBudgetList());
+        }
+    }
+
+    public void initSummaryAccumulated(Package p) {
+        if (!isLeaf()) {
+            p.getBudget().reinitType("accumulted");
+            // currentP.getBudget().
+            for (WorkPackage child : project.getChildren(p.getId())) {
+                p.getPlannedBudgetList().addAllToPlanned(
+                        child.getPlannedBudgetList());
+            }
+            System.out.println("Current P is not a leaf "
+                    + p.getPlannedBudgetList());
+        }
+    }
+
+    public void updateParentBudget(WorkPackage p) {
+        System.out.println("upadate parent budget: " + p.getId() + p.getBudget());
+        p.getParent().getBudget().addAllToSumType("initplanned", p.getBudget().getBudgetForType("initplanned"));
+        p.getParent().getBudget().addAllToSumType("accumulated", p.getBudget().getBudgetForType("accumulated"));
+    }
+
+    public void updateTreeBudget(WorkPackage root) {
+        System.out.println("update tree budget " + root.getId() + root.getBudget());
+        if (project.getChildren(root.getId()) == null) {
+            updateParentBudget(root);
+            return;
+        }
+        for (WorkPackage wp : project.getChildren(root.getId())) {
+            updateTreeBudget(wp);
+            updateParentBudget(wp);
+        }
+
+    }
 }
