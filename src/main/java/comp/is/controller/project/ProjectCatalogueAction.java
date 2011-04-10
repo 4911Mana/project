@@ -194,9 +194,11 @@ public class ProjectCatalogueAction {
                     wp.setId(".");
                     wp.setParentId(".");
                     wp.setProjid(entity.getId());
-                    System.out.println("Adding " + currentPP);
-                    em.persist(entity);
+                    System.out.println("Adding " + wp.getId());
                     em.persist(wp);
+                    System.out.println("Adding " + currentPP.getId());
+                    em.persist(entity);
+                    
                     this.allProj.put(entity.getId(), entity);
                     view.displayMsg(entity.getId() + " Successfully created");
                     return null;

@@ -15,17 +15,18 @@
 		<p:dataTable var="entry" value="#{wp.wpPlannedBudgetList}">
 			<f:facet name="header">
 				<p:outputPanel>
-					<h:outputText value="Alvailable budget:" align="right" />
-					<h:outputText value="1234$" align="right" />
+					<h:outputText value="Alvailable budget: " align="right" />
+					<h:outputText value="#{projectAction.dolAmountAvailable} $"
+						align="right" />
 				</p:outputPanel>
 			</f:facet>
-			<p:column footerText="Total" sortBy="#{entry.key}">
+			<p:column footerText="Total" sortBy="#{entry.value.lg}">
 				<f:facet name="header">
                     Labour Grade
             </f:facet>
-				<h:outputText value="#{entry.key}" />
+				<h:outputText value="#{entry.value.lg}" />
 			</p:column>
-			<p:column >
+			<p:column>
 				<f:facet name="header">
                     Current Value
             </f:facet>
@@ -35,48 +36,49 @@
 				<f:facet name="header">
                    Adjust +/-
             </f:facet>
-				<p:spinner id="plannedSpinner" value='#{entry.value.adjustmentAmount}' showOn="true"
-					disabled="false" stepFactor="0.5" min="#{entry.value.currentAmount * -1} "
-					converter="javax.faces.Double" style="width:100px"
-					>
+				<p:spinner id="plannedSpinner"
+					value='#{entry.value.adjustmentAmount}' showOn="hover"
+					disabled="false" stepFactor="0.5"
+					min="#{entry.value.currentAmount * -1} "
+					converter="javax.faces.Double" style="width:100px">
 					<p:ajax update="plannedVal" process="plannedSpinner" />
 				</p:spinner>
 			</p:column>
-			
+
 		</p:dataTable>
 	</p:outputPanel>
-		<p:dialog header="Basic Dialog" widgetVar="dlg1" width="450">
-			<p:dataTable id="report" var="entry" value="#{wp.wpBudget}">
-				<p:column headerText="Labour Grade" footerText="Total">
-					<h:outputText value="#{entry.key}" sortBy="#{entry.key}" />
-				</p:column>
-
-				<p:column footerText='#{entry.value["accumulated"]}$'>
+	<p:dialog header="Earned Value Report for package #{wp.id}" widgetVar="report" width="650">
+		<p:dataTable id="report" var="entry" value="#{wp.wpBudget}">
+			<p:column headerText="Labour Grade" footerText="Total">
+				<h:outputText value="#{entry.key}" sortBy="#{entry.key}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+                    Planned
+            </f:facet>
+				<h:outputText value='#{entry.value["initplanned"].dolVal}' />
+			</p:column>
+			<p:column>
+				<p:column footerText='$'>
 					<f:facet name="header">
                     Accumulated
             </f:facet>
-					<h:outputText value='#{entry.value["accumulated"].hrsVal}' />
+					<h:outputText value='#{entry.value["accumulated"].dolVal}' />
 				</p:column>
 				<p:column>
 					<f:facet name="header">
                     To complete
             </f:facet>
-					<h:outputText value='#{entry.value["tocomplete"].hrsVal}' />
+					<h:outputText value='#{entry.value["tocomplete"].dolVal}' />
 				</p:column>
-				<p:column>
-					<f:facet name="header">
-                    Planned
-            </f:facet>
-					<h:outputText value='#{entry.value["initplanned"].hrsVal}' />
-				</p:column>
-				<p:column>
-					<f:facet name="header">
+
+				<f:facet name="header">
                     Available
             </f:facet>
-					<h:outputText value='#{entry.value["available"].hrsVal}' />
-				</p:column>
-			</p:dataTable>
-		</p:dialog>
+				<h:outputText value='#{entry.value["available"].dolVal}' />
+			</p:column>
+		</p:dataTable>
+	</p:dialog>
 </ui:composition>
 </body>
 </html>

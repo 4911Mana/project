@@ -63,9 +63,8 @@
 							target="#{requestScope.renderReport}" />
 					</p:commandButton>
 					<p:menuButton value="Reports">
-						<p:menuitem value="Earned Value Report" onclick="dlg1.show();" >
-						<f:setPropertyActionListener value="#{true}"
-							target="#{requestScope.renderReport}" /></p:menuitem>
+						<p:menuitem value="Earned Value Report" onclick="report.show();"/>
+
 						<p:menuitem value="Other Report"
 							url="http://www.primefaces.org/showcase" />
 					</p:menuButton>

@@ -183,62 +183,59 @@ public class WorkPackage extends WorkpackageEntity implements
         return true;
     }
 
-    public void initAccumulatedBudget() {
-        if(budget.getBudgetForType("accumulated") == null){
-            budget.reinitType("accumulated");
-        }
-        if (this.employees == null) {
-            return;
-        }
-        System.out.println("Budget init start--------------------------------");
+//    public void initAccumulatedBudget() {
+//        if(budget.getBudgetForType("accumulated") == null){
+//            budget.reinitType("accumulated");
+//        }
+//        if (this.employees == null) {
+//            return;
+//        }
+//        System.out.println("Budget init start--------------------------------");
+//
+//        for (TimesheetentryEntity te : getTimeSheetEntries()) {
+//            Date timesheetDate = te.getTimeSheet().getTimeSheetWeek().getWeekend();
+//            if (te.getWorkPackage().getId().equalsIgnoreCase(getId())
+//                    & te.getWorkPackage().getProjid()
+//                            .equalsIgnoreCase(getProjid())) {
+//                System.out.println("Time sheet entry " + te);
+//                // System.out.println("Current grade" + e.getCurrentGrade());
+//                LabourGrade grade = LabourGrade.getGrade(new Employee((te
+//                        .getTimeSheet().getEmployee())).getCurrentGrade());
+//                LabourchargerateEntity rateEntity = this.getgetRateForGrade(grade);
+//                budget.addToSumType("accumulated", grade,
+//                        getTotalForTimesheetEntry(te), new Double(0));
+//            }
+//        }
+//        System.out
+//                .println("Budget init end-----------------------------------");
+//    }
 
-        for (TimesheetentryEntity te : getTimeSheetEntries()) {
-            Date timesheetDate = te.getTimeSheet().getTimeSheetWeek().getWeekend();
-            if (te.getWorkPackage().getId().equalsIgnoreCase(getId())
-                    & te.getWorkPackage().getProjid()
-                            .equalsIgnoreCase(getProjid())) {
-                System.out.println("Time sheet entry " + te);
-                // System.out.println("Current grade" + e.getCurrentGrade());
-                LabourGrade grade = LabourGrade.getGrade(new Employee((te
-                        .getTimeSheet().getEmployee())).getCurrentGrade());
-                LabourchargerateEntity rateEntity = getRateForGrade(grade);
-                budget.addToSumType("accumulated", grade,
-                        getTotalForTimesheetEntry(te), new Double(0));
-            }
-        }
-        System.out
-                .println("Budget init end-----------------------------------");
-    }
+//    public Double getTotalForTimesheetEntry(TimesheetentryEntity te) {
+//        Double amount = 0D;
+//        System.out.println("Fri" + te.getFrihours());
+//        amount += te.getFrihours();
+//        System.out.println("Mon" + te.getMonhours());
+//        amount += te.getMonhours();
+//        System.out.println("Sat" + te.getSathours());
+//        amount += te.getSathours();
+//        System.out.println("Sun" + te.getSunhours());
+//        amount += te.getSunhours();
+//        System.out.println("Thu" + te.getThuhours());
+//        amount += te.getThuhours();
+//        System.out.println("Tue" + te.getTuehours());
+//        amount += te.getTuehours();
+//        System.out.println("Wed" + te.getWedhours());
+//        amount += te.getWedhours();
+//        return amount;
+//    }
 
-    public Double getTotalForTimesheetEntry(TimesheetentryEntity te) {
-        Double amount = 0D;
-        System.out.println("Fri" + te.getFrihours());
-        amount += te.getFrihours();
-        System.out.println("Mon" + te.getMonhours());
-        amount += te.getMonhours();
-        System.out.println("Sat" + te.getSathours());
-        amount += te.getSathours();
-        System.out.println("Sun" + te.getSunhours());
-        amount += te.getSunhours();
-        System.out.println("Thu" + te.getThuhours());
-        amount += te.getThuhours();
-        System.out.println("Tue" + te.getTuehours());
-        amount += te.getTuehours();
-        System.out.println("Wed" + te.getWedhours());
-        amount += te.getWedhours();
-        return amount;
-    }
-
-    public List<Entry<LabourGrade, Hashtable<String, Budget.RateAmountPair>>> getWpBudget() {
-//        List<Entry<LabourGrade, Hashtable<String, Budget.RateAmountPair>>> budgetList = new ArrayList<Entry<LabourGrade, Hashtable<String, Budget.RateAmountPair>>>(
-//                budget.entrySet());
-
-        return new ArrayList<Entry<LabourGrade, Hashtable<String, Budget.RateAmountPair>>>(budget.entrySet());
-    }
-    public List<Entry<LabourGrade, PlannedBudgetEntry>> getWpPlannedBudgetList() {
-        System.out.println("Getting planned bgt lst" + plannedBudgetList);
-        return new ArrayList<Entry<LabourGrade, PlannedBudgetEntry>>(plannedBudgetList.entrySet());
-    }
+//    public List<Entry<LabourGrade, Hashtable<String, Budget.RateAmountPair>>> getWpBudget() {
+//        return new ArrayList<Entry<LabourGrade, Hashtable<String, Budget.RateAmountPair>>>(budget.entrySet());
+//    }
+//    public List<Entry<LabourGrade, PlannedBudgetEntry>> getWpPlannedBudgetList() {
+//        System.out.println("Getting planned bgt lst" + plannedBudgetList);
+//        return new ArrayList<Entry<LabourGrade, PlannedBudgetEntry>>(plannedBudgetList.entrySet());
+//    }
 
     public void initPlannedBudget() {
         System.out

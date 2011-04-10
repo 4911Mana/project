@@ -50,7 +50,7 @@ public class ProjectTree extends Hashtable<String, WorkPackage> {
     public Set<WorkPackage> getLeafs(){
         Set<WorkPackage> set = new HashSet<WorkPackage>();
         for(WorkPackage wp : this.values()){
-            if(wp.isLeaf()){set.add(wp);}
+            if(this.getChildren(wp.getId()).isEmpty()){set.add(wp);}
         }
         return set;
     }

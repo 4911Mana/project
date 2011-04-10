@@ -38,6 +38,7 @@ public abstract class Package implements Serializable {
     protected Budget budget;
     protected Set<LabourchargerateEntity> rates;
     protected PlannedBudgetList plannedBudgetList;
+    
 
     public Package() {
         id = "";
@@ -153,7 +154,7 @@ public abstract class Package implements Serializable {
 
     @Transient
     public List<Entry<LabourGrade, Hashtable<String, Budget.RateAmountPair>>> getWpBudget() {
-        return null;
+        return new ArrayList<Entry<LabourGrade, Hashtable<String, Budget.RateAmountPair>>>(budget.entrySet());
     }
 
     @Transient
@@ -195,7 +196,8 @@ public abstract class Package implements Serializable {
     }
     @Transient
     public List<Entry<LabourGrade, PlannedBudgetEntry>> getWpPlannedBudgetList() {
-        return null;
+        System.out.println("Getting planned bgt lst" + plannedBudgetList);
+        return new ArrayList<Entry<LabourGrade, PlannedBudgetEntry>>(plannedBudgetList.entrySet());
     }
     public void setPlannedBudgetList(PlannedBudgetList plannedBudget) {
         this.plannedBudgetList = plannedBudget;

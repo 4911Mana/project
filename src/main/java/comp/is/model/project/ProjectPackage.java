@@ -13,7 +13,7 @@ import comp.is.model.project.key.EmployeerolePK;
 public class ProjectPackage extends ProjectEntity {
     final WorkPackage rootFlag;
     private EmployeeEntity manager;
-
+    
     public ProjectPackage() {
         rootFlag = null;
         manager = new EmployeeEntity();
@@ -104,5 +104,5 @@ public class ProjectPackage extends ProjectEntity {
             }
         }
         return null;
-    }
+    } 
 }

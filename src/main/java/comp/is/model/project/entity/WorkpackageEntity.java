@@ -39,8 +39,6 @@ public class WorkpackageEntity extends Package {
     protected String projid;
     protected Set<WorkPackageBudgetEntity> plannedBudget;
 
-    
-
     public WorkpackageEntity(){
         
     }

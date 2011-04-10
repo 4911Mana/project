@@ -30,6 +30,8 @@ import javax.persistence.Query;
 
 import comp.is.model.admin.Employee;
 import comp.is.model.admin.LabourGrade;
+import comp.is.model.project.Budget;
+import comp.is.model.project.Budget.RateAmountPair;
 import comp.is.model.project.ChildWp;
 import comp.is.model.project.CurrentWp;
 import comp.is.model.project.PlannedBudgetEntry;
@@ -37,9 +39,11 @@ import comp.is.model.project.ProjectPackage;
 import comp.is.model.project.ProjectTree;
 import comp.is.model.project.WorkPackage;
 import comp.is.model.project.entity.EmployeeEntity;
+import comp.is.model.project.entity.EmployeelabourchargerateEntity;
 import comp.is.model.project.entity.LabourchargerateEntity;
 import comp.is.model.project.entity.Package;
 import comp.is.model.project.entity.ProjectEntity;
+import comp.is.model.project.entity.TimesheetentryEntity;
 import comp.is.model.project.entity.WorkPackageBudgetEntity;
 import comp.is.model.project.entity.WorkpackageEntity;
 import comp.is.view.project.EmployeePickListBean;
@@ -60,7 +64,7 @@ public class ProjectAction {
     private ProjectPackage pp;
     private ProjectTree project;
     private Hashtable<String, LabourchargerateEntity> rates;
-    private final List<String> sql;
+    private Double dolAmountAvailable;
 
     @PersistenceContext(unitName = "ProjectManager")
     private EntityManager em;
@@ -75,7 +79,6 @@ public class ProjectAction {
         currentP = new WorkPackage();
         childWp = new WorkPackage();
         rates = new Hashtable<String, LabourchargerateEntity>();
-        sql = new ArrayList<String>();
 
     }
 
@@ -84,6 +87,14 @@ public class ProjectAction {
      * 
      * @see comp.is.controller.project.ProjectActionLocal#addChild()
      */
+
+    public Double getDolAmountAvailable() {
+        return dolAmountAvailable;
+    }
+
+    public void setDolAmountAvailable(Double dolAmountAvailable) {
+        this.dolAmountAvailable = dolAmountAvailable;
+    }
 
     public String addChild() {
         System.out.println("Saving: " + childWp.toString());
@@ -174,14 +185,18 @@ public class ProjectAction {
             if (wp.getParent() != null & !wp.getId().equalsIgnoreCase(".")) {
                 WorkPackage newWp = new WorkPackage(wp);
                 newWp.setRates(getEffectiveRatesForDate(newWp.getStartDate()));
-                newWp.initAccumulatedBudget();
-                newWp.initPlannedBudget();
-                newWp.initToCompleteBudget();
-                newWp.initPlannedBudgetEntries();
+                // try {
+                // //initAccumulatedBudget(wp);
+                // } catch (DataInconsistencyException e) {
+                // System.out.println(e.toString());
+                // }
+                // newWp.initPlannedBudget();
+                // newWp.initToCompleteBudget();
+                // newWp.initPlannedBudgetEntries();
                 project.put(newWp);
             }
         }
-        
+
     }
 
     private boolean findAndSetRoot(String id) {
@@ -267,13 +282,31 @@ public class ProjectAction {
             return "failure";
         }
         fillWpMap();
-        
+
         currentP = new WorkPackage(project.getRoot());
-       
+
         childWp = new WorkPackage();
         childWp.setParent(currentP);
-        System.out.println(currentP.getBudget());
-        updateTreeBudget((WorkPackage)currentP);
+        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7");
+        try {
+            for (WorkPackage wp : project.getLeafs()) {
+
+                initAccumulatedBudget(wp);
+                wp.initPlannedBudget();
+                wp.initToCompleteBudget();
+            }
+            System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7");
+            updateTreeBudget((WorkPackage) currentP);
+            System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7");
+        } catch (DataInconsistencyException e) {
+            System.err.println(e.toString());
+        }
+        if (pp.getInBudget() != null) {
+            Double accumulated = this.getTotalForType("accumulated");
+            Double tocomplete = this.getTotalForType("tocomplete");
+
+            dolAmountAvailable = pp.getInBudget() - accumulated - tocomplete;
+        }
         view.init();
         return "success";
     }
@@ -505,7 +538,6 @@ public class ProjectAction {
         Set<LabourchargerateEntity> rateSheet = new HashSet<LabourchargerateEntity>();
         for (LabourGrade grade : LabourGrade.values()) {
             String queryStr = RATE_SQL + "'" + grade.toString() + "'";
-            System.err.println(queryStr);
             Query query = em.createQuery(queryStr);
             final List<LabourchargerateEntity> p1result = query.getResultList();
             System.err.println("All rates: " + p1result);
@@ -517,15 +549,33 @@ public class ProjectAction {
                 if (!e.getEffectiveDate().before(date)
                         & e.getEffectiveDate().after(rate.getEffectiveDate())) {
                     rate = e;
-                    System.err
-                            .println("Rates: "
-                                    + e
-                                    + "******************************************************************");
                 }
             }
             rateSheet.add(rate);
         }
         return rateSheet;
+    }
+
+    public LabourchargerateEntity getEffectiveRatesForLabourGradeForDate(
+            LabourGrade lg, Date date) {
+        if (date == null) {
+            date = Calendar.getInstance().getTime();
+        }
+        String queryStr = RATE_SQL + "'" + lg.toString() + "'";
+        Query query = em.createQuery(queryStr);
+        final List<LabourchargerateEntity> p1result = query.getResultList();
+        System.err.println("All rates: " + p1result);
+        if (p1result == null || p1result.isEmpty()) {
+            return null;
+        }
+        LabourchargerateEntity rate = p1result.get(0);
+        for (LabourchargerateEntity e : p1result) {
+            if (!e.getEffectiveDate().before(date)
+                    & e.getEffectiveDate().after(rate.getEffectiveDate())) {
+                rate = e;
+            }
+        }
+        return rate;
     }
 
     public boolean isLeaf() {
@@ -555,8 +605,10 @@ public class ProjectAction {
         project.getRoot().getPlannedBudgetList().init();
         for (WorkPackage child : project.getChildren(getProject().getRoot()
                 .getId())) {
-            project.getRoot().getPlannedBudgetList().addAllToPlanned(
-                    child.getPlannedBudgetList());
+            System.out.println("All children of "
+                    + getProject().getRoot().getId() + ": " + child);
+            project.getRoot().getPlannedBudgetList()
+                    .addAllToPlanned(child.getPlannedBudgetList());
         }
     }
 
@@ -574,14 +626,28 @@ public class ProjectAction {
     }
 
     public void updateParentBudget(WorkPackage p) {
-        System.out.println("upadate parent budget: " + p.getId() + p.getBudget());
-        p.getParent().getBudget().addAllToSumType("initplanned", p.getBudget().getBudgetForType("initplanned"));
-        p.getParent().getBudget().addAllToSumType("accumulated", p.getBudget().getBudgetForType("accumulated"));
+        System.out.println("upadate parent budget: " + p.getId()
+                + p.getBudget());
+        p.getParent()
+                .getBudget()
+                .addAllToSumType("initplanned",
+                        p.getBudget().getBudgetForType("initplanned"));
+        p.getParent()
+                .getBudget()
+                .addAllToSumType("accumulated",
+                        p.getBudget().getBudgetForType("accumulated"));
+        p.getParent()
+                .getBudget()
+                .addAllToSumType("tocomplete",
+                        p.getBudget().getBudgetForType("tocomplete"));
     }
 
-    public void updateTreeBudget(WorkPackage root) {
-        System.out.println("update tree budget " + root.getId() + root.getBudget());
-        if (project.getChildren(root.getId()) == null) {
+    public void updateTreeBudget(WorkPackage root)
+            throws DataInconsistencyException {
+        System.out.println("update tree budget " + root.getId()
+                + root.getBudget());
+        if (project.getChildren(root.getId()).isEmpty()) {
+
             updateParentBudget(root);
             return;
         }
@@ -591,4 +657,100 @@ public class ProjectAction {
         }
 
     }
+
+    public void initAccumulatedBudget(WorkpackageEntity wp) {
+        if (wp.getBudget().getBudgetForType("accumulated") == null) {
+            wp.getBudget().reinitType("accumulated");
+        }
+        if (wp.getEmployeesAssigned() == null) {
+            return;
+        }
+        System.out
+                .println("Accumulated Budget init start--------------------------------");
+
+        for (TimesheetentryEntity te : wp.getTimeSheetEntries()) {
+            Date timesheetDate = te.getTimeSheet().getTimeSheetWeek()
+                    .getWeekend();
+            if (te.getWorkPackage().getId().equalsIgnoreCase(wp.getId())
+                    & te.getWorkPackage().getProjid()
+                            .equalsIgnoreCase(wp.getProjid())) {
+                System.out.println("Time sheet entry for "
+                        + te.getTimeSheet().getId());
+
+                LabourchargerateEntity rateEntity = null;;
+                try {
+                    rateEntity = this.getRateForDate(te
+                            .getTimeSheet().getEmployee().getLabourChargeRates(),
+                            timesheetDate);
+                
+                Double hrsAmount = getTotalForTimesheetEntry(te);
+                Double dolAmount = new Double(0);
+                if (rateEntity != null) {
+                    dolAmount = hrsAmount * rateEntity.getRate();
+                }
+                System.out.println("Adding to accum: " + rateEntity + "/"
+                        + hrsAmount + "/" + dolAmount);
+                wp.getBudget().addToSumType("accumulated",
+                        LabourGrade.getGrade(rateEntity.getRateclassid()),
+                        hrsAmount, dolAmount);
+                } catch (DataInconsistencyException e) {
+                    System.out.println(e.toString());
+                }
+            }
+        }
+        System.out
+                .println("Accumulated Budget init end-----------------------------------");
+    }
+
+    public Double getTotalForTimesheetEntry(TimesheetentryEntity te) {
+        Double amount = 0D;
+        System.out.println("Fri" + te.getFrihours());
+        amount += te.getFrihours();
+        System.out.println("Mon" + te.getMonhours());
+        amount += te.getMonhours();
+        System.out.println("Sat" + te.getSathours());
+        amount += te.getSathours();
+        System.out.println("Sun" + te.getSunhours());
+        amount += te.getSunhours();
+        System.out.println("Thu" + te.getThuhours());
+        amount += te.getThuhours();
+        System.out.println("Tue" + te.getTuehours());
+        amount += te.getTuehours();
+        System.out.println("Wed" + te.getWedhours());
+        amount += te.getWedhours();
+        return amount;
+    }
+
+    public LabourchargerateEntity getRateForDate(
+            Set<EmployeelabourchargerateEntity> set, Date date)
+            throws DataInconsistencyException {
+        if (set.isEmpty()) {
+            throw new DataInconsistencyException("No rates found");
+        }
+        Iterator<EmployeelabourchargerateEntity> it = set.iterator();
+        LabourchargerateEntity fRate = it.next().getLabourChargerRate();
+        while (it.hasNext()) {
+            LabourchargerateEntity rate = it.next().getLabourChargerRate();
+            if (!rate.getEffectiveDate().before(date)
+                    & rate.getEffectiveDate().after(fRate.getEffectiveDate())) {
+                fRate = rate;
+            }
+        }
+        return fRate;
+    }
+
+    public Double getTotalForType(String type) {
+        Budget budget = project.getRoot().getBudget();
+        Hashtable<LabourGrade, RateAmountPair> accumulatedBudget = budget
+                .getBudgetForType(type);
+        Double total = 0.0;
+        for (LabourGrade lg : LabourGrade.values()) {
+            if (accumulatedBudget.get(lg) != null) {
+                total += accumulatedBudget.get(lg).getDolVal();
+            }
+
+        }
+        return total;
+    }
+
 }

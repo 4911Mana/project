@@ -13,6 +13,7 @@ import comp.is.model.project.entity.WorkPackageBudgetEntity;
 public class Budget extends
         Hashtable<LabourGrade, Hashtable<String, Budget.RateAmountPair>> {
     private boolean plannedCostSet = false;
+    
 
     public Budget() {
         reinitType("accumulated");
@@ -77,7 +78,7 @@ public class Budget extends
                     type,
                     (prevHrsAmount == null) ? new Budget.RateAmountPair(hrsAmount, dolAmount)
                             : new Budget.RateAmountPair(hrsAmount + prevHrsAmount, dolAmount + prevDolAmount));
-            System.out.println(type + prevHrsAmount);
+            System.out.println(type + prevHrsAmount + "/ setting "+ hrsAmount);
         } else {
             Hashtable<String, Budget.RateAmountPair> value = new Hashtable<String, Budget.RateAmountPair>();
             value.put(type, new Budget.RateAmountPair(hrsAmount, dolAmount));
@@ -103,9 +104,10 @@ public class Budget extends
 
     public Hashtable<LabourGrade, Budget.RateAmountPair> getBudgetForType(
             String type) {
+        System.out.println("Getting budget for type : " + type);
         Hashtable<LabourGrade, Budget.RateAmountPair> initP = new Hashtable<LabourGrade, Budget.RateAmountPair>();
         for (Map.Entry<LabourGrade, Hashtable<String, Budget.RateAmountPair>> e : entrySet()) {
-            System.out.println(type + " "+ e.getKey() + " " + e.getValue());
+            
             if(e.getValue().get(type) != null)
             initP.put(e.getKey(), e.getValue().get(type));
         }
