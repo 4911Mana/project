@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:l="http://java.sun.com/jsf/composite/tags">
+
+<!-- 
+		Replace path to template, title, header and body
+		with actual data.
+	 -->
+<ui:composition template="/WEB-INF/templates/master.xhtml">
+	<ui:define name="content">
+		<h:form>
+			<p:outputPanel id="outtbl">
+				<p:dataTable id="emptbl" var="emp" value="#{employee.allPeons}"
+					paginator="true" rows="10" emptyMessage="No employees found"
+					widgetVar="empTable"
+					selection="#{addProjectStaffAction.selectedEmployees}">
+
+					<f:facet name="header">
+						<!-- <p:outputPanel>
+							<h:outputText value="Search all fields:" />
+							<p:inputText id="globalFilter" onkeyup="empTable.filter()"
+								style="width:100px, align:right" /> </p:outputPanel>-->
+						<p:ajaxStatus style="width:16px;height:16px;">
+							<f:facet name="start">
+								<h:outputText value="Connecting..." />
+								<h:graphicImage value="/resources/gfx/ajaxloading.gif" />
+								
+								
+							</f:facet>
+
+							<f:facet name="complete">
+								<h:outputText value="" />
+							</f:facet>
+						</p:ajaxStatus>
+
+					</f:facet>
+
+					<p:column selectionMode="multiple" />
+
+					<p:column sortBy="#{emp.id}" filterBy="#{emp.id}">
+						<f:facet name="header">
+							<h:outputText value="ID" />
+						</f:facet>
+						<h:outputText value="#{emp.id}" />
+					</p:column>
+
+					<p:column sortBy="#{emp.lastname}" filterBy="#{emp.lastname}">
+						<f:facet name="header">
+							<h:outputText value="Name" />
+						</f:facet>
+						<h:outputText value="#{emp.lastname}, #{emp.firstname}" />
+					</p:column>
+
+				</p:dataTable>
+				<p:commandButton type="push" value="Add to Project"
+					onclick="confirmation.show()" image="ui-icon-folder-open" />
+
+			</p:outputPanel>
+			<p:growl id="growl" showDetail="true" life="3000" />
+
+			<p:confirmDialog id="asgnDlg"
+				message="Assign Selected Employees to Project" header="Confirmation"
+				widgetVar="confirmation">
+
+
+				<h:panelGrid columns="2" cellpadding="5">
+					<h:outputLabel for="tproj" value="Project number:*" />
+					<p:autoComplete id="tproj"
+						value="#{addProjectStaffAction.targetProj}"
+						completeMethod="#{addProjectStaffAction.getProjList}"
+						required="true" />
+
+					<p:message for="tproj" errorClass="invalid" />
+					<f:facet name="footer">
+						<p:commandButton value="Confirm" update="growl"
+							onclick="confirmation.hide()"
+							action="#{addProjectStaffAction.assignSelectedEmployees}" />
+						<p:commandButton value="Quit" onclick="confirmation.hide()"
+							type="button" />
+					</f:facet>
+				</h:panelGrid>
+			</p:confirmDialog>
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+
+</html>

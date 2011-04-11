@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.prime.com.tr/ui">
+
+	<ui:composition >
+		<h:form>
+		<p:dock position="top"
+				itemWidth="35"
+				maxWidth="50"
+				proximity="50">
+			
+			<p:menuitem value="Time Sheet"
+						icon="#{msg.sampleDockImage1}" 
+						styleClass="dockIcon" 	
+						action="#{dockNav.setupTimeSheet()}" 
+						ajax="false"/>
+			
+			<p:menuitem value="Projects View" 	
+						icon="#{msg.sampleDockImage2}" 
+						styleClass="dockIcon" 	
+						action="#{dockNav.setupProjectView()}" 
+						ajax="false"/>
+			
+			<p:menuitem value="System Admin"  	
+						icon="#{msg.sampleDockImage3}"
+						styleClass="dockIcon"
+						action="#{dockNav.setupSystemAdmin()}" 
+						ajax="false"/>
+			
+			<p:menuitem value="HR Admin"      	
+						icon="#{msg.sampleDockImage4}" 
+						styleClass="dockIcon" 	
+						action="#{dockNav.setupHRAdmin()}" 
+						ajax="false"/>
+			
+			<p:menuitem value="Change Password" 
+						icon="#{msg.sampleDockImage5}" 
+						styleClass="dockIcon" 	
+						action="#{dockNav.setupChangePassword()}" 
+						ajax="false"/>
+			
+			<p:menuitem value="Home" 			
+						icon="#{msg.sampleDockImage6}" 
+						styleClass="dockIcon" 	
+						action="#{dockNav.setupHome()}" 
+						ajax="false"/>
+			
+			<p:menuitem value="Logout" 			
+						icon="#{msg.sampleDockImage7}" 
+						styleClass="dockIcon" 	
+						action="#{dockNav.logout()}" 
+						ajax="false"/>
+						
+		</p:dock>
+		</h:form>
+	</ui:composition>		
+</html>

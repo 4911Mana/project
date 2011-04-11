@@ -79,9 +79,8 @@ public class ProjectCatalogueAction {
 
     public ProjectCatalogueAction() {
         currentPP = new ProjectPackage();
-        // selectedEmp = new Employee[100];
         currentProjManager = currentPP.getManager();
-        newProjManager = new EmployeeEntity();
+        //newProjManager = new EmployeeEntity();
         allProj = new Hashtable<String, ProjectEntity>();
     }
 
@@ -131,7 +130,7 @@ public class ProjectCatalogueAction {
                 + pp.getDescription());
         setCurrentPP(pp);
         currentPPisNew = false;
-        currentProjManager = currentPP.getManager();
+        currentProjManager = new Employee(currentPP.getManager());
         newProjManager = null;
         return null;
     }
@@ -145,44 +144,45 @@ public class ProjectCatalogueAction {
 
     public String doPersist() {
         System.out.println("Adding " + currentPP);
-        List<String> msgs = new ArrayList<String>();
-        boolean err = false;
-
+        this.newProjManager = currentPP.getManager();
         ProjectEntity entity = new ProjectEntity(currentPP);
+        
         if (entity.getProjectBudget() != null) {
-            entity.getProjectBudget().setProject(entity);
+            //entity.getProjectBudget().setProject(entity);
             entity.getProjectBudget().setProjid(entity.getId());
+            entity.getProjectBudget().setInitBudget(currentPP.getInBudget());
 
         }
         try {
-            //check if a project is a new for persist or existed before and will be merged
+           
             ProjectEntity proj = getProjById(entity.getId());
             if (proj != null & !currentPPisNew) {
-                if (currentProjManager != null) {
-                    if (!currentProjManager.equals(newProjManager)) {
+                if (newProjManager != null) {
+                    if (currentProjManager.getId() != newProjManager.getId()) {
                         //ask for confirmation
-                            //EmployeeroleEntity role = ProjectPackage.findManager(proj);
-//                            System.out.println("Role to remove: " + role.getEmployee().getId());
+                            addProjManager(entity);
+                            EmployeeroleEntity role = ProjectPackage.findManager(proj);
+                            System.out.println("Role to remove: " + role.getEmployee().getId());
 //                            for(EmployeeroleEntity r : entity.getEmployeeRoles()){
-                                System.out.println("All roles: " + entity.getEmployeeRoles());
+//                                System.out.println("All roles: " + entity.getEmployeeRoles());
 //                            }
-//                          
+                          
                             //role = em.find(EmployeeroleEntity.class, role.getId());
-//                            System.out.println("Removing previouse manager " 
-//                                    + role.getId().getEmpid() 
-//                                    + "/"+ role.getId().getProjid() 
-//                                    + "/"+ role.getId().getRoleid());
+                            System.out.println("Removing previouse manager " 
+                                    + role.getId().getEmpid() 
+                                    + "/"+ role.getId().getProjid() 
+                                    + "/"+ role.getId().getRoleid());
                             //em.remove(role);
-                            //entity.getEmployeeRoles().remove(role);
+                            entity.getEmployeeRoles().remove(role);
 //                            for(EmployeeroleEntity r : entity.getEmployeeRoles()){
 //                                System.out.println("One role removed: " + r.getEmployee().getId());
 //                            }
-                            //addProjManager(entity);
+                           
                     }
                 }
                 
                 em.merge(entity);
-                //allProj.put(entity.getId(), entity);
+                allProj.put(entity.getId(), entity);
                 view.displayMsg(entity.getId() + " Successfully updated");
                 return null;
             } else {
@@ -190,14 +190,17 @@ public class ProjectCatalogueAction {
                 if (numValidator.projectIsUnique(entity.getId())) {
                     addSupervisorToNewProj(entity);
                     addProjManager(entity);
+                    
+                    
+                   
+                    em.persist(entity);
+                    System.out.println("Adding " + currentPP.getId());
                     WorkpackageEntity wp = new WorkpackageEntity();
                     wp.setId(".");
                     wp.setParentId(".");
                     wp.setProjid(entity.getId());
                     System.out.println("Adding " + wp.getId());
-                    em.persist(wp);
-                    System.out.println("Adding " + currentPP.getId());
-                    em.persist(entity);
+                    entity.getWorkPackages().add(wp);
                     
                     this.allProj.put(entity.getId(), entity);
                     view.displayMsg(entity.getId() + " Successfully created");
@@ -212,6 +215,7 @@ public class ProjectCatalogueAction {
         } catch (Exception ex) {
             view.displayMsg("Unable to create " + ex.toString());
             System.out.println("Unable to create " + ex.toString());
+            ex.printStackTrace();
         }
         return null;
     }
@@ -222,7 +226,8 @@ public class ProjectCatalogueAction {
     }
 
     private void addSupervisorToNewProj(ProjectEntity pp) {
-        if (manager != null) {
+        if (manager.getId() != 0) {
+            System.out.println("Supervisor " + manager.getId());
             EmployeeroleEntity role = new EmployeeroleEntity();
             EmployeerolePK id = new EmployeerolePK();
             id.setEmpid(manager.getId());
@@ -234,6 +239,8 @@ public class ProjectCatalogueAction {
     }
 
     private void addProjManager(ProjectEntity pp) {
+        if(newProjManager == null || newProjManager.getId() == 0){return;}
+        System.out.println("manager " + newProjManager.getId());
         EmployeeroleEntity role = new EmployeeroleEntity();
         EmployeerolePK id = new EmployeerolePK();
         System.out.println("Adding New Proj Manager " + ((newProjManager == null)? "null" : newProjManager.getId()));

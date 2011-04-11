@@ -96,7 +96,7 @@ public class ProjectEntity extends Package implements Serializable {
     
     
      //bi-directional one-to-one association to Projectbudget
-     @OneToOne(mappedBy="project")
+     @OneToOne(mappedBy="project", cascade=CascadeType.MERGE)
      public ProjectbudgetEntity getProjectBudget() {
      return this.initBudget;
      }

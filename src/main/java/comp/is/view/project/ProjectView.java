@@ -18,6 +18,7 @@ import comp.is.controller.project.ProjectAction;
 import comp.is.controller.project.ProjectActionLocal;
 import comp.is.model.admin.Employee;
 import comp.is.model.admin.LabourGrade;
+import comp.is.model.project.BudgetTypeMismatchException;
 import comp.is.model.project.WorkPackage;
 import comp.is.model.project.entity.WorkPackageBudgetEntity;
 
@@ -61,6 +62,12 @@ public class ProjectView implements Serializable {
         projectAction.setWp(projectAction.getProject().getRoot());
         empPickList.setRendered(false);
         projectAction.initProjectPlannedBudget();
+        try {
+            projectAction.updateTotal();
+        } catch (BudgetTypeMismatchException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public ChildWpPanelBean getChildPanel() {
@@ -99,18 +106,26 @@ public class ProjectView implements Serializable {
 
             if (wp != null)// should be exception
             {    
-            empPickList.setRendered(true);         
+            empPickList.setRendered(true); 
+            wp.getBudget().print();
             projectAction.setWp(wp);
             projectAction.initSummaryPlannedBudget(projectAction.getWp());
+            try {
+                projectAction.updateTotal();
+            } catch (BudgetTypeMismatchException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             ArrayList<Employee> assignedEmp = projectAction.getTargetEmp(wp);
+            for(Employee e : assignedEmp){System.out.println(e.getLastname());}
             Collections.sort(assignedEmp);
             ArrayList<Employee> availEmp = new ArrayList<Employee>(projectAction.getSourceEmp(wp));
+            for(Employee e : availEmp){System.out.println(e.getLastname());}
             Collections.sort(availEmp);
-            availEmp.removeAll(assignedEmp);
+            if(assignedEmp != null || !assignedEmp.isEmpty()){availEmp.removeAll(assignedEmp);}
+            
             empPickList.arrangeEmployees(availEmp, assignedEmp, 
                     (wp.getResponsibleEngineer()==null)? null : new Employee(wp.getResponsibleEngineer()));
-            System.out.println("Not null, setting to : "
-                    + WorkPackage.unpad(selectedNode) + "\navail: " + availEmp + "\nass: " + assignedEmp);
             }
             
         }

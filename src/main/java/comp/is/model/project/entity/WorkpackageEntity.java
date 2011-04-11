@@ -38,6 +38,9 @@ public class WorkpackageEntity extends Package {
     protected ProjectEntity project;
     protected String projid;
     protected Set<WorkPackageBudgetEntity> plannedBudget;
+    protected String parentId;
+
+    
 
     public WorkpackageEntity(){
         
@@ -90,12 +93,13 @@ public class WorkpackageEntity extends Package {
     
     @Column(name="PARENTID", nullable = false, updatable = false)
     public String getParentId() {
-        return parent.getId();
+        return parentId;
     }
     
     public void setParentId(String id) {
-        if(parent != null){
-        parent.setId(id);}
+        parentId = id;
+//        if(parent != null){
+//        parent.setId(id);}
     }
 
     @Transient

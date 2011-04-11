@@ -31,6 +31,7 @@ public class ProjectPackage extends ProjectEntity {
         // labourratemarkup = root.getLabourratemarkup();
         workPackages = root.getWorkPackages();
         projectEmployees = root.getProjectEmployees();
+        employeeRoles = root.getEmployeeRoles();
         initBudget = root.getProjectBudget();
         rootFlag = new WorkPackage();
         rootFlag.setId(".");
@@ -72,13 +73,7 @@ public class ProjectPackage extends ProjectEntity {
             manager = null;
             return;
         }
-        EmployeeroleEntity role = new EmployeeroleEntity();
-        EmployeerolePK id = new EmployeerolePK();
-        id.setEmpid(manager.getId());
-        id.setProjid(getId());
-        id.setRoleid(1);
-        role.setId(id);
-        getEmployeeRoles().add(role);
+       
         System.out.println("Manager is set to " + manager.getLastname());
     }
 
@@ -98,7 +93,7 @@ public class ProjectPackage extends ProjectEntity {
     public static EmployeeroleEntity findManager(ProjectEntity root) {
         for (EmployeeroleEntity role : root.getEmployeeRoles()) {
             System.out.println("All emps for this proj " + root.getEmployeeRoles());
-            if (role.getProject().getId().equalsIgnoreCase(root.getId())
+            if (role.getId().getProjid().equalsIgnoreCase(root.getId())
                     & role.getRole().getId() == 1) {
                 return role;
             }

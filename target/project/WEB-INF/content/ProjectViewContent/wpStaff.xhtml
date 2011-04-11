@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+
+<head>
+<title>IGNORED</title>
+</head>
+<body>
+<ui:composition>
+	<!-- data table -->
+	<p:outputPanel id="outtbl"
+		rendered="#{not employeePickListBean.rendered}">
+		<p:dataTable id="emptbl" var="emp" value="#{wp.employees}"
+			paginator="true" rows="10" emptyMessage="No employees assigned"
+			widgetVar="empTable">
+
+			<!--  <f:facet name="header">
+            <p:outputPanel>
+                <h:outputText value="Search all fields:" />
+                <p:inputText id="globalFilter" onkeyup="empTable.filter()" style="width:150px" />
+            </p:outputPanel>
+        </f:facet>-->
+
+			<p:column sortBy="#{emp.id}" filterBy="#{emp.strId}">
+				<f:facet name="header">
+					<h:outputText value="ID" />
+				</f:facet>
+				<h:outputText value="#{emp.strId}" />
+			</p:column>
+
+			<p:column sortBy="#{emp.lastname}" filterBy="#{emp.lastname}">
+				<f:facet name="header">
+					<h:outputText value="Name" />
+				</f:facet>
+				<h:outputText value="#{emp.lastname}, #{emp.firstname}" />
+			</p:column>
+		</p:dataTable>
+	</p:outputPanel>
+	<!-- data table end -->
+	<p:outputPanel id="outacc" rendered="#{employeePickListBean.rendered}">
+
+		<p:tab title="Available Staff">
+		<!-- pick list start-->
+			
+			<p:pickList id="pickList" value="#{employeePickListBean.employees}" var="employee"
+					itemLabel="#{employee}" itemValue="#{employee}"
+					converter="employee" iconOnly="true" >
+					<f:facet name="sourceCaption">Available</f:facet>
+					<f:facet name="targetCaption">Assigned</f:facet>
+				</p:pickList>
+			<!-- pick list end-->
+		</p:tab>
+		<p:panel id="respEngInplace" rendered="#{wp.openForCharges or tree.selectedNode.leaf}">
+			<h:outputText value="Responsible Engineer, double click to select: " style="font-weight:bold"/>
+			<p:inplace editor="true" onEditUpdate="messages"
+				label="#{empty employeePickListBean.respEng ? 'not selected' : employeePickListBean.respEng}" 
+				effectSpeed="fast"
+				event="dblclick" widgetVar="respEngInplace">
+				<h:selectOneMenu value="#{employeePickListBean.respEng}" converter="employee">
+				<f:selectItems value="#{employeePickListBean.employees.target}"  
+                    var="employee" itemLabel="#{employee}"  
+                    itemValue="#{employee}" converter="employee"/>  
+				</h:selectOneMenu>
+			</p:inplace>
+			<p:spacer width="30"/>
+			<p:commandButton update="respEngInplace, displayEmp" image="ui-icon ui-icon-arrowrefresh-1-w"/>  
+		</p:panel>
+	</p:outputPanel>
+	<!-- <p:dialog showEffect="fade" hideEffect="fade" widgetVar="dialog">
+        <h:panelGrid id="displayEmp" columns="2">
+            <h:outputText value="Source: " style="font-weight:bold"/>
+            <ui:repeat value="#{employeePickListBean.employees.source}" var="emp">
+                <h:outputText value="#{emp.strId}" style="margin-right:5px" />
+            </ui:repeat>
+
+            <h:outputText value="Target: " style="font-weight:bold"/>
+            <ui:repeat value="#{employeePickListBean.employees.target}" var="emp">
+                <h:outputText value="#{emp.strId}" style="margin-right:5px" />
+            </ui:repeat>
+        </h:panelGrid>
+    </p:dialog> -->
+</ui:composition> 
+</body>
+</html>

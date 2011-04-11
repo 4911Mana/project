@@ -61,7 +61,7 @@
 				event="dblclick" widgetVar="respEngInplace">
 				<h:selectOneMenu value="#{employeePickListBean.respEng}" converter="employee">
 				<f:selectItems value="#{employeePickListBean.employees.target}"  
-                    var="employee" itemLabel="#{employee}"  
+                    var="employee" itemLabel="#{employee.strId}: #{employee.firstname}, #{employee.lastname} "  
                     itemValue="#{employee}" converter="employee"/>  
 				</h:selectOneMenu>
 			</p:inplace>

@@ -24,7 +24,8 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name="TIMESHEETWEEK")
 public class TimesheetweekEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
+	
+    private static final long serialVersionUID = 1L;
 	private Set<EmployeelabourchargerateEntity> employeeLabourChargeRates;
 	private Set<TimesheetEntity> timeSheets;
 	private Date weekend;

@@ -6,15 +6,19 @@ import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.WeakHashMap;
 
+import javax.ejb.EJB;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterException;
 
+import comp.is.controller.project.ProjectAction;
 import comp.is.model.admin.Employee;
 
 public class EmployeeConverter implements Converter {
 
-    private static Map<String, Employee> employees = new HashMap<String, Employee>();
+    private Map<Integer, Employee> employees = new HashMap<Integer, Employee>();
+   
 
     @Override
     public String getAsString(FacesContext context, UIComponent component,
@@ -22,12 +26,12 @@ public class EmployeeConverter implements Converter {
         if (obj == null) {
             return null;}
         Employee e = (Employee) obj;
-        synchronized (employees) {
-            if (!employees.containsKey(e.getStrId())) {
-                employees.put(e.getStrId(), e);
-            }
-            return e.getStrId();
-        }
+        System.out.println("Converter " + e.getFirstname());
+        
+                employees.put(e.getId(), e);
+                
+            return String.valueOf(e.getId());
+        
     }
 
     @Override
@@ -35,7 +39,16 @@ public class EmployeeConverter implements Converter {
             String submittedValue) {
         if (submittedValue.trim().equals("")) {
             return null;}
-        return employees.get(submittedValue.trim());
+        System.out.println("Converter as ogj " + submittedValue.trim());
+        try {
+            int id = Integer.parseInt(submittedValue);
+            return employees.get(id);
+            
+            
+        } catch(NumberFormatException exception) {
+            throw new ConverterException("Not a valid employee");
+        }
+        
     }
 
     // @Override

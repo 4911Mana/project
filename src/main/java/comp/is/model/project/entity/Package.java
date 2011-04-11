@@ -45,6 +45,7 @@ public abstract class Package implements Serializable {
         employees = new ArrayList<Employee>();
         budget = new Budget();
         plannedBudgetList = new PlannedBudgetList();
+        
     }
 
     @Transient
@@ -94,6 +95,7 @@ public abstract class Package implements Serializable {
         budget = candidate.budget;
         plannedBudgetList = candidate.plannedBudgetList;
         employees = candidate.employees;
+        rates = candidate.rates;
     }
 
     @Transient

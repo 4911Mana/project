@@ -62,10 +62,14 @@ public class EmployeePickListBean implements Serializable{
     }
 
     public void arrangeEmployees(ArrayList<Employee>source, ArrayList<Employee>target, Employee engineer){
-        employees = new DualListModel<Employee>(source, target);
+        if(source == null ){ source = new ArrayList<Employee>();}
+        if(target == null){target = new ArrayList<Employee>();}
+        for(Employee e : source){System.out.println("Source " + e.getLastname());}
+        DualListModel<Employee> model = new DualListModel<Employee>(source, target);
+        this.setEmployees(model);
         respEng = engineer;
     }
-
+ 
     public int getActiveTabIndex() {
         return activeTabIndex;
     }

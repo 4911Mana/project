@@ -182,15 +182,19 @@
 			<artifactId>flick</artifactId>
 			<version>1.0.0</version>
 		</dependency>
-		<dependency> <groupId>org.jboss.seam.solder</groupId> <artifactId>seam-solder</artifactId> 
-			<version>3.0.0.Beta1</version> </dependency>
 		<dependency>
+			<groupId>org.jboss.seam.solder</groupId>
+			<artifactId>seam-solder</artifactId>
+			<version>3.0.0.Beta1</version>
+		</dependency>
+		<!--  <dependency>
 			<groupId>javax.enterprise</groupId>
 			<artifactId>cdi-api</artifactId>
 			<version>1.0-SP2</version>
 			<scope>provided</scope>
-		</dependency>
+		</dependency>-->
 	</dependencies>
+
 	<build>
 		<finalName>${project.artifactId}</finalName>
 		<plugins>
@@ -290,8 +294,7 @@
 							<fileNames>
 								<fileName>${project.build.directory}/${project.build.finalName}.war</fileName>
 								<!-- JNDI Datasource that connects to in-memory HSQLDB to demonstrate 
-									JPA 
-								<fileName>src/main/resources-jbossas/default-ds.xml</fileName>-->
+									JPA <fileName>src/main/resources-jbossas/default-ds.xml</fileName> -->
 							</fileNames>
 						</configuration>
 					</plugin>

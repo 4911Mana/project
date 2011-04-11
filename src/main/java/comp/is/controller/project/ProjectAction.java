@@ -32,6 +32,7 @@ import comp.is.model.admin.Employee;
 import comp.is.model.admin.LabourGrade;
 import comp.is.model.project.Budget;
 import comp.is.model.project.Budget.RateAmountPair;
+import comp.is.model.project.BudgetTypeMismatchException;
 import comp.is.model.project.ChildWp;
 import comp.is.model.project.CurrentWp;
 import comp.is.model.project.PlannedBudgetEntry;
@@ -184,15 +185,11 @@ public class ProjectAction {
         for (WorkpackageEntity wp : wps) {
             if (wp.getParent() != null & !wp.getId().equalsIgnoreCase(".")) {
                 WorkPackage newWp = new WorkPackage(wp);
-                newWp.setRates(getEffectiveRatesForDate(newWp.getStartDate()));
-                // try {
-                // //initAccumulatedBudget(wp);
-                // } catch (DataInconsistencyException e) {
-                // System.out.println(e.toString());
-                // }
-                // newWp.initPlannedBudget();
-                // newWp.initToCompleteBudget();
-                // newWp.initPlannedBudgetEntries();
+                try {
+                    newWp.setRates(getEffectiveRatesForDate(newWp.getStartDate()));
+                } catch (RatesNotFoundException e) {
+                    System.out.println(e.toString());
+                }
                 project.put(newWp);
             }
         }
@@ -287,28 +284,41 @@ public class ProjectAction {
 
         childWp = new WorkPackage();
         childWp.setParent(currentP);
-        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7");
+        System.out
+                .println("Before init &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7");
         try {
             for (WorkPackage wp : project.getLeafs()) {
-
+                wp.getBudget().print();
                 initAccumulatedBudget(wp);
+                wp.getBudget().print();
                 wp.initPlannedBudget();
+                wp.getBudget().print();
                 wp.initToCompleteBudget();
+                wp.getBudget().print();
+
             }
-            System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7");
+            System.out
+                    .println("After init Before update &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7");
             updateTreeBudget((WorkPackage) currentP);
-            System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7");
-        } catch (DataInconsistencyException e) {
+            initProjectPlannedBudget();
+            initSummaryPlannedBudget(currentP);
+            updateTotal();
+
+        } catch (Exception e) {
             System.err.println(e.toString());
         }
+
+        view.init();
+        return "success";
+    }
+
+    public void updateTotal() throws BudgetTypeMismatchException {
         if (pp.getInBudget() != null) {
             Double accumulated = this.getTotalForType("accumulated");
             Double tocomplete = this.getTotalForType("tocomplete");
 
             dolAmountAvailable = pp.getInBudget() - accumulated - tocomplete;
         }
-        view.init();
-        return "success";
     }
 
     /*
@@ -421,8 +431,10 @@ public class ProjectAction {
 
         ArrayList<Employee> emp = wp.getAvailableStaff();
         if (emp != null) {
+           
             return emp;
         } else {
+            for(Employee e : pp.getEmployees()){System.out.println("projActin getsourceEmp " + e.getLastname());}
             return new ArrayList<Employee>(pp.getEmployees());
         }
     }
@@ -435,29 +447,25 @@ public class ProjectAction {
      * .project.WorkPackage)
      */
     public ArrayList<Employee> getTargetEmp(WorkPackage wp) {
-        Set<Employee> emp = new HashSet<Employee>();
-        // Map<Integer, Employee> emp = new Hashtable<Integer, Employee>();
-        // for (Employee e : wp.getEmployees()) {
-        // if (!emp.containsKey(e.getId())) {
-        // emp.put(e.getId(), e);
-        // }
-        // }
-        if (project.getChildren(wp.getId()) == null) {
+        //Set<Employee> emp = new HashSet<Employee>();
+         Map<Integer, Employee> emp = new Hashtable<Integer, Employee>();
+         for (Employee e : wp.getEmployees()) {
+         if (!emp.containsKey(e.getId())) {
+         emp.put(e.getId(), e);
+         }
+         }
+        if (project.getChildren(wp.getId()).isEmpty()) {
             return new ArrayList<Employee>(wp.getEmployees());
         } else {
             for (WorkPackage cwp : project.getChildren(wp.getId())) {
-                // for (Employee e : getTargetEmp(cwp)) {
-                // if (!emp.containsKey(e.getId())) {
-                // emp.put(e.getId(), e);
-                // }
-                // }
-                emp.addAll(getTargetEmp(cwp));
+                 for (Employee e : getTargetEmp(cwp)) {
+                 if (!emp.containsKey(e.getId())) {
+                 emp.put(e.getId(), e);
+                 }
+                 }
+                //emp.addAll(getTargetEmp(cwp));
             }
-            System.err
-                    .println("P1 "
-                            + getEffectiveRatesForDate(Calendar.getInstance()
-                                    .getTime()));
-            return new ArrayList<Employee>(emp);
+            return new ArrayList<Employee>(emp.values());
         }
     }
 
@@ -467,7 +475,7 @@ public class ProjectAction {
      * @see comp.is.controller.project.ProjectActionLocal#doMerge()
      */
 
-    public String doMerge() {
+    public String doMerge() throws BudgetTypeMismatchException {
         System.out.println("Saving " + currentP);
         List<String> msgs = new ArrayList<String>();
         boolean err = false;
@@ -485,7 +493,7 @@ public class ProjectAction {
                     .getRespEng()));
         }
 
-        candidate.mereg(currentP);
+        //candidate.mereg(currentP);
         Set<Employee> employeesAssigned = new HashSet<Employee>();
         Set<EmployeeEntity> empSet = new HashSet<EmployeeEntity>();
         for (Employee e : pickList.getEmployees().getTarget()) {
@@ -531,7 +539,7 @@ public class ProjectAction {
         return null;
     }
 
-    public Set<LabourchargerateEntity> getEffectiveRatesForDate(Date date) {
+    public Set<LabourchargerateEntity> getEffectiveRatesForDate(Date date) throws RatesNotFoundException {
         if (date == null) {
             date = Calendar.getInstance().getTime();
         }
@@ -542,7 +550,7 @@ public class ProjectAction {
             final List<LabourchargerateEntity> p1result = query.getResultList();
             System.err.println("All rates: " + p1result);
             if (p1result == null || p1result.isEmpty()) {
-                break;
+                throw new RatesNotFoundException("Effective LabourChargerates not found for " + grade.toString());
             }
             LabourchargerateEntity rate = p1result.get(0);
             for (LabourchargerateEntity e : p1result) {
@@ -612,9 +620,10 @@ public class ProjectAction {
         }
     }
 
-    public void initSummaryAccumulated(Package p) {
+    public void initSummaryAccumulated(Package p)
+            throws BudgetTypeMismatchException {
         if (!isLeaf()) {
-            p.getBudget().reinitType("accumulted");
+            p.getBudget().reinitType("accumulated");
             // currentP.getBudget().
             for (WorkPackage child : project.getChildren(p.getId())) {
                 p.getPlannedBudgetList().addAllToPlanned(
@@ -625,9 +634,8 @@ public class ProjectAction {
         }
     }
 
-    public void updateParentBudget(WorkPackage p) {
-        System.out.println("upadate parent budget: " + p.getId()
-                + p.getBudget());
+    public void updateParentBudget(WorkPackage p)
+            throws BudgetTypeMismatchException {
         p.getParent()
                 .getBudget()
                 .addAllToSumType("initplanned",
@@ -643,22 +651,26 @@ public class ProjectAction {
     }
 
     public void updateTreeBudget(WorkPackage root)
-            throws DataInconsistencyException {
+            throws DataInconsistencyException, BudgetTypeMismatchException {
         System.out.println("update tree budget " + root.getId()
                 + root.getBudget());
         if (project.getChildren(root.getId()).isEmpty()) {
-
+            root.initPlannedBudgetEntries();
             updateParentBudget(root);
+            System.out.println("Returning from update parent budget: "
+                    + root.getId());
             return;
         }
         for (WorkPackage wp : project.getChildren(root.getId())) {
             updateTreeBudget(wp);
+            root.initPlannedBudgetEntries();
             updateParentBudget(wp);
         }
 
     }
 
-    public void initAccumulatedBudget(WorkpackageEntity wp) {
+    public void initAccumulatedBudget(WorkpackageEntity wp)
+            throws BudgetTypeMismatchException {
         if (wp.getBudget().getBudgetForType("accumulated") == null) {
             wp.getBudget().reinitType("accumulated");
         }
@@ -677,22 +689,26 @@ public class ProjectAction {
                 System.out.println("Time sheet entry for "
                         + te.getTimeSheet().getId());
 
-                LabourchargerateEntity rateEntity = null;;
+                LabourchargerateEntity rateEntity = null;
+                ;
                 try {
-                    rateEntity = this.getRateForDate(te
-                            .getTimeSheet().getEmployee().getLabourChargeRates(),
+                    rateEntity = this.getRateForDate(te.getTimeSheet()
+                            .getEmployee().getLabourChargeRates(),
                             timesheetDate);
-                
-                Double hrsAmount = getTotalForTimesheetEntry(te);
-                Double dolAmount = new Double(0);
-                if (rateEntity != null) {
-                    dolAmount = hrsAmount * rateEntity.getRate();
-                }
-                System.out.println("Adding to accum: " + rateEntity + "/"
-                        + hrsAmount + "/" + dolAmount);
-                wp.getBudget().addToSumType("accumulated",
-                        LabourGrade.getGrade(rateEntity.getRateclassid()),
-                        hrsAmount, dolAmount);
+
+                    Double hrsAmount = getTotalForTimesheetEntry(te);
+                    Double dolAmount = new Double(0);
+                    if (rateEntity != null) {
+                        dolAmount = hrsAmount * rateEntity.getRate();
+
+                        System.out.println("Adding to accum: " + rateEntity
+                                + " /" + hrsAmount + "/" + dolAmount);
+                        wp.getBudget().addToSumType(
+                                "accumulated",
+                                LabourGrade.getGrade(rateEntity
+                                        .getRateclassid()), hrsAmount,
+                                dolAmount);
+                    }
                 } catch (DataInconsistencyException e) {
                     System.out.println(e.toString());
                 }
@@ -739,7 +755,8 @@ public class ProjectAction {
         return fRate;
     }
 
-    public Double getTotalForType(String type) {
+    public Double getTotalForType(String type)
+            throws BudgetTypeMismatchException {
         Budget budget = project.getRoot().getBudget();
         Hashtable<LabourGrade, RateAmountPair> accumulatedBudget = budget
                 .getBudgetForType(type);
