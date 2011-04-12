@@ -99,8 +99,8 @@ body {
 	background-position:0px 4px;
 }
 #cnt {
-	width:1000px;
-	margin:0 auto;
+	width:800px;
+	margin:0 200px;
 	position:relative;
 	background: url(../gfx/content.jpg) repeat-y 0 165px;
 }

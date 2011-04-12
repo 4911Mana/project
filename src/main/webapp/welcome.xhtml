@@ -11,24 +11,6 @@
 	<ui:composition template="/WEB-INF/templates/master.xhtml">
 		<ui:define name="content">
 			<p:growl id="messages" showDetail="true" />
-			<p:layout style="width:800px; min-height:800px;">
-				<p:layoutUnit position="left" width="200" resizable="true"
-					>
-					<ui:insert name="projectCatalogue">
-						<ui:include
-							src="/WEB-INF/content/ProjectViewContent/projectCatalogue.xhtml" />
-					</ui:insert>
-				</p:layoutUnit>
-
-				<!--  Centre-->
-
-				<p:layoutUnit position="center">
-					<ui:insert name="projTabs">
-						<ui:include src="/WEB-INF/content/ProjectViewContent/projectTabs.xhtml" />
-					</ui:insert>
-				</p:layoutUnit>
-
-			</p:layout>
 				</ui:define>
 	</ui:composition>
 

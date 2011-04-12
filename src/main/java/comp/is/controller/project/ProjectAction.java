@@ -106,13 +106,13 @@ public class ProjectAction {
         WorkPackage candidate = new WorkPackage(childWp);
         // if(currentP.is)
         candidate.setProjid(project.getRoot().getId());
-        candidate.setParent(currentP);
         if (project.getRoot().getId().equalsIgnoreCase(currentP.getId())) {
             candidate.setParentId(".");
             candidate.setPlannedBudget(null);
             
         } else {
             candidate.setParentId(currentP.getId());
+            candidate.setParent((WorkPackage)currentP);
         }
         candidate.setProject(pp);
 
@@ -291,7 +291,7 @@ public class ProjectAction {
         fillWpMap();
 
         currentP = new WorkPackage(project.getRoot());
-
+        
         childWp = new WorkPackage();
         childWp.setParent(currentP);
         System.out
@@ -495,6 +495,8 @@ public class ProjectAction {
         boolean err = false;
 
         WorkPackage candidate = this.getWpById(currentP.getId());
+        candidate.setProjid(project.getRoot().getId());
+        candidate.setProject(project.getRoot());
         candidate.flushPlannedBudget();
 
         

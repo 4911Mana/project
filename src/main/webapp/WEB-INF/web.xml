@@ -31,7 +31,7 @@
   <session-timeout>3000</session-timeout>
  </session-config>
  <welcome-file-list>
-  <welcome-file/>
+  <welcome-file>/welcome.xhtml</welcome-file>
  </welcome-file-list>
  <security-constraint>
   <display-name>Restricted GET To Employees</display-name>

@@ -45,6 +45,7 @@ public class WorkPackage extends WorkpackageEntity implements
 
     public WorkPackage(Package p) {
         init(p);
+        projid = p.getId();
     }
 
     public WorkPackage(WorkpackageEntity p) {
@@ -57,6 +58,7 @@ public class WorkPackage extends WorkpackageEntity implements
         statusReports = p.getStatusReports();
         project = p.getProject();
         plannedBudget = p.getPlannedBudget();
+        projid = p.getProjid();
 
         if (p.getEmployeesAssigned() != null
                 & (employees == null || employees.isEmpty())) {

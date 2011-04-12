@@ -25,33 +25,29 @@
 <!--				onblur="clS(0);" name="s" id="s" /> <input class="search_button"-->
 <!--				type="submit" value="" id="searchsubmit" /></form>-->
 <!---->
-			 Logo 
+		
 <!--			<div id="logo"><a href="#"></a></div>-->
 <!---->
-			 Slogan 
+			 <h:outputText value="Loged in as #{employee.firstname} #{employee.lastname}" />
 <!--			<p class="htit">f r e e &nbsp;w e b &nbsp;t e m p l a t e &nbsp;b-->
 <!--			y &nbsp;d r y i c o n s</p>-->
 <!---->
-			 Main Menu 
+			
 			<div id="menu">
-			<a class="menu_freeb" href="#">Project Management</a> 
-			<a class="menu_grap" href="#">Supervising</a> 
+			<a class="menu_freeb" href="/project/ProjectCatalogueContent.xhtml">Project Management</a> 
+			<a class="menu_grap" href="/project/searchStaff.xhtml">Supervising</a> 
 			<a class="menu_frm" href="#">Timesheet Management</a>
-			<a class="menu_fnt" href="#">Action Centr</a></div>
-<!--			</div>-->
+			
+			</div>
 
-			<h:outputText value="Loged in as #{employee.firstname} #{employee.lastname}" />
+			
 		<!-- Main Container -->
 			<div id="cnt">
 			<!-- Left Column -->
-			<div id="lcnt">
+ 			<div id="lcnt">
+			
 			<!-- Left Column Section Links -->
-<!--			<div class="lslink"><a class="tutorial" href="#">Tutorials</a>-->
-<!--			<a class="showcases" href="#">Showcases</a> <a class="inspiration"-->
-<!--				href="#">Inspiration</a> <a class="brushes" href="#">Brushes</a> <a-->
-<!--				class="photoshop" href="#">Photoshop</a> <a class="templates"-->
-<!--				href="#">Templates</a> <a class="resources" href="#">Resources</a> <a-->
-<!--				class="software" href="#">Software</a></div>-->
+			
 
 			<!-- Popular Posts -->
 <!--			<h3 class="sidetit_l">Popular posts</h3>-->
@@ -76,7 +72,8 @@
 			
 			<div id="ccnt">
 			<!-- Post -->
-			<div class="post"><ui:insert name="content" /></div>
+			<ui:insert name="content" />
+			<div class="post"></div>
 
 			<!-- Pagination -->
 <!--			<div id="pagination"><span class="prev">&laquo; Prev</span> <span-->
@@ -128,7 +125,7 @@
 <!--				href="http://tinyurl.com/ctj47o">http://tinyurl.com/ctj47o</a></p>-->
 <!--			</div>-->
 <!---->
-			 Sponsors 
+			
 <!--			<h3 class="sidetit_r">Sponsors</h3>-->
 <!--			<a class="img_link" target="_blank" href="http://dryicons.com"><img-->
 <!--				src="images/dryicons_banner.jpg" /></a><br />-->

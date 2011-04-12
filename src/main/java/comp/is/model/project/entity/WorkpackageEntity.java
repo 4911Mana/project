@@ -40,8 +40,6 @@ public class WorkpackageEntity extends Package {
     protected Set<WorkPackageBudgetEntity> plannedBudget;
     protected String parentId;
 
-    
-
     public WorkpackageEntity(){
         
     }
@@ -133,7 +131,7 @@ public class WorkpackageEntity extends Package {
      }
 
     // bi-directional many-to-many association to Employee
-    @ManyToMany
+    @ManyToMany(cascade=CascadeType.MERGE)
     @JoinTable(name = "WORKPACKAGEEMPLOYEESASSIGNED", joinColumns = {
             @JoinColumn(name = "PROJID", referencedColumnName = "PROJID", nullable = false),
             @JoinColumn(name = "WPID", referencedColumnName = "ID", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "EMPID", nullable = false) })
@@ -165,7 +163,7 @@ public class WorkpackageEntity extends Package {
         return getId();
     }
     
-    @OneToMany(mappedBy = "wp", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "wp", fetch = FetchType.EAGER, cascade=CascadeType.MERGE)
     public Set<WorkPackageBudgetEntity> getPlannedBudget() {
         return plannedBudget;
     }
