@@ -55,13 +55,13 @@ public class ProjectEntity extends Package implements Serializable {
     public ProjectEntity(ProjectPackage pp) {
         init(pp);
         customer = pp.customer;
-        workPackages = new HashSet<WorkpackageEntity>(pp.workPackages);
-        projectEmployees = new HashSet<EmployeeEntity>(pp.projectEmployees);
+        workPackages = pp.workPackages;
+        projectEmployees = pp.projectEmployees;
         initBudget = pp.initBudget;
-        projectSummaries = new HashSet<ProjectsummaryEntity>(pp.projectSummaries);
-        timeSheetEntries = new HashSet<TimesheetentryEntity>(pp.timeSheetEntries);
-        employeeRoles =  new HashSet<EmployeeroleEntity>(pp.employeeRoles);
-        rateSheets = new HashSet<RatesheetEntity>(pp.rateSheets);
+        projectSummaries = pp.projectSummaries;
+        timeSheetEntries = pp.timeSheetEntries;
+        employeeRoles =  pp.employeeRoles;
+        rateSheets = pp.rateSheets;
     }
 
     @Column(length = 256)
@@ -85,7 +85,7 @@ public class ProjectEntity extends Package implements Serializable {
     }
 
      //bi-directional many-to-one association to Employeerole
-     @OneToMany(mappedBy="project", fetch = FetchType.EAGER)
+     @OneToMany(mappedBy="project", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
      public Set<EmployeeroleEntity> getEmployeeRoles() {
      return this.employeeRoles;
      }
@@ -96,7 +96,7 @@ public class ProjectEntity extends Package implements Serializable {
     
     
      //bi-directional one-to-one association to Projectbudget
-     @OneToOne(mappedBy="project", cascade=CascadeType.MERGE)
+     @OneToOne(mappedBy="project")
      public ProjectbudgetEntity getProjectBudget() {
      return this.initBudget;
      }

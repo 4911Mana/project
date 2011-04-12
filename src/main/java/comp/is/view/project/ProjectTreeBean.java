@@ -103,9 +103,7 @@ public class ProjectTreeBean implements Serializable {
             view.displayRoot();
         } else if (selectedNode.getData().toString()
                 .equalsIgnoreCase(event.getTreeNode().getData().toString())) {
-            System.out.println("Selected" + selectedNode.getData().toString()
-                    + "Event source : "
-                    + event.getTreeNode().getData().toString());
+
             view.onNodeSelect();
 
         }

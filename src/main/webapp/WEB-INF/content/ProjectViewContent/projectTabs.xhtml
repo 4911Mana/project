@@ -18,7 +18,7 @@
 				tabChangeListener="#{employeePickListBean.onTabChange}">
 				<!-- first tab -->
 				<p:tab title="Info">
-					<l:wpInfoTag customerValue="#{project.customer}" customerReadonly="false"
+					<l:wpInfoTag customerValue="#{project.customer}" customerRender="true" customerReadonly="false"
 					numberValue="#{project.id}" numberReadonly="false"
 						titleValue="#{project.name}" descValue="#{project.description}"
 						startDate="#{project.startDate}"

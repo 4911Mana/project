@@ -15,6 +15,7 @@
 	<composite:attribute name="numberReadonly" />
 	<composite:attribute name="customerValue" />
 	<composite:attribute name="customerReadonly" />
+	<composite:attribute name="customerRender" />
 </composite:interface>
 
 <composite:implementation>
@@ -28,10 +29,12 @@
 		<p:inputText id="title" label="title" value="#{cc.attrs.titleValue}" width="00px"/>
 		<p:spacer/>	
 		
-		<h:outputLabel for="customer" value="Customer:" />
-		<p:inputText id="customer" value="#{cc.attrs.customerValue}" readonly="#{cc.attrs.customerReadonly}"/>
-			
+		<h:outputLabel for="customer" value="Customer:" rendered="#{cc.attrs.customerRender}"/>
+		<p:inputText id="customer" value="#{cc.attrs.customerValue}" rendered="#{cc.attrs.customerRender}" readonly="#{cc.attrs.customerReadonly}"/>
+		<p:spacer rendered="#{not cc.attrs.customerRender}"/>
+		<p:spacer rendered="#{not cc.attrs.customerRender}"/>
 		<p:spacer/>
+		
 		
 		
 		
@@ -40,7 +43,8 @@
 		<p:message for="date" errorClass="invalid" />
 		</h:panelGrid>
 	<br />
-	<h:outputLabel for="charges" value="Open for Charges:" />
+	<p:spacer/>
+		<p:spacer/><h:outputLabel for="charges" value="Open for Charges:" />
 	<h:selectBooleanCheckbox id="charges" value="#{cc.attrs.charges}" />
 		<p />
 	<h:outputLabel for="desc" value="Description:" />

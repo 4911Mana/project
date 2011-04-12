@@ -19,7 +19,7 @@
 				<!-- first tab -->
 				<p:tab title="Info">
 
-					<l:wpInfoTag customerValue="#{project.customer}" customerReadonly="true"
+					<l:wpInfoTag customerValue="#{project.customer}" customerRender="false"
 					numberValue="#{wp.number}" numberReadonly="true"
 						titleValue="#{wp.name}" descValue="#{wp.description}"
 						startDate="#{wp.startDate}" charges="#{wp.openForCharges}" />
@@ -79,7 +79,7 @@
 				closeListener="#{childPanel.handleClose}"
 				onCloseUpdate="child:campnou, campnou">
 
-				<l:wpInfoTag numberValue="#{childWp.number}"
+				<l:wpInfoTag numberValue="#{childWp.number}" customerRender="false"
 					titleValue="#{childWp.name}" descValue="#{childWp.description}"
 					startDate="#{childWp.startDate}"
 					charges="#{childWp.openForCharges}" mask="#{wp.childMask}" />

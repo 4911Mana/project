@@ -47,7 +47,7 @@
 			
 			<p:pickList id="pickList" value="#{employeePickListBean.employees}" var="employee"
 					itemLabel="#{employee}" itemValue="#{employee}"
-					converter="employee" iconOnly="true" >
+					iconOnly="true" converter="employee">
 					<f:facet name="sourceCaption">Available</f:facet>
 					<f:facet name="targetCaption">Assigned</f:facet>
 				</p:pickList>
@@ -61,7 +61,7 @@
 				event="dblclick" widgetVar="respEngInplace">
 				<h:selectOneMenu value="#{employeePickListBean.respEng}" converter="employee">
 				<f:selectItems value="#{employeePickListBean.employees.target}"  
-                    var="employee" itemLabel="#{employee.strId}: #{employee.firstname}, #{employee.lastname} "  
+                    var="employee" itemLabel="#{employee}"  
                     itemValue="#{employee}" converter="employee"/>  
 				</h:selectOneMenu>
 			</p:inplace>

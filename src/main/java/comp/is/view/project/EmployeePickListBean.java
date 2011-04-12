@@ -2,6 +2,7 @@ package comp.is.view.project;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.ejb.LocalBean;
@@ -28,6 +29,7 @@ public class EmployeePickListBean implements Serializable{
     private Employee respEng;
     private boolean rendered = false;
     private int activeTabIndex = 0;
+    private Hashtable<String, Employee> employeesTable;
     
     public EmployeePickListBean(){
         employees = new DualListModel<Employee>(new ArrayList<Employee>(), new ArrayList<Employee>());
@@ -64,7 +66,8 @@ public class EmployeePickListBean implements Serializable{
     public void arrangeEmployees(ArrayList<Employee>source, ArrayList<Employee>target, Employee engineer){
         if(source == null ){ source = new ArrayList<Employee>();}
         if(target == null){target = new ArrayList<Employee>();}
-        for(Employee e : source){System.out.println("Source " + e.getLastname());}
+//        for(Employee e : source){employeesTable.put(e.toString(), e);}
+//        for(Employee e : target){employeesTable.put(e.toString(), e);}
         DualListModel<Employee> model = new DualListModel<Employee>(source, target);
         this.setEmployees(model);
         respEng = engineer;

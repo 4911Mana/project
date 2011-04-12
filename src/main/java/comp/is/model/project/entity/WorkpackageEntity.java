@@ -48,6 +48,7 @@ public class WorkpackageEntity extends Package {
     public WorkpackageEntity(WorkPackage candidate) {
         init(candidate);
         setParent(candidate.getParent());
+        parentId = candidate.parentId;
         employeesAssigned = candidate.getEmployeesAssigned();
         responsibleEngineerId = candidate.getResponsibleEngineer();
         statusReports = candidate.getStatusReports();
@@ -55,7 +56,8 @@ public class WorkpackageEntity extends Package {
         projid = candidate.getProjid();
         timeSheetEntries = candidate.getTimeSheetEntries();
         plannedBudget = candidate.plannedBudget;
-        System.out.println("budget " + candidate.budget);
+        System.out.println("budget " + candidate.plannedBudget);
+        System.out.println("projid " + candidate.projid);
     }
 
     // bi-directional many-to-one association to Workpackage
@@ -141,9 +143,6 @@ public class WorkpackageEntity extends Package {
 
     public void setParent(WorkpackageEntity wpParent) {
         parent = wpParent;
-        if(wpParent != null){
-        projid = wpParent.getProjid();
-        }
     }
 
     public void setProject(ProjectEntity project) {
@@ -166,7 +165,7 @@ public class WorkpackageEntity extends Package {
         return getId();
     }
     
-    @OneToMany(mappedBy = "wp", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    @OneToMany(mappedBy = "wp", fetch = FetchType.EAGER)
     public Set<WorkPackageBudgetEntity> getPlannedBudget() {
         return plannedBudget;
     }

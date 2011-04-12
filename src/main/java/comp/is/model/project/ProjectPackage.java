@@ -21,8 +21,8 @@ public class ProjectPackage extends ProjectEntity {
 
     public ProjectPackage(ProjectEntity root) {
         init(root);
-        if (findManager(root) != null) {
-            manager = findManager(root).getEmployee();
+        if (findCurrentManager(root) != null) {
+            manager = findCurrentManager(root).getEmployee();
             System.err.println("Project Manager constructor = "
                     + manager.getId());
         }
@@ -45,6 +45,8 @@ public class ProjectPackage extends ProjectEntity {
         System.out.println((getEmployees() == null) ? "0" : getEmployees()
                 .size() + " Emp added");
     }
+
+    
 
     public String getChildMask() {
         String mask = "*";
@@ -69,10 +71,7 @@ public class ProjectPackage extends ProjectEntity {
     }
 
     public void setManager(EmployeeEntity manager) {
-        if (manager == null) {
-            manager = null;
-            return;
-        }
+        this.manager = manager;
        
         System.out.println("Manager is set to " + manager.getLastname());
     }
@@ -90,14 +89,23 @@ public class ProjectPackage extends ProjectEntity {
         initBudget.setInitBudget(amount);
     }
 
-    public static EmployeeroleEntity findManager(ProjectEntity root) {
-        for (EmployeeroleEntity role : root.getEmployeeRoles()) {
-            System.out.println("All emps for this proj " + root.getEmployeeRoles());
-            if (role.getId().getProjid().equalsIgnoreCase(root.getId())
-                    & role.getRole().getId() == 1) {
+    public EmployeeroleEntity findManager(EmployeeEntity currentProjManager) {
+        for (EmployeeroleEntity role : getEmployeeRoles()) {
+            if (role.getId().getEmpid()== (currentProjManager.getId())
+                    & role.getId().getRoleid() == 1) {
                 return role;
             }
         }
         return null;
     } 
+    
+    private EmployeeroleEntity findCurrentManager(ProjectEntity root) {
+        for (EmployeeroleEntity role : root.getEmployeeRoles()) {
+            if (role.getId().getProjid().equalsIgnoreCase(root.getId())
+                    & role.getId().getRoleid() == 1) {
+                return role;
+            }
+        }
+        return null;
+    }
 }

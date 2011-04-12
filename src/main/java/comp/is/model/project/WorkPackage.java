@@ -50,6 +50,7 @@ public class WorkPackage extends WorkpackageEntity implements
     public WorkPackage(WorkpackageEntity p) {
         init(p);
         setParent(p.getParent());
+        parentId = p.getParentId();
         responsibleEngineerId = p.getResponsibleEngineer();
         timeSheetEntries = p.getTimeSheetEntries();
         employeesAssigned = p.getEmployeesAssigned();
@@ -81,7 +82,7 @@ public class WorkPackage extends WorkpackageEntity implements
     }
 
     public boolean isRootChild() {
-        return getParent().getId().equalsIgnoreCase(".");
+        return this.getParentId().equalsIgnoreCase(".");
     }
 
     public String getChildMask() {
@@ -159,15 +160,15 @@ public class WorkPackage extends WorkpackageEntity implements
             return new ArrayList<Employee>(parent.getEmployees());
     }
 
-    // public void mereg(Package p) {
-    // description = p.getDescription();
-    // id = p.getId();
-    // name = p.getName();
-    // startDate = p.getStartDate();
-    // status = p.getStatus();
-    //
-    // setEmployees(p.getEmployees());
-    // }
+     public void mereg(Package p) {
+     description = p.getDescription();
+     id = p.getId();
+     name = p.getName();
+     startDate = p.getStartDate();
+     status = p.getStatus();
+    
+     setEmployees(p.getEmployees());
+     }
 
     public boolean isOpenForCharges() {
         if (getResponsibleEngineer() == null) {
@@ -225,7 +226,7 @@ public class WorkPackage extends WorkpackageEntity implements
             for (LabourGrade grade : LabourGrade.values()) {
                 Double amount = getPlannedBudgetList().get(grade)
                         .getAdjustmentAmount();
-                if (amount >= 0) {
+                if (amount > 0) {
                     WorkPackageBudgetEntity entity = getBudgetEntryForLaborGrade(grade);
                     if (entity == null) {
                         entity = new WorkPackageBudgetEntity();
@@ -241,6 +242,7 @@ public class WorkPackage extends WorkpackageEntity implements
                         plannedBudget.add(entity);
                         budget.addToSumType("initplanned", grade, amount,
                                 amount * getRateForGrade(grade).getRate());
+                       // System.out.println();
                     }
                 }
             }

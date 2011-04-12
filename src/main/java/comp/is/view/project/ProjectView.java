@@ -13,7 +13,6 @@ import javax.inject.Named;
 
 import org.primefaces.event.SelectEvent;
 
-
 import comp.is.controller.project.ProjectAction;
 import comp.is.controller.project.ProjectActionLocal;
 import comp.is.model.admin.Employee;
@@ -47,7 +46,7 @@ public class ProjectView implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
                 msg, "");
-       context.addMessage(null, message);
+        context.addMessage(null, message);
     }
 
     public void displayMsgs(List<String> msgs) {
@@ -94,7 +93,6 @@ public class ProjectView implements Serializable {
 
     public void onNodeSelect() {
         String selectedNode = projectTree.getSelectedNode().toString();
-        
 
         System.out.println("View: Selected: " + selectedNode);
         if (selectedNode.isEmpty()) {
@@ -105,35 +103,43 @@ public class ProjectView implements Serializable {
                     .unpad(selectedNode));
 
             if (wp != null)// should be exception
-            {    
-            empPickList.setRendered(true); 
-            wp.getBudget().print();
-            projectAction.setWp(wp);
-            projectAction.initSummaryPlannedBudget(projectAction.getWp());
-            try {
-                projectAction.updateTotal();
-            } catch (BudgetTypeMismatchException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            {
+                empPickList.setRendered(true);
+                wp.getBudget().print();
+                projectAction.setWp(wp);
+                projectAction.initSummaryPlannedBudget(projectAction.getWp());
+                try {
+                    projectAction.updateTotal();
+                } catch (BudgetTypeMismatchException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                ArrayList<Employee> assignedEmp = projectAction
+                        .getTargetEmp(wp);
+                for (Employee e : assignedEmp) {
+                    System.out.println(e.getLastname());
+                }
+                Collections.sort(assignedEmp);
+                ArrayList<Employee> availEmp = new ArrayList<Employee>(
+                        projectAction.getSourceEmp(wp));
+                for (Employee e : availEmp) {
+                    System.out.println(e.getLastname());
+                }
+                Collections.sort(availEmp);
+                if (assignedEmp != null || !assignedEmp.isEmpty()) {
+                    availEmp.removeAll(assignedEmp);
+                }
+
+                empPickList.arrangeEmployees(availEmp, assignedEmp, (wp
+                        .getResponsibleEngineer() == null) ? null
+                        : new Employee(wp.getResponsibleEngineer()));
             }
-            ArrayList<Employee> assignedEmp = projectAction.getTargetEmp(wp);
-            for(Employee e : assignedEmp){System.out.println(e.getLastname());}
-            Collections.sort(assignedEmp);
-            ArrayList<Employee> availEmp = new ArrayList<Employee>(projectAction.getSourceEmp(wp));
-            for(Employee e : availEmp){System.out.println(e.getLastname());}
-            Collections.sort(availEmp);
-            if(assignedEmp != null || !assignedEmp.isEmpty()){availEmp.removeAll(assignedEmp);}
-            
-            empPickList.arrangeEmployees(availEmp, assignedEmp, 
-                    (wp.getResponsibleEngineer()==null)? null : new Employee(wp.getResponsibleEngineer()));
-            }
-            
+
         }
     }
-    
-    public void resetTabs(){
+
+    public void resetTabs() {
         empPickList.setActiveTabIndex(0);
     }
-   
-    
+
 }

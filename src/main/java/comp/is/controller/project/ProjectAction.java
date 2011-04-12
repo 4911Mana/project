@@ -105,7 +105,15 @@ public class ProjectAction {
         // check for errors
         WorkPackage candidate = new WorkPackage(childWp);
         // if(currentP.is)
+        candidate.setProjid(project.getRoot().getId());
         candidate.setParent(currentP);
+        if (project.getRoot().getId().equalsIgnoreCase(currentP.getId())) {
+            candidate.setParentId(".");
+            candidate.setPlannedBudget(null);
+            
+        } else {
+            candidate.setParentId(currentP.getId());
+        }
         candidate.setProject(pp);
 
         System.out.println("CANDIDATE " + candidate.getDetails());
@@ -149,6 +157,7 @@ public class ProjectAction {
         }
         // persist
         WorkpackageEntity entity = new WorkpackageEntity(candidate);
+        entity.setParent(null);
         try {
             doPersist(entity);
         } catch (Exception ex) {
@@ -186,7 +195,8 @@ public class ProjectAction {
             if (wp.getParent() != null & !wp.getId().equalsIgnoreCase(".")) {
                 WorkPackage newWp = new WorkPackage(wp);
                 try {
-                    newWp.setRates(getEffectiveRatesForDate(newWp.getStartDate()));
+                    newWp.setRates(getEffectiveRatesForDate(newWp
+                            .getStartDate()));
                 } catch (RatesNotFoundException e) {
                     System.out.println(e.toString());
                 }
@@ -391,7 +401,9 @@ public class ProjectAction {
     }
 
     private void doPersist(WorkpackageEntity entity) {
+        // entity.getP
         em.persist(entity);
+        em.flush();
     }
 
     /*
@@ -431,10 +443,12 @@ public class ProjectAction {
 
         ArrayList<Employee> emp = wp.getAvailableStaff();
         if (emp != null) {
-           
+
             return emp;
         } else {
-            for(Employee e : pp.getEmployees()){System.out.println("projActin getsourceEmp " + e.getLastname());}
+            for (Employee e : pp.getEmployees()) {
+                System.out.println("projActin getsourceEmp " + e.getLastname());
+            }
             return new ArrayList<Employee>(pp.getEmployees());
         }
     }
@@ -447,23 +461,23 @@ public class ProjectAction {
      * .project.WorkPackage)
      */
     public ArrayList<Employee> getTargetEmp(WorkPackage wp) {
-        //Set<Employee> emp = new HashSet<Employee>();
-         Map<Integer, Employee> emp = new Hashtable<Integer, Employee>();
-         for (Employee e : wp.getEmployees()) {
-         if (!emp.containsKey(e.getId())) {
-         emp.put(e.getId(), e);
-         }
-         }
+        // Set<Employee> emp = new HashSet<Employee>();
+        Map<Integer, Employee> emp = new Hashtable<Integer, Employee>();
+        for (Employee e : wp.getEmployees()) {
+            if (!emp.containsKey(e.getId())) {
+                emp.put(e.getId(), e);
+            }
+        }
         if (project.getChildren(wp.getId()).isEmpty()) {
             return new ArrayList<Employee>(wp.getEmployees());
         } else {
             for (WorkPackage cwp : project.getChildren(wp.getId())) {
-                 for (Employee e : getTargetEmp(cwp)) {
-                 if (!emp.containsKey(e.getId())) {
-                 emp.put(e.getId(), e);
-                 }
-                 }
-                //emp.addAll(getTargetEmp(cwp));
+                for (Employee e : getTargetEmp(cwp)) {
+                    if (!emp.containsKey(e.getId())) {
+                        emp.put(e.getId(), e);
+                    }
+                }
+                // emp.addAll(getTargetEmp(cwp));
             }
             return new ArrayList<Employee>(emp.values());
         }
@@ -483,7 +497,7 @@ public class ProjectAction {
         WorkPackage candidate = this.getWpById(currentP.getId());
         candidate.flushPlannedBudget();
 
-        WorkpackageEntity entity = null;
+        
         // if (!candidate.getId().equalsIgnoreCase(currentP.getId())) {
         // msgs.add("Number update is not allowed");
         // err = true;
@@ -518,18 +532,17 @@ public class ProjectAction {
             setWp(getWpById(currentP.getId()));
             return null;
         }
+        WorkpackageEntity entity = new WorkpackageEntity(candidate);
+        entity.setProjid(project.getRoot().getId());
+        entity.setProject(project.getRoot());
         try {
-            entity = new WorkpackageEntity(candidate);
             em.merge(entity);
-            System.out.println("Saving " + candidate + " "
-                    + candidate.getStartDate() + "/ "
-                    + candidate.getEmployeesAssigned());
-            // em.refresh(entity) ;
-
         } catch (Exception ex) {
             view.displayMsg("Unable to update " + ex.toString());
             setWp(getWpById(currentP.getId()));
-            System.out.println("Unable to update " + ex.toString());
+            System.out
+            .println("Projid" + entity.getProjid());
+            ex.printStackTrace();
             return null;
 
         }
@@ -539,7 +552,8 @@ public class ProjectAction {
         return null;
     }
 
-    public Set<LabourchargerateEntity> getEffectiveRatesForDate(Date date) throws RatesNotFoundException {
+    public Set<LabourchargerateEntity> getEffectiveRatesForDate(Date date)
+            throws RatesNotFoundException {
         if (date == null) {
             date = Calendar.getInstance().getTime();
         }
@@ -550,7 +564,9 @@ public class ProjectAction {
             final List<LabourchargerateEntity> p1result = query.getResultList();
             System.err.println("All rates: " + p1result);
             if (p1result == null || p1result.isEmpty()) {
-                throw new RatesNotFoundException("Effective LabourChargerates not found for " + grade.toString());
+                throw new RatesNotFoundException(
+                        "Effective LabourChargerates not found for "
+                                + grade.toString());
             }
             LabourchargerateEntity rate = p1result.get(0);
             for (LabourchargerateEntity e : p1result) {

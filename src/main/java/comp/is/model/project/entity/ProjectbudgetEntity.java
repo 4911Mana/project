@@ -36,7 +36,7 @@ public class ProjectbudgetEntity implements Serializable {
 
 	//bi-directional one-to-one association to Project
 	@OneToOne
-	@JoinColumn(name="PROJID")
+	@JoinColumn(name="PROJID", insertable=false, updatable=false)
 	public ProjectEntity getProject() {
 		return this.project;
 	}

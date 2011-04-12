@@ -14,7 +14,7 @@
 	<p:outputPanel id="outtbl">
 		<p:dataTable id="emptbl" var="emp" value="#{employee.allPeons}"
 			paginator="true" rows="10" emptyMessage="No employees found"
-			widgetVar="empTable" selection="#{project.manager}" rowSelectListener="#{catalogueAction.onProjManagerRawSelect}">
+			widgetVar="empTable" selection="#{catalogueAction.newProjManager}">
 
 			<f:facet name="header">
             <p:outputPanel>

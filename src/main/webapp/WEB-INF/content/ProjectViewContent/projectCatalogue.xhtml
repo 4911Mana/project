@@ -27,7 +27,7 @@
 						<h:outputText value="#{proj.name}" />
 						<h:outputText value="#{proj.customer}" />
 
-						<p:commandLink update="proj, proj:panel, proj:emptbl" 
+						<p:commandLink update="proj, proj:panel, proj:emptbl, proj:outtbl" 
 							action="#{catalogueAction.displayProj}" title="View Detail">
 							<p:graphicImage value="/resources/gfx/search.png" style="border:none"/>
 							<f:setPropertyActionListener value="#{proj.id}"
